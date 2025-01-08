@@ -1,0 +1,32 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl" >Create New Services</h1>
+
+
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="dialogContent">
+    <form [formGroup]="form" class="w-full mt-2">
+        <div class="flex flex-col gap-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Service Name</mat-label>
+                <input formControlName="name" matInput>
+                <mat-error *ngIf="form.get('name').hasError('required')">Service Name is required</mat-error>
+                <mat-error *ngIf="form.get('name').hasError('isUnMatching')">Service Name is already exists</mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>API Url</mat-label>
+                <input formControlName="url" matInput>
+                <mat-error *ngIf="form.get('url').hasError('required')">API Url is required</mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="mt-4">
+    <button mat-raised-button color="primary" class="w-32" mat-dialog-close [disabled]='!form.valid' (click)="Save()">Save</button>
+    <button mat-raised-button color="primary" class="w-32 " mat-dialog-close type="button">Cancel</button>
+</mat-dialog-actions>

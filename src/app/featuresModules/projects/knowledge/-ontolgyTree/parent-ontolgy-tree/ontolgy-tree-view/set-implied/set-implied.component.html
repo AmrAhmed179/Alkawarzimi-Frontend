@@ -1,0 +1,62 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Add Implied Frame
+            </h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="w-[700px] ">
+            <div class="">
+                <mat-form-field appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
+                    <mat-label>Serach...</mat-label>
+                    <input cdkFocusInitial matInput [(ngModel)]="search" (keyup)="formChang()">
+                </mat-form-field>
+            </div>
+            <div class=" mt-1 ">
+                <div dir="rtl" class="overflow-auto border py-2 h-[200px]">
+                    <div [ngClass]="{'bg-slate-200': currentClassAndPrpsIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(classAndpropEntity, i)" *ngFor="let classAndpropEntity of classesAndProps; let i =index">
+
+                        <div class="flex w-full px-3 justify-between">
+                            <p class="w-1/2 font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
+                            <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{classAndpropEntity._id}}</P>
+
+                            <div class="flex gap-2 items-center">
+                                <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{i+1}}</P>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button (click)="addFrame()" class="text-white py-1 bg-[#999797] px-2 mt-5  mb-1  rounded-sm hover:bg-orange-500">Add Frame</button>
+                <div class="border h-12 py-1">
+                    <div dir="rtl" [ngClass]="{'bg-slate-200': impliedEntityIndex == i}" class="flex   m-1 py-1 items-center" (click)="impliedEntityIndex = i " *ngFor="let implied of impliedEntity; let i =index">
+
+                        <div class="flex w-full py-1 px-3 justify-between">
+                            <p class="w-1/2 font-semibold">{{implied.entityInfo[0].entityText}}</p>
+                            <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{implied._id}}</P>
+
+                            <div class="flex gap-2 items-center">
+                                <button (click)="deleteImplied()" class=" rounded-sm text-white px-1 mx-2 h-5"><mat-icon class="text-red-600" svgIcon="mat:delete"></mat-icon></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="setImlied()"> Add</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

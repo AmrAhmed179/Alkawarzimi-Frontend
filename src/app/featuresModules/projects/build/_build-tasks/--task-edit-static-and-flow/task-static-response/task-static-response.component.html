@@ -1,0 +1,218 @@
+<div class="m-4 ">
+    <!-- <button (click)="submitForm()" [disabled]="!dialogNodeForm.valid" class="bg-[#FF9336] rounded-sm text-white flex items-center py-1 px-2 hover:bg-[#1F2F3C]"><mat-icon svgIcon="mat:save"></mat-icon> Save</button> -->
+    <button (click)="submitForm()" class="bg-[#FF9336] rounded-sm text-white flex items-center py-1 px-2 hover:bg-[#1F2F3C]"><mat-icon svgIcon="mat:save"></mat-icon> Save</button>
+</div>
+
+<form *ngIf="output.controls.length > 0" [formGroup]="dialogNodeForm">
+
+    <div formArrayName="output" cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="mt-4 mx-4 " *ngFor="let control of output.controls; let outputIndex =index" [formGroup]="returnOutControl(control)" (click)="currentIdex = outputIndex" cdkDrag>
+            <div>
+                <mat-accordion>
+                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="isPanelOpen">
+                        <mat-expansion-panel-header [collapsedHeight]="'60px'">
+                            <mat-panel-title>
+                                <div class="flex items-center gap-2 mt-2 w-full">
+                                    <!-- <button (click)="panelOpenState = true" *ngIf="panelOpenState == false && currentIdex ==outputIndex "><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+                                    <button (click)="panelOpenState = true" *ngIf="panelOpenState == false && currentIdex !=outputIndex "><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+                                    <button (click)="panelOpenState = false" *ngIf="panelOpenState == true && currentIdex ==outputIndex"><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_down"> </mat-icon></button>
+                                    <button (click)="panelOpenState = false" *ngIf="panelOpenState == true && currentIdex !=outputIndex"><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_down"> </mat-icon></button> -->
+                                    <button *ngIf="!panelOpenState"><mat-icon  class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+                                    <button *ngIf="panelOpenState && currentIdex == outputIndex"><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_down"> </mat-icon></button>
+                                    <button *ngIf="panelOpenState && currentIdex != outputIndex"><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+
+                                    <div (click)="disablePanel($event)" class="mx-4 w-full flex justify-between">
+                                        <p class="text-base bg-[#F7F7F7] px-1 w-24 rounded flex items-center justify-center">{{control?.value?.response_type}}</p>
+
+                                        <div class="flex flex-row">
+                                            <pre class="text-base font-bold font-mono">Typing delay : </pre>
+                                            <mat-select class="border border-gray-300 px-2 py-1 w-32" formControlName="typingDelay" [(ngModel)]="control?.value.typingDelay">
+                                                <mat-option [value]="'0'">Zero</mat-option>
+                                                <mat-option [value]="'0.5'">Half Second</mat-option>
+                                                <mat-option [value]="'1'">One Second</mat-option>
+                                                <mat-option [value]="'2'">Two Second</mat-option>
+                                            </mat-select>
+                                        </div>
+                                        <div>
+                                            <button (click)="deleteResponse(control,outputIndex)" class="text-gray-400"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div [formGroup]="returnTextControl(control)">
+                            <!-- Add form controls for text -->
+                            <div *ngIf="control.value.response_type == 'Text'">
+                                <div formArrayName="valueArEn">
+                                    <div class="flex flex-col w-3/4 mt-2" appearance="outline" *ngFor="let valueControl of returnValueArray(control) let i = index " [formGroup]="valueControl">
+                                        <div class="flex justify-between " *ngIf="lang == 'ar' && valueControl.get('ar')?.value != '' ">
+                                            <input matInput class="inputValue" formControlName="ar" placeholder="Enter a text response">
+                                            <button (click)="deleteValue(control,i)"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                        </div>
+                                        <div class="flex justify-between " *ngIf="lang == 'en' && valueControl.get('en')?.value != '' ">
+                                            <input matInput class="inputValue" formControlName="en" placeholder="Enter a text response">
+                                            <button (click)="deleteValue(control,i)"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                        </div>
+
+                                    </div>
+                                    <button mat-raised-button class="my-4" (click)="addValue(control)">Add Value</button>
+                                </div>
+                                <div class="flex gap-2" *ngIf="control.value.text.selection_policy == 'random'">
+                                    <p>Variations are set to random. </p> <button class="text-orange-400" (click)="returnTextControl(control).get('selection_policy').setValue('sequential') ">Set to sequential</button>
+                                </div>
+
+                                <div class="flex gap-2" *ngIf="control.value.text.selection_policy == 'sequential'">
+                                    <p>Variations are set to sequential. </p><button class="text-orange-400" (click)="returnTextControl(control).get('selection_policy').setValue('random') ">Set to random</button>
+                                </div>
+                            </div>
+
+                            <div *ngIf="control.value.response_type == 'Option'">
+                                <div [formGroup]="returnResOptionGroup(control)">
+                                    <div class="flex  justify-around w-3/4 my-2 mx-10">
+                                        <p class="font-semibold">Title</p>
+                                        <p class=" font-semibold">Description (optional)</p>
+                                    </div>
+                                    <div class="flex  justify-around w-3/4 mx-20  my-2 gap-2">
+                                        <input *ngIf="lang == 'ar'" matInput class="inputValue" formControlName="titleAr" placeholder="Add title">
+                                        <input *ngIf="lang == 'en'" matInput class="inputValue" formControlName="titleEn" placeholder="Add title">
+                                        <input matInput class="inputValue" formControlName="description" placeholder="Add Description">
+
+                                    </div>
+                                    <div formArrayName="optionsArEn">
+                                        <div class="flex  justify-around w-3/4  my-2">
+                                            <p class="text-[#83A8C2] font-semibold">Label</p>
+                                            <p class="text-[#83A8C2] font-semibold">Value</p>
+                                            <p class="text-[#83A8C2] font-semibold">IconSrc</p>
+                                        </div>
+                                        <mat-divider class="my-1 border-[1.5px] w-3/4  my-2"></mat-divider>
+                                        <div class="flex flex-col w-3/4 mt-2" appearance="outline" *ngFor="let optionControl of returnOptionArray(control); let optionIndex = index " [formGroup]="optionControl">
+                                            <div class="flex justify-between items-center gap-2">
+                                                <p class="text-xl">{{optionIndex}}</p>
+                                                <input *ngIf="lang == 'en'" matInput class="inputValue" formControlName="labelEn" placeholder="Add Label">
+                                                <input *ngIf="lang == 'ar'" matInput class="inputValue" formControlName="labelAr" placeholder="Add Label">
+                                                <input matInput class="inputValue" formControlName="value" placeholder="Add Value">
+                                                <input matInput class="inputValue" formControlName="iconSrc" placeholder="Add IconSrc">
+                                                <button (click)="deleteOption(control,optionIndex)"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                            </div>
+                                            <mat-divider class="mt-1"></mat-divider>
+                                            <div>
+                                            </div>
+                                        </div>
+                                        <div class=" mt-4">
+                                            <button mat-raised-button class="" (click)="addOption(control)">Add option</button>
+                                        </div>
+                                    </div>
+
+                                    <div class=" flex justify-around items-center">
+                                        <div class="flex gap-2">
+                                            <mat-slide-toggle color="primary" formControlName="mainOptions"></mat-slide-toggle>
+                                            <p class="text-base">Main Options </p>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div *ngIf="control.value.response_type == 'List'">
+                                <div [formGroup]="returnResOptionGroup(control)">
+                                    <div class="flex  justify-around w-3/4 my-2 mx-10">
+                                        <p class="font-semibold">Title</p>
+                                        <p class=" font-semibold">Description (optional)</p>
+                                    </div>
+                                    <div class="flex  justify-around w-3/4 mx-20  my-2 gap-2">
+                                        <input *ngIf="lang == 'ar'" matInput class="inputValue" formControlName="titleAr" placeholder="Add title">
+                                        <input *ngIf="lang == 'en'" matInput class="inputValue" formControlName="titleEn" placeholder="Add title">
+                                        <input matInput class="inputValue" formControlName="description" placeholder="Add Description">
+
+                                    </div>
+                                    <div formArrayName="optionsArEn">
+                                        <div class="flex  justify-around w-3/4  my-2">
+                                            <p class="text-[#83A8C2] font-semibold">Label</p>
+                                            <p class="text-[#83A8C2] font-semibold">Value</p>
+                                            <p class="text-[#83A8C2] font-semibold">IconSrc</p>
+                                        </div>
+                                        <mat-divider class="my-1 border-[1.5px] w-3/4  my-2"></mat-divider>
+                                        <div class="flex flex-col w-3/4 mt-2" appearance="outline" *ngFor="let optionControl of returnOptionArray(control); let listIndex = index " [formGroup]="optionControl">
+                                            <div class="flex justify-between items-center gap-2">
+                                                <p class="text-xl">{{listIndex}}</p>
+                                                <input *ngIf="lang == 'en'" matInput class="inputValue" formControlName="labelEn" placeholder="Add Label">
+                                                <input *ngIf="lang == 'ar'" matInput class="inputValue" formControlName="labelAr" placeholder="Add Label">
+                                                <input matInput class="inputValue" formControlName="value" placeholder="Add Value">
+                                                <input matInput class="inputValue" formControlName="iconSrc" placeholder="Add IconSrc">
+                                                <button (click)="deleteOption(control,listIndex)"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                            </div>
+                                            <mat-divider class="mt-1"></mat-divider>
+                                            <div>
+                                            </div>
+                                        </div>
+                                        <button mat-raised-button class="mt-4" (click)="addOption(control)">Add option</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div *ngIf="control.value.response_type == 'Image'">
+                                <div [formGroup]="returnTemplateControl(control)" class="flex flex-col gap-3 w-3/4 mx-10">
+                                    <div class="flex flex-col gap-2">
+                                        <p>Image Title</p>
+                                        <input matInput *ngIf="lang == 'ar'" class="inputValue" formControlName="titleAr" placeholder="Add Image Title">
+                                        <input matInput *ngIf="lang == 'en'" class="inputValue" formControlName="titleEn" placeholder="Add Image Title">
+                                    </div>
+
+                                    <div class="flex flex-col gap-2">
+                                        <p>Image Src</p>
+                                        <input matInput class="inputValue" formControlName="src" placeholder="Add Image Src">
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <p>Hyperlink</p>
+                                        <input matInput class="inputValue" formControlName="hyperlink" placeholder="Add Hyperlink">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="control.value.response_type == 'GoTo'">
+                                <div class="flex flex-col gap-3 w-3/4 mx-20">
+                                    <div class="flex items-center flex-row gap-2">
+                                        <p>Task Name: </p>
+                                        <mat-select class="border border-gray-300 px-2 py-1 w-44" formControlName="goToTaskId" [(ngModel)]="control?.value.text.goToTaskId">
+                                            <mat-option *ngFor="let task of tasks" value="{{task.intentId}}">{{task.name}}</mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+
+                <!-- Add form controls for other output properties -->
+            </div>
+        </div>
+    </div>
+    <div *ngIf="output.controls.length >1">
+        <div class="flex gap-2 m-4" *ngIf="dialogNodeForm.value.display_policy == 'multi-card'">
+            <p>Variations are set to multi-card. </p> <button class="text-orange-400" (click)="dialogNodeForm.get('display_policy').setValue('single-card') ">Set to single-card</button>
+        </div>
+
+        <div class="flex gap-2 m-4" *ngIf="dialogNodeForm.value.display_policy == 'single-card'">
+            <p>Variations are set to single-card. </p><button class="text-orange-400" (click)="dialogNodeForm.get('display_policy').setValue('multi-card') ">Set to multi-card</button>
+        </div>
+    </div>
+
+
+
+</form>
+
+<div class="m-4">
+    <button [matMenuTriggerFor]="menu" class="flex items-center text-[#E77512] bg-[#F0F0F0] px-1 mt-4">  <mat-icon class=" " svgIcon="mat:add"> </mat-icon>Add Response Type
+  </button>
+    <mat-menu class="bg-[#F0F0F0] w-40 " #menu="matMenu">
+        <button mat-menu-item (click)="addResponse('Text',1)">Text</button>
+        <button mat-menu-item (click)="addResponse('Option',2)">Option</button>
+        <button mat-menu-item (click)="addResponse('List',6)"> List</button>
+        <button mat-menu-item (click)="addResponse('Image',3)">Image</button>
+        <button mat-menu-item (click)="addResponse('GoTo',4)">GoTo</button>
+        <button mat-menu-item (click)="addResponse('Carousel',5)">Carousel</button>
+        <button mat-menu-item (click)="addResponse('Chart',7)">Chart</button>
+    </mat-menu>
+</div>

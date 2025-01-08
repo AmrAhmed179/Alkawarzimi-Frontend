@@ -1,0 +1,23 @@
+<nav mat-tab-nav-bar class="flex items-center">
+    <div class="flex items-center">
+        <div>
+            <a mat-tab-link routerLink="ontologyTreeView" routerLinkActive="active" (click)="goToOntologyTree()">Ontology Tree</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="propertyTreeView" routerLinkActive="active">Properties
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="AllEntities" (click)="goToEntities()" routerLinkActive="active">Entities
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="AllEntities" routerLinkActive="active">Objects
+</a>
+        </div>
+    </div>
+</nav>
+
+<div class="my-2 mx-4">
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,123 @@
+.tree-node-content {
+    display: flex;
+    justify-content: space-between;
+    button {
+        margin-left: 5px;
+    }
+}
+
+::ng-deep {
+    .node-wrapper {
+        display: flex;
+        align-items: center;
+        padding-left: 0 !important;
+        padding-right: 20px !important;
+        margin-top: 5px;
+        height: 3rem;
+        border: solid 1px #ccc;
+        border-radius: 3px;
+    }
+    .toggle-children {
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 8px;
+        margin-left: 8px;
+    }
+    .toggle-children:hover {
+        color: orange;
+    }
+    .node-content-wrapper {
+        flex: 1;
+        overflow: hidden;
+    }
+    .node-wrapper:hover {
+        background: #ffedd5 !important;
+    }
+    .node-content-wrapper-active,
+    .node-content-wrapper.node-content-wrapper-active:hover,
+    .node-content-wrapper-active.node-content-wrapper-focused {
+        background-color: transparent;
+        /* changed this line */
+    }
+    .node-content-wrapper:hover {
+        background: #ffedd5 !important;
+        border: solid 1px #ffedd5;
+    }
+    tree-node-wrapper {
+        background: #f3872929 !important;
+    }
+}
+
+.statistics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0px;
+}
+
+.tree-parent {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(12, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.tree-search {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.tree-structure {
+    grid-area: 2 / 1 / 12 / 2;
+}
+
+.tree-info {
+    grid-area: 12 / 1 / 13 / 2;
+}
+
+.verbNode {
+    color: #e6251f;
+}
+
+.propNode {
+    color: #2bcc1f;
+}
+
+:root .mat-button,
+:root .mat-stroked-button,
+:root .mat-flat-button,
+:root .mat-raised-button {
+    border-radius: 0%;
+}
+
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+
+/*
+* This padding sets alignment of the nested nodes.
+*/
+
+.example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 40px;
+}
+
+
+/*
+* Padding for leaf nodes.
+* Leaf nodes need to have padding so as to align with other non-leaf nodes
+* under the same parent.
+*/
+
+.example-tree div[role=group]>.mat-tree-node {
+    padding-left: 40px;
+}

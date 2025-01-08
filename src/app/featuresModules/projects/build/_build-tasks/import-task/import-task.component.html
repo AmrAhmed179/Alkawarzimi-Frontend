@@ -1,0 +1,40 @@
+<div>
+    <div class="grid grid-cols-3 -m-6 justify-items-end content-center h-16 bg-[#E77512] ">
+        <div></div>
+        <h1 mat-dialog-title class="text-2xl text-white font-bold mt-3">Add Pre-Built Bot</h1>
+        <!-- <button class="text-secondary bg-[#E77512] mt-3 mx-3" mat-dialog-close mat-icon-button type="button">
+<mat-icon  svgIcon="mat:close"></mat-icon>
+</button> -->
+    </div>
+
+    <mat-divider class="mt-7"></mat-divider>
+    <ng-container>
+
+        <mat-dialog-content class="">
+            <div class="flex flex-col">
+                <div class="mt-4">
+                    <form [formGroup]="form">
+                        <mat-form-field style="font-size: 14px;" class="w-[800px]">
+                            <mat-label>Exported Tasks</mat-label>
+                            <mat-select formControlName="taskId">
+                                <mat-option *ngFor="let task of importedTask" value="{{task._id}}">{{task.taskName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </div>
+
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class=" bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button" (click)="addTask()">Add</button>
+
+                <button mat-raised-button class=" bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

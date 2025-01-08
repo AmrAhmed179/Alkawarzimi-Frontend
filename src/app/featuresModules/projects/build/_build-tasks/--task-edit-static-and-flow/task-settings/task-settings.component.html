@@ -1,0 +1,78 @@
+<div>
+    <form *ngIf="intentSettings" [formGroup]="settingForm" class="m-6 ">
+        <button mat-raised-button class="bg-gradient-to-r from-[#E57E25] to-[#F29544] border rounded-sm px-2 mb-6 text-white" (click)="saveSettings()">Save Settings</button>
+        <mat-form-field appearance="standard" class="w-[90%]">
+            <mat-label> Task Name</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field appearance="standard" class="w-[90%]">
+            <mat-label>Add Description </mat-label>
+            <input formControlName="description" matInput>
+        </mat-form-field>
+        <div class="flex items-center justify-between w-[90%]">
+            <mat-form-field style="font-size: 14px;">
+                <mat-label> Task type</mat-label>
+                <mat-select formControlName="category" [(ngModel)]="intentSettings.category">
+                    <mat-option [value]="'responsive'">Responsive</mat-option>
+                    <mat-option [value]="'triggered'">Triggered</mat-option>
+                    <mat-option [value]="'notification'">Notification</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-checkbox color="primary" class="example-margin" formControlName="sideTalk">Side Talk </mat-checkbox>
+            <mat-checkbox color="primary" class="example-margin" formControlName="serviceFlow">Service flow</mat-checkbox>
+            <mat-checkbox color="primary" class="example-margin" formControlName="statelessFlow">Stateless flow </mat-checkbox>
+
+        </div>
+
+        <mat-radio-group color="primary" formControlName="responseMode" class="w-1/3 flex justify-between">
+            <mat-radio-button [value]="1">Static Responses</mat-radio-button>
+            <mat-radio-button [value]="2">Diagram-Flow</mat-radio-button>
+        </mat-radio-group>
+        <div class="w-1/2">
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">Main Task</p>
+                <div>
+                    <mat-slide-toggle color="primary" (change)="mainTaskChange()" formControlName="mainTask"></mat-slide-toggle>
+                    <button class="text-secondary mx-1" (click)="editMainTask()" *ngIf="settingForm.controls['mainTask'].value ==true" mat-dialog-close type="button">
+                     <mat-icon class="text-[#E77512] " svgIcon="mat:edit"></mat-icon>
+                  </button>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">Stop Digression</p>
+                <mat-slide-toggle color="primary" formControlName="stopDigression"></mat-slide-toggle>
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">End of conversation</p>
+                <mat-slide-toggle color="primary" formControlName="endConversation"></mat-slide-toggle>
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">Has Trigger</p>
+                <mat-slide-toggle color="primary" formControlName="hasTrigger"></mat-slide-toggle>
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">Change Language</p>
+                <div class="flex">
+                    <mat-slide-toggle color="primary" formControlName="changeLanguage"></mat-slide-toggle>
+                    <mat-select class="border w-24 mx-4 px-2 border-[#ddd]" *ngIf="settingForm.get('changeLanguage')?.value" formControlName="category" formControlName="changeLanguageTo">
+                        <mat-option [value]="'en'">English</mat-option>
+                        <mat-option [value]="'ar'">Arabiuc</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 ">
+                <p class="text-base">Ad Flow</p>
+                <mat-slide-toggle color="primary" formControlName="adFlow"></mat-slide-toggle>
+            </div>
+        </div>
+
+
+    </form>
+</div>

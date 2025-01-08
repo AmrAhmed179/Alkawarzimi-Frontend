@@ -1,0 +1,69 @@
+<!-- <mat-toolbar color="primary">
+    <span>Analytics </span>
+    <span class="example-fill-remaining-space"></span>
+</mat-toolbar> -->
+
+<nav mat-tab-nav-bar class="mb-4">
+    <div class="flex items-center">
+        <div>
+            <a mat-tab-link routerLink="overview" routerLinkActive="active">Overview</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="Chatbotconversation" routerLinkActive="active">Chatbot conversation
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="Agentconversation" routerLinkActive="active">Agent conversation
+</a>
+        </div>
+
+        <div>
+            <a mat-tab-link routerLink="Gptconversation" routerLinkActive="active">Gpt conversation
+</a>
+        </div>
+
+        <!-- <div>
+            <a mat-tab-link routerLink="Survey" routerLinkActive="active">Survey
+</a>
+        </div> -->
+        <div>
+            <a mat-tab-link routerLink="Leadgeneration" routerLinkActive="active">Lead generation
+</a>
+        </div>
+
+    </div>
+    <div>
+
+    </div>
+    <div class="flex justify-end mr-6">
+        <div class="mx-3 mt-3">
+            <mat-form-field class="maTop" appearance="fill">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="startDate" placeholder="{{'startDate'|translate}}">
+                    <input matEndDate formControlName="endDate" placeholder="{{'endDate'|translate}}">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+
+        <div class="flex gap-2 items-center">
+            <div>
+                <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="refeshData()">Refresh data </button>
+            </div>
+            <button *ngIf="showButtons == true" mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" [matMenuTriggerFor]="menu">Report <mat-icon svgIcon="mat:chevron_right"></mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <div>
+                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(statisticalReport,'statisticalReport ')" *ngIf="showButtons == true">Statistical Report</button>
+                </div>
+                <div class="mt-2">
+                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(conversationsReport,'coversationReport')" *ngIf="showButtons == true">Conversation Report</button>
+                </div>
+            </mat-menu>
+
+        </div>
+    </div>
+</nav>
+
+<router-outlet></router-outlet>

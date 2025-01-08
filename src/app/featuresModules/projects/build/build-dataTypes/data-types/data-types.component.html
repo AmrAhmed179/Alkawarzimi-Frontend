@@ -1,0 +1,16 @@
+<vex-secondary-toolbar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+          <a mat-tab-link routerLink="sysEntities" routerLinkActive="li-active">System Entities</a>
+          <a mat-tab-link routerLink="entities" routerLinkActive="li-active">My Entities</a>
+          <a mat-tab-link routerLink="menus" routerLinkActive="li-active">Menus</a>
+          <a mat-tab-link routerLink="classes" routerLinkActive="li-active">Classes</a>
+   
+
+    </nav>
+</vex-secondary-toolbar>
+
+<mat-tab-nav-panel #tabPanel>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+</mat-tab-nav-panel>

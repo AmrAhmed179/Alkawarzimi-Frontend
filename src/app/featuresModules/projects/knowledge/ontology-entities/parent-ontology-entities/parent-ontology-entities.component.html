@@ -1,0 +1,29 @@
+<!-- <mat-toolbar color="primary">
+    <span>Analytics </span>
+    <span class="example-fill-remaining-space"></span>
+</mat-toolbar> -->
+
+<nav mat-tab-nav-bar class="">
+    <div class="flex items-center">
+        <div>
+            <a mat-tab-link routerLink="overview" routerLinkActive="active" (click)="goToOntologyTree()">Ontology Tree</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="Chatbotconversation" routerLinkActive="active" (click)="goToPropertiesTree()">Properties
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="ontologyEntities" routerLinkActive="active">Entities
+</a>
+        </div>
+
+        <div>
+            <a mat-tab-link routerLink="Gptconversation" routerLinkActive="active">Objects
+</a>
+        </div>
+
+    </div>
+
+</nav>
+
+<router-outlet></router-outlet>

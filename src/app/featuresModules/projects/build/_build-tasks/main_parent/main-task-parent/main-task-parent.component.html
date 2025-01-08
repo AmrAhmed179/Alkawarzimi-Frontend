@@ -1,0 +1,318 @@
+<div>
+    <div class=" mx-6 pt-18 py-2  flex items-center justify-between">
+        <div class="flex justify-start gap-2 ">
+            <button (click)="workspaceType(projectName)" [ngClass]="{'taskActive':sourcBoat === projectName,'text-white':sourcBoat === projectName,'hover:taskActive':sourcBoat == projectName}" class="bg-white border text-orange-500 border-gray-300 rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">{{projectName}}</button>
+            <button (click)="workspaceType(type)" [ngClass]="{'taskActive':sourcBoat == type,'text-white':sourcBoat == type,'hover:taskActive':sourcBoat == type}" class="bg-white border text-orange-500 border-gray-300 rounded-sm px-2 py-2 text-base hover:bg-slate-100 "
+                *ngFor="let type of types">{{type}} <button (click)="deleteBot($event,type)"
+                    class="text-red-600 "><mat-icon class="h-5" svgIcon="mat:delete"></mat-icon> </button></button>
+        </div>
+        <div>
+            <button class="bg-gradient-to-r from-[#E57E25] to-[#F29544] border rounded-sm px-2 py-2 text-white" (click)="createTask()">CREATE
+                TASK</button>
+        </div>
+
+        <div class="flex gap-2">
+            <button class="bg-[#1F2F3C] text-white px-2 py-1 rounded-lg hover:bg-[#EB8731]" (click)="addBreBuildBot()">Add Pre-Built Bot</button>
+            <button class="flex items-center bg-[#1F2F3C] text-white px-2 py-1  rounded-lg hover:bg-[#EB8731] " [matMenuTriggerFor]="menu">Export Tasks
+                <mat-icon svgIcon="mat:keyboard_arrow_down"></mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML
+                </button>
+                <button mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML Table
+                </button>
+            </mat-menu>
+        </div>
+    </div>
+</div>
+<div class="bg-white h-16">
+    <div class="mx-8  flex items-center justify-between">
+        <div class="flex justify-start mt-3">
+            <button (click)="taskType('events')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='events'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 h-14 ">Events</button>
+            <button (click)="taskType('dialogflow')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='dialogflow'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Flow Tasks</button>
+            <button (click)="taskType('knowledge')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='knowledge'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Knowledge Tasks</button>
+            <button (click)="taskType('ads')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='ads'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Ad Tasks</button>
+        </div>
+        <div class="flex items-center gap-10 ">
+            <button *ngIf="taskTypeName == 'dialogflow'" class="bg-gradient-to-r from-[#E57E25] to-[#F29544] border rounded-sm px-2 py-2 text-white mr-8" (click)=" importTask()">IMPORTTASK</button>
+            <button (click)="filterclick()" *ngIf="(taskTypeName == 'knowledge' || taskTypeName == 'events') && showfilter == false" class="bg-gradient-to-r from-[#216FB3] to-[#3187D5] text-white p-2 rounded-sm w-20">FILTER</button>
+
+            <mat-form-field style="font-size: 11px;" class="mt-3 w-28" *ngIf="taskTypeName == 'events' && showfilter == true">
+                <mat-label>filter</mat-label>
+                <mat-select [(ngModel)]="filterCategory">
+                    <div>
+                        <mat-option value="all">All</mat-option>
+                        <mat-option value="responsive">Responsive</mat-option>
+                        <mat-option value="triggered">Triggered</mat-option>
+                        <mat-option value="notification">Notification</mat-option>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="font-size: 11px;" class="mt-3 w-28 " *ngIf="taskTypeName == 'knowledge' && showfilter == true">
+                <mat-label>filter</mat-label>
+                <mat-select (selectionChange)="filterValue($event)" [(ngModel)]="filterCategory">
+                    <div *ngIf="taskTypeName == 'knowledge'">
+                        <mat-option value="all">All</mat-option>
+                        <mat-option value="ontology">ontology</mat-option>
+                        <mat-option value="problem">problem</mat-option>
+                        <mat-option value="else">else</mat-option>
+                    </div>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="flex relative ">
+                <form [formGroup]="form" class="">
+                    <mat-form-field style="font-size: 8px;" class="mt-2 w-72">
+                        <input placeholder="Search For Task..." for formControlName="Text" cdkFocusInitial matInput (keyup.enter)="searchTaskResult()">
+                    </mat-form-field>
+                </form>
+                <button class="bg-[#E57E25] hover:bg-[#F29544] border rounded-sm px-2 py-1 text-white h-11 mt-2 w-24" (click)="searchTaskResult()"><mat-icon
+                        svgIcon="mat:search"></mat-icon></button>
+                <div *ngIf="showTaskSearch" (clickOutside)="onClickedOutside($event)" id="taskSearch" class="absolute w-full  bg-[#EF903D] mt-14 z-[150]">
+                    <div class="m-2 text-white flex flex-col text-base hover:bg-orange-300" (click)="goToTasksFromSearch(item.intentId)" *ngFor="let item of taskSearchResult">
+                        <span>{{item.intentId}}</span>
+                        <span>example: {{item.example}}</span>
+                        <span>confidence: {{item.confidence}}</span>
+                        <mat-divider class="mt-1 border-gray-300"></mat-divider>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="maXHeight overflow-auto">
+    <table mat-table [dataSource]="dataSource" class="w-full " *ngIf="taskTypeName == 'dialogflow'">
+
+
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef m class="bg-slate-50 text-black"> </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Task">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50 text-black"> Task </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
+              </button>
+            </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="ResponseType">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <td mat-cell *matCellDef="let row">
+                <div *ngIf="row.responseMode == 2">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                </div>
+
+                <div *ngIf="row.responseMode == 1">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:assignment"></mat-icon></button>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ExamplesCount">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Examples Count </th>
+            <td mat-cell *matCellDef="let row">
+                {{row.examples}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="StopDigression">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Stop Digression </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-slide-toggle color="primary" (change)="returnAfterDigression(row,$event)" [(ngModel)]="row.stopDigression"></mat-slide-toggle>
+
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Description">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Description </th>
+            <td mat-cell *matCellDef="let row">
+                {{row.description}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ImportTask">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="exportTask(row.intentId)" class="bg-gradient-to-r from-[#216FB3] to-[#3187D5] text-white p-1 rounded-sm ">EXPORTTASK</button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsTask sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsTask;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data </td>
+        </tr>
+    </table>
+
+    <table mat-table [dataSource]="dataSource" class="w-full " *ngIf="taskTypeName == 'events'">
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Task">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Task </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
+            </button>
+            </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="ResponseType">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <td mat-cell *matCellDef="let row">
+                <div *ngIf="row.responseMode == 2">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                </div>
+
+                <div *ngIf="row.responseMode == 1">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:assignment"></mat-icon></button>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Type">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <td mat-cell *matCellDef="let row">
+                <div>
+                    <p class="text-base">{{row.category | uppercase}}</p>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsEvents sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsEvents;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data </td>
+        </tr>
+    </table>
+
+    <table mat-table [dataSource]="dataSource" matSort class="w-full " *ngIf="taskTypeName == 'knowledge'">
+
+        <!-- <ng-container matColumnDef="applicationId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-slate-50"> Application Id </th>
+    <td mat-cell *matCellDef="let row"> {{row.applicationId}} </td>
+</ng-container> -->
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Task">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50 text-black"> Task </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
+            </button>
+            </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="ResponseType">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <td mat-cell *matCellDef="let row">
+                <div *ngIf="row.responseMode == 2">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                </div>
+
+                <div *ngIf="row.responseMode == 1">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:assignment"></mat-icon></button>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ExamplesCount">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Examples Count </th>
+            <td mat-cell *matCellDef="let row">
+                {{row.examples}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="StopDigression">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Stop Digression </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-slide-toggle color="primary" (change)="returnAfterDigression(row,$event)" [(ngModel)]="row.stopDigression" [(ngModel)]="row.stopDigression"></mat-slide-toggle>
+
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Description">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Description </th>
+            <td mat-cell *matCellDef="let row">
+                {{row.description}}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsKnowldge sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsKnowldge;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data </td>
+        </tr>
+    </table>
+
+    <table mat-table [dataSource]="dataSource" class="w-full " *ngIf="taskTypeName == 'ads'">
+
+        <ng-container matColumnDef="Delete">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Task">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Task </th>
+            <td mat-cell *matCellDef="let row">
+                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
+            </button>
+            </td>
+        </ng-container>
+
+        <!-- Progress Column -->
+        <ng-container matColumnDef="ResponseType">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <td mat-cell *matCellDef="let row">
+                <div *ngIf="row.responseMode == 2">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon svgIcon="mat:share"></mat-icon></button>
+                </div>
+
+                <div *ngIf="row.responseMode == 1">
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon svgIcon="mat:assignment"></mat-icon></button>
+                </div>
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsAds sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsAds;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data </td>
+        </tr>
+    </table>
+    <div class="w-full  mb-1">
+        <mat-paginator #paginator class="demo-paginator" [showFirstLastButtons]="true" [length]="totalItems" [pageSize]="pageSize" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</div>

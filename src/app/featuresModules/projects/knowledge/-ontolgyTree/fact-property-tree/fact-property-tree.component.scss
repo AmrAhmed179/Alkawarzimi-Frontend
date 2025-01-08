@@ -1,0 +1,83 @@
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+
+/*
+* This padding sets alignment of the nested nodes.
+*/
+
+.example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 25px;
+}
+
+
+/*
+* Padding for leaf nodes.
+* Leaf nodes need to have padding so as to align with other non-leaf nodes
+* under the same parent.
+*/
+
+.example-tree div[role=group]>.mat-tree-node {
+    padding-left: 40px;
+}
+
+.formWidth {
+    width: calc(100% - 330px);
+}
+
+.treeHight {
+    height: calc(100vh - 230px);
+    min-height: 300px;
+    scrollbar-width: auto;
+    scrollbar-color: #C1C1C1 #ece6e6;
+    padding: 12px;
+}
+
+::ng-deep {
+    .toggle-children {
+        height: 50px;
+    }
+    .node-content-wrapper {
+        width: 98%;
+    }
+}
+
+.tapBorder {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-radius: 4px;
+    color: #6F6F6F;
+}
+
+.icon12Px {
+    font-size: 12px;
+    height: 12px;
+    width: 12px;
+    line-height: 12px;
+}
+
+.selectedNodeBg {
+    background-color: #eeb98a;
+}
+
+.blackNodeBg {
+    background-color: #3E3E3E;
+}
+
+.custom-checkbox .mat-checkbox-inner-container {
+    width: 24px;
+    /* Adjust width */
+    height: 24px;
+    /* Adjust height */
+    transform: scale(1.5);
+    /* Scale the checkbox */
+}

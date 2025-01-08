@@ -1,0 +1,8 @@
+<div class="my-6 mx-16">
+    <form *ngIf="projectOptions" class="flex w-2/5" [formGroup]="serviceForm" (change)="getFormValue()">
+        <mat-form-field class="flex-auto ">
+            <mat-label>Base URL</mat-label>
+            <input matInput Enmity="Base URL" formControlName="serviceBaseUrl">
+        </mat-form-field>
+    </form>
+</div>

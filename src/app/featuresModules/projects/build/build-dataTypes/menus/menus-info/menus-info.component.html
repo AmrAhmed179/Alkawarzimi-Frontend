@@ -1,0 +1,144 @@
+<div class="bg-app-bar border-b sticky left-0 flex h-16 items-center gap-5 ">
+    <div class="flex justify-start items-center w-full px-6">
+        <div>
+            <h2 class="title my-0 pr-4 mr-4 border-r hidden sm:block flex-none">
+                @{{menuName}}
+            </h2>
+        </div>
+        <div>
+            <button mat-button class="mat-button text-white pr-4 mr-4 border-r bg-primary" (click)="updateMenu()">Save
+            </button>
+            <button mat-button class="mat-button text-white bg-warn" (click)="navigateBack()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-row">
+    <div>
+        <div class="flex items-baseline px-14">
+            <h1 class="text-base tracking-wide w-1/12 uppercase">Menu name:</h1>
+            <div class="w-11/12">
+
+                <mat-form-field floatLabel="always" appearance="standard" class="min-w-full">
+                    <input matInput [(ngModel)]="menuName" />
+                    <span matPrefix class="text-2xl text-orange-400">@&nbsp;</span>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 px-6">
+
+        <div class="card px-6 container">
+
+            <div class="border-b flex items-center justify-evenly py-8 w-full" style="height: 60px;">
+                <div class="flex gap-2 items-center justify-center">
+                    <button class="mat-button text-white bg-primary" (click)="expandAllNodes()">
+                        Expand All
+                    </button>
+                    <button class="mat-button text-white bg-primary" (click)="collapseAllNodes()">
+                        Collapse All
+                    </button>
+                </div>
+
+                <mat-form-field class="w-80" appearance="standard">
+                    <input matInput type="text" class="small-text" [(ngModel)]="searchQuery">
+                </mat-form-field>
+
+                <div class="flex gap-2 items-center justify-center">
+                    <button mat-icon-button color="primary" (click)="performSearch()">
+                        <mat-icon svgIcon="mat:search"></mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="clearSearch()">
+                        <mat-icon svgIcon="mat:loop"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <tree-root #tree [focused]="true" [nodes]="filteredNodes.length > 0 ? filteredNodes : nodes" cdkDropList (cdkDropListDropped)="drop($event)" class="">
+                <ng-template #treeNodeTemplate let-node>
+                    <div class="node-container" cdkDrag [cdkDragData]="{ node: node.data, parentNode: node.parent?.data }" (click)="handleNodeClick(node.data)">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <div *ngFor="let langInfo of node.data.nodeLangInfo">
+                                    <ng-container *ngIf="langInfo.language == 'ar'">
+                                        <span class="text-base font-medium">{{ langInfo.entityText }}</span>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button mat-icon-button color="primary" (click)="openAddNodeDialog(node.data.node_id)">
+                                    <mat-icon matTooltip="Add Child" svgIcon="mat:add"></mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" (click)="openEditNodeDialog(node.data)">
+                                    <mat-icon matTooltip="Edit Node" svgIcon="mat:edit"></mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" (click)="openDeleteNodeDialog(node.data.node_id)">
+                                    <mat-icon matTooltip="Delete Node" svgIcon="mat:delete"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </tree-root>
+
+        </div>
+
+
+        <div class="grid grid-rows-2 gap-3 px-6">
+            <div class="row-span-1">
+                <div class="card">
+                    <div class="border-b h-10 flex items-center justify-center">
+                        <h1 class="text-lg font-medium text-orange-400">Synonyms</h1>
+                    </div>
+                    <div class="min-h-[5rem]">
+                    </div>
+                </div>
+                <div class="pt-4">
+                    <button mat-flat-button class="mat-button text-white bg-primary">
+                        Add Synonyms
+                    </button>
+                </div>
+            </div>
+            <div class="row-span-2">
+                <div class="card">
+                    <div class="border-b h-10 flex items-center justify-center">
+                        <h1 class="text-lg font-medium text-orange-400">Actions</h1>
+                    </div>
+                    <div class="flex items-center bg-center justify-center px-6 w-full">
+                        <mat-form-field appearance="standard" class="w-full border-b" *ngIf="selectedNode">
+                            <mat-label>Choose an action</mat-label>
+                            <mat-select name="actionType" [(ngModel)]="selectedNode?.action.type" (selectionChange)="updateActionType($event.value)">
+                                <mat-option value="none">none</mat-option>
+                                <mat-option value="text">text</mat-option>
+                                <mat-option value="procUtterance">Process Utterance</mat-option>
+                                <mat-option value="goToTask">Go To Task</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex items-center bg-center justify-center px-6 w-full" *ngIf=" selectedNode?.action.type === 'goToTask' ">
+                        <ng-container>
+                            <mat-form-field appearance="standard" class="w-full">
+                                <mat-label>Select Task</mat-label>
+                                <mat-select [(ngModel)]="selectedNode.action.goToTaskId" name="intentId">
+                                    <mat-option *ngFor="let task of tasks" [value]="task.name">
+                                        {{ task.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </ng-container>
+                    </div>
+
+                    <div *ngIf="selectedNode?.action.type === 'text'" class="px-6">
+                        <quill-editor [(ngModel)]="selectedNode.action.response" #editor [styles]="{ flex: '1 1 auto', minHeight:'100px'}" [required]="true"></quill-editor>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

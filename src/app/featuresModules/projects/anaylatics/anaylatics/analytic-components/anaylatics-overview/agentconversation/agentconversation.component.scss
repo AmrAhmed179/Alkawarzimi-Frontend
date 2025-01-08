@@ -1,0 +1,30 @@
+table {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+}
+
+::ng-deep .mat-tab-label {
+    font-size: 15px;
+}
+
+th.mat-header-cell,
+td.mat-cell {
+    border: 1px solid #CCC;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+.mat-row:nth-child(odd) {
+    background-color: #F9F9F9;
+}

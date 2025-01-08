@@ -1,0 +1,114 @@
+<div class="flex w-[98.7%] gap-3 mt-3 mx-3">
+    <div class="w-[55%] bg-white rounded-sm">
+        <form class="flex gap-2 my-1 mx-2 " [formGroup]="form">
+            <mat-form-field appearance="fill" class="h-10 w-1/5 matFormstyle">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="Category" (selectionChange)="formChang('')">
+                    <mat-option value="''"> All </mat-option>
+                    <mat-option *ngFor="let factCatogery of factCatogeries" value="{{factCatogery.id}}"> {{factCatogery.name}} </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="fill" class="h-10 w-1/5 matFormstyle">
+                <mat-label>Filter</mat-label>
+                <mat-select formControlName="Filter" (selectionChange)="formChang('')">
+                    <mat-option value="''"> All </mat-option>
+                    <mat-option value="filter_rev">Reviewed</mat-option>
+                    <mat-option value="filter_no_rev">Not Reviewed</mat-option>
+                    <mat-option value="filter_no_syn">Without Synonyms</mat-option>
+                    <mat-option value="filter_error_stem">Error in Stems</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="h-10 w-2/5 text-[9.5px]">
+                <mat-label>Serach...</mat-label>
+                <input cdkFocusInitial matInput formControlName="search" (keyup)="formChang('')">
+            </mat-form-field>
+
+            <button class="border border-gray-400 bg-[#F5F5F5] mt-2 px-2 h-8 hover:bg-white rounded-sm" (click)="formChang('clear')">Clear Fillter</button>
+        </form>
+    </div>
+    <div class="w-[45%] bg-white h-14 rounded-sm flex justify-center items-center">
+        <p class="text-lg font-semibold">{{entityTitle}}</p>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="flex w-[98.7%] gap-3 mt-3 mx-3 h-[39rem]">
+    <div class="w-[55%] bg-white rounded-sm overflow-auto border  border-gray-300">
+        <cdk-virtual-scroll-viewport [itemSize]="50">
+            <div [ngClass]="{'bg-slate-900': currentIndex == i}" class="flex bg-[#F5F5F5] border-b-2 m-1 py-1 items-center" (click)="clickOnList(entity, i)" *cdkVirtualFor="let entity of ontologyEntities; let i =index">
+                <div class="flex h-16 items-center  bg-orange-400">
+                    <p class="  px-4 text-lg text-white text-center">{{i+1}}</p>
+
+                </div>
+                <div class="flex  mx-2 " [ngClass]="{'bg-white': currentIndex == i}">
+                    <div class="flex flex-col  border-r-2 mx-2">
+                        <mat-checkbox (change)="editIsReviewed(entity)" *ngIf="type != 'prop'" color="primary" class="example-margin " [(ngModel)]="entity.entityInfo[0].isReviewed">Revised</mat-checkbox>
+                        <mat-checkbox (change)="setIsType(entity)" *ngIf="type == 'action' || type=='gneratedFrames'" color="primary" class="example-margin" [(ngModel)]="entity.frame.isType">Type</mat-checkbox>
+                        <mat-checkbox *ngIf="type == 'action' || type=='gneratedFrames'" color="primary" class="example-margin" [(ngModel)]="entity.frame.pastEvent">PastEvent</mat-checkbox>
+                        <mat-checkbox (change)="setAmbClass(entity)" *ngIf="type == 'class' || type == 'prop' " color="primary" [(ngModel)]="entity.ambClass" class="example-margin">Amb</mat-checkbox>
+                        <mat-checkbox (change)="setTriggerEntity(entity)" *ngIf="type == 'class' || type == 'prop'" color="primary" [(ngModel)]="entity.trigger" class="example-margin">Trigger</mat-checkbox>
+                        <mat-checkbox (change)="setFemale(entity)" *ngIf="type == 'individual' " color="primary" [(ngModel)]="entity.female" class="example-margin">Female</mat-checkbox>
+                    </div>
+                    <div class="flex flex-col border-r-2 mx-2">
+                        <mat-checkbox (change)="setNegative(entity)" *ngIf="type == 'action' || type=='gneratedFrames'" color="primary" class="example-margin" [(ngModel)]="entity.frame.negative">Negative</mat-checkbox>
+                        <mat-checkbox (change)="setInformative(entity)" *ngIf="type == 'action' || type=='gneratedFrames'" color="primary" class="example-margin" [(ngModel)]="entity.frame.Informative">Informative</mat-checkbox>
+                        <mat-checkbox (change)="SetIgnoreTellAbout(entity)" *ngIf="type == 'action' || type=='gneratedFrames'" color="primary" class="example-margin" [(ngModel)]="entity.frame.ignoreTellAbout">IgnoreTellAbout</mat-checkbox>
+                        <mat-checkbox (change)="setTalkAboutMenu(entity)" *ngIf="type == 'prop' || type == 'class' || type == 'individual'" [(ngModel)]="entity.talkAboutMenu" color="primary" class="example-margin">TakeAboutMenu</mat-checkbox>
+                    </div>
+
+                </div>
+                <div class="flex w-64">
+                    <P class="bg-[#999999] rounded-lg text-white px-1 mx-2 h-5">{{entity._id}}</P>
+                    <p [ngClass]="{'text-white': currentIndex == i}" class="text-red-800 font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                </div>
+
+                <div class="justify-end ml-auto">
+                    <div>
+                        <button (click)="openCatogeryIdDialog(entity)" *ngIf="entity.categoryId == null  " matTooltip="Select Fact Category"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:tonality"></mat-icon> </button>
+                        <button (click)="openCatogeryIdDialog(entity)" *ngIf="entity.categoryId != null   " matTooltip="Select Fact Category"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-red-600" svgIcon="mat:tonality"></mat-icon> </button>
+                        <button *ngIf="entity.errorInStem == true" matTooltip="Error in Entity String"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-red-600" svgIcon="mat:error_outline"></mat-icon> </button>
+                        <button *ngIf="type=='action'" matTooltip="Show Related Frames" (click)="openRelatedFramesAndEligible(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:screen_share"></mat-icon> </button>
+                        <button *ngIf="type=='action'" matTooltip="Show Related Frames" (click)="openRelatedFrames(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:featured_video"></mat-icon> </button>
+                        <button *ngIf="type=='class'" matTooltip="Add Class Restrictions" (click)="openShowDeconstructClass(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:linear_scale"></mat-icon> </button>
+                        <button (click)="openShowEntityBehavior(entity)" matTooltip="Show Entities Behaviour"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:widgets"></mat-icon> </button>
+                        <button *ngIf="type=='action'" matTooltip="Edit Frame" (click)="editFrame(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:edit"></mat-icon> </button>
+                        <button *ngIf="type !=='prop'" matTooltip="Delete Entity" (click)="deleteEntity(entity._id)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
+                        <button *ngIf="entity?.children.length > 0" class="text-white text-xs font-semibold bg-orange-400 mx-1 px-1 rounded-lg  h-4"> <mat-icon class="" >Syn</mat-icon> </button>
+                        <button *ngIf="entity?.children.length < 1" class="text-white  mx-1 px-1 rounded-lg pt-1"> <mat-icon class="" ></mat-icon> </button>
+                    </div>
+                </div>
+            </div>
+        </cdk-virtual-scroll-viewport>
+
+
+
+    </div>
+    <div class="w-[45%] bg-white  rounded-sm px-2 py-2 overflow-auto">
+        <div *ngIf="currentIndex || currentIndex == 0 ">
+            <button (click)="openCreateEntity()" class="bg-slate-950 text-white flex items-center rounded-md hover:bg-orange-500 px-2 py-1"> <mat-icon class="" svgIcon="mat:add"></mat-icon> New</button>
+        </div>
+        <div class="h-12 w-full border bg-[#F7F7F7] mt-4 hover:bg-orange-500 flex items-center justify-between" *ngFor="let childEntity of childrenEntites">
+
+            <div class="flex w-64">
+                <P class="bg-[#999999] rounded-lg text-white px-1 mx-2">{{childEntity._id}}</P>
+                <p class="text-black hover:text-white font-semibold">{{childEntity?.entityInfo[0]?.entityText}}</p>
+            </div>
+            <div *ngIf="type=='gneratedFrames'">
+                <p class="bg-[#999999] rounded-lg text-white px-1 mx-2 font-medium">{{childEntity?.frame.GenReson}}</p>
+            </div>
+            <div>
+                <button (click)="deleteEntity(childEntity._id)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
+
+                <button *ngIf="type=='action' || type=='gneratedFrames'" (click)="editFrame(childEntity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:edit"></mat-icon> </button>
+                <button *ngIf="type=='action' || type=='gneratedFrames'" (click)="setArgumentMapping(childEntity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:view_day"></mat-icon> </button>
+            </div>
+
+        </div>
+    </div>
+</div>

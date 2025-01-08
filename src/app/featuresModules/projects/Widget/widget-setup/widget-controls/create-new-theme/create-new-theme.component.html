@@ -1,0 +1,26 @@
+<div class="w-96">
+    <div class="flex items-center justify-between my-2">
+        <h1 class="text-lg">Create Theme</h1>
+        <button mat-dialog-close>
+      <mat-icon svgIcon="mat:close" class="icon-xl text-slate-600"></mat-icon>
+    </button>
+    </div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="themeForm" (ngSubmit)="onSubmit()">
+        <div>
+            <mat-form-field class="w-full">
+                <mat-label>Theme Name</mat-label>
+                <input matInput formControlName="themeName" required />
+                <mat-error *ngIf="themeForm.controls.themeName.hasError('required')">Theme Name is required</mat-error>
+            </mat-form-field>
+        </div>
+        <mat-dialog-actions align="center" class="mt-3">
+            <button mat-button type="button" color="primary" class="text-white text-xs py-2 rounded-sm bg-slate-600" (click)="close()">
+        Close
+      </button>
+            <button color="primary" mat-flat-button class="text-white text-xs py-2 rounded-sm" color="primary">
+        {{ "add" | translate }}
+      </button>
+        </mat-dialog-actions>
+    </form>
+</div>

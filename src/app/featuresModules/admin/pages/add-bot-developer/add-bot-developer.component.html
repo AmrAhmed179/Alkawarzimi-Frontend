@@ -1,0 +1,54 @@
+<div class="bg-[#2F323B]">
+    <div class="m-6">
+        <div class="m-y pt-4">
+            <a href="" class="text-yellow-700 text-2xl tracking-wider hover:text-slate-100 hover:underline "><strong>CREATE NEW BOT DEVELOPER </strong></a>
+        </div>
+        <!-- <h1 class="text-2xl text-[#E77512] pt-6">CREATE NEW BOT DEVELOPER</h1> -->
+        <div class="bg-[#393C44] w-full  mt-8 pr-4 pl-16 border-b-orange-400 border-b-2 shadow-2xl ">
+            <h1 class="text-lg pt-6">Create New bot developer</h1>
+            <form class="flex flex-col gap-3 justify-between py-2" [formGroup]="form">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Name</mat-label>
+                    <input matInput Enmity="Name" formControlName="Name">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Email</mat-label>
+                    <input matInput Enmity="Email" formControlName="Email">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Phone Number</mat-label>
+                    <input matInput Enmity="PhoneNumber" formControlName="PhoneNumber">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Password</mat-label>
+                    <input matInput Enmity="Password" formControlName="Password">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Confirm password</mat-label>
+                    <input matInput Enmity="Confirmpassword" formControlName="Confirmpassword">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Role (select one):</mat-label>
+                    <mat-select Enmity="Role (select one):" formControlName="Role">
+                        <mat-option value="Admin">Admin</mat-option>
+                        <mat-option value="User">User</mat-option>
+                        <mat-option value="Analyst">Analyst</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+            <div class="flex justify-end gap-3">
+                <div>
+                    <button mat-raised-button color="primary" (click)="addBotDeveloper()">Save</button>
+                </div>
+                <div>
+                    <button mat-raised-button color="warn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

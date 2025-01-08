@@ -1,0 +1,53 @@
+<div>
+    <ng-container>
+        <mat-dialog-content class="">
+            <div>
+                <div class="bg-[#F9A154] w-full">
+                    <p class="flex justify-center text-white text-xl font-semibold">Frame</p>
+                </div>
+                <div dir="rtl" class="hover:bg-slate-100" *ngFor="let item of relatedFrames">
+                    <div *ngIf="item.eligibleRelation == false">
+                        <div class="grid grid-cols-7 w-[1000px] justify-center items-center p-2">
+                            <p class="">{{item.stem}}</p>
+                            <p><span class="bg-[#5BC0DE] text-white font-semibold py-1 px-2">{{item.svl?.name}}</span></p>
+                            <p><span class="bg-[#999999] text-white py-1 px-2">{{item.features.name}}</span> </p>
+                            <p>{{item.sbj}}</p>
+                            <p>{{item.obj}}</p>
+                            <p>{{item.cmp}}</p>
+
+                        </div>
+                        <mat-divider class="bg-[#A1EAE9]"></mat-divider>
+                    </div>
+                </div>
+
+                <div class="bg-[#F9A154] w-full">
+                    <p class="flex justify-center text-white text-xl font-semibold">Eligible Frame</p>
+                </div>
+                <div dir="rtl" class="hover:bg-slate-100" *ngFor="let item of relatedFrames">
+                    <div *ngIf="item.eligibleRelation == true">
+                        <div class="grid grid-cols-7 w-[1000px] justify-center items-center p-2">
+                            <p class="">{{item.stem}}</p>
+                            <p><span class="bg-[#5BC0DE] text-white font-semibold py-1 px-2">{{item.svl?.name}}</span></p>
+                            <p><span class="bg-[#999999] text-white py-1 px-2">{{item.features.name}}</span> </p>
+                            <p>{{item.sbj}}</p>
+                            <p>{{item.obj}}</p>
+                            <p>{{item.cmp}}</p>
+
+                        </div>
+                        <mat-divider class="bg-[#A1EAE9]"></mat-divider>
+                    </div>
+                </div>
+
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <!-- <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+            </div>
+        </mat-dialog-actions> -->
+    </ng-container>
+</div>

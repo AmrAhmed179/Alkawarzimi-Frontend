@@ -1,0 +1,130 @@
+.content {
+    height: calc(100vh - 130px - 60px);
+}
+
+// Full view grid
+.parent {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    /* grid-column-gap: 1rem; */
+    /* grid-row-gap: 1rem; */
+}
+
+.div1 {
+    grid-area: 1 / 3 / 4 / 6;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+
+}
+
+
+.div2 {
+    grid-area: 4 / 3 / 6 / 6;
+}
+
+.div3 {
+    grid-area: 1 / 1 / 6 / 3;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+.table-container {
+    //height: 40.5rem;
+    width: 100%;
+
+}
+
+.table-container table {
+    width: 100%;
+    /* Take full width */
+    height: 100%;
+    /* Take full height */
+}
+
+// Left column grid
+
+
+.sub-parent {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.search {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.table-content {
+    grid-area: 2 / 1 / 8 / 2;
+}
+
+.info {
+    grid-area: 8 / 1 / 9 / 2;
+}
+
+
+.viewport {
+    height: 100%;
+    // width: 40.2rem;
+    width: 100%;
+}
+
+.item {
+    height: 50px;
+}
+
+// ::ng-deep .mat-form-field {
+//     .mat-input-element {
+//         //font-size: 15px !important;
+//     }
+// }
+
+.analysis-parent {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(8, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.analysis-div1 {
+    grid-area: 1 / 1 / 3 / 2;
+}
+
+.analysis-div2 {
+    grid-area: 3 / 1 / 9 / 2;
+}
+
+:root .mat-button,
+:root .mat-stroked-button,
+:root .mat-flat-button,
+:root .mat-raised-button {
+    border-radius: 0%;
+}
+
+
+.unique-stems-parent {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(8, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.unique-button {
+    grid-area: 1 / 1 / 2 / 2;
+    justify-self: end;
+    /* Aligns the button to the end (right side) */
+    align-self: end;
+}
+
+.unique-table {
+    grid-area: 2 / 1 / 9 / 2;
+}

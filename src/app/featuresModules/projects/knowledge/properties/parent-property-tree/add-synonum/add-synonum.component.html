@@ -1,0 +1,32 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Add Synonum </h1>
+
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="w-[700px] ">
+            <div class="">
+                <mat-form-field appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
+                    <mat-label>Serach...</mat-label>
+                    <input cdkFocusInitial matInput [(ngModel)]="synonum">
+                </mat-form-field>
+            </div>
+
+
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="addSyn()"> Add</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

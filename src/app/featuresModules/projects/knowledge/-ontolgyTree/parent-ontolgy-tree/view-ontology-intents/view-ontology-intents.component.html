@@ -1,0 +1,63 @@
+<div class="mt-2 flex bg-[#f8f6f6] w-full">
+    <div class="flex justify-between w-full ">
+        <div>
+            <button (click)="activeTap = 'AllGeneratedIntents'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'AllGeneratedIntents'}">All Generated Intents</button>
+            <button (click)="activeTap = 'ClassGeneratedIntents'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'ClassGeneratedIntents'}">Class Generated Intents</button>
+            <button (click)="activeTap = 'PropertyGeneratedIntents'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'PropertyGeneratedIntents'}">Property Generated Intents</button>
+            <button (click)="activeTap = 'VerbGeneratedIntents'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'VerbGeneratedIntents'}">Verb Generated Intents</button>
+            <button (click)="activeTap = 'Property+VerbGeneratedIntents'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'Property+VerbGeneratedIntents'}">Property + Verb Generated Intents</button>
+        </div>
+        <div class="self-end mr-6">
+            <button class="flex items-center bg-[#1F2F3C] text-white px-2 py-1  rounded-lg hover:bg-[#EB8731] " [matMenuTriggerFor]="menu">Export Facts
+        <mat-icon svgIcon="mat:keyboard_arrow_down"></mat-icon>
+    </button>
+            <mat-menu #menu="matMenu">
+                <button (click)="factsAsHTML()" mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML
+        </button>
+                <button (click)="errorHTML()" mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML Table
+        </button>
+                <button (click)="factsAsTable()" mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon>  Error In Facts Responses
+        </button>
+            </mat-menu>
+        </div>
+    </div>
+
+
+</div>
+<div class="m-6 tableHeight py-1">
+    <mat-paginator #paginator class="demo-paginator" [showFirstLastButtons]="true" [length]="totalitems" [pageSize]="10" aria-label="Select page">
+    </mat-paginator>
+    <table mat-table [dataSource]="dataSource" class="">
+        <ng-container matColumnDef="position">
+            <td mat-cell *matCellDef="let element">
+                <div class="my-2">
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <p class="text-base text-[#3F3F3F] font-medium">{{element.body}}</p>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="bg-[#F7F7F7] border p-2">
+                                <p class="text-[#c28439] text-base">Answer</p>
+                                <div class="bg-white p-2 h-14">
+                                    <p class="text-[#3F3F3F] text-base">{{element.pattern[0].answer}}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-[#F7F7F7] border p-2">
+                                <p class="text-[#c28438] text-base">Question Patterns:{{element.pattern[0].patternId}}</p>
+                            </div>
+
+                            <div class="bg-[#F7F7F7] border p-2">
+                                <p class="text-[#c28438] text-base">Annotationss</p>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</div>

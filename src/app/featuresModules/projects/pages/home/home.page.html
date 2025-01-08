@@ -1,0 +1,85 @@
+<div class="py-3 px-10 h-14 flex gap-4 justify-between bg-slate-200">
+    <div class="flex justify-between border-r-2 gap-80 px-2">
+        <div>
+            <h1 class="text-xl">Tasks</h1>
+        </div>
+        <div><button mat-raised-button color="primary">CREATE TASK</button></div>
+    </div>
+
+    <div class="flex gap-5">
+        <div>
+            <button mat-raised-button color="basic">NLU Train</button>
+        </div>
+        <div>
+            <a href="">
+                <mat-icon class="text-orange-500 pt-1" svgIcon="mat:textsms" matTooltip="textsms"></mat-icon>
+            </a>
+        </div>
+        <div>
+            <a href="">
+                <mat-icon class="text-orange-500 pt-1" svgIcon="mat:help" matTooltip="help"></mat-icon>
+            </a>
+        </div>
+
+        <div>
+            <a href="">
+                <mat-icon class="text-orange-500 pt-1" svgIcon="mat:perm_identity" matTooltip="help"></mat-icon>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="h-14 py-3 bg-slate-50 flex justify-between px-8">
+
+    <div class="flex justify-between gap-4">
+        <div>
+            <button mat-raised-button class="text-orange-500 bg-slate-200  focus:bg-orange-500 focus:text-slate-200">Developers-Flow</button>
+        </div>
+        <div>
+            <button mat-raised-button class="text-orange-500 bg-slate-200  focus:bg-orange-500 focus:text-slate-200">Personalize</button>
+        </div>
+        <div>
+            <button mat-raised-button class="text-orange-500 bg-slate-200  focus:bg-orange-500 focus:text-slate-200">Small Talk</button>
+        </div>
+    </div>
+
+    <div class="flex justify-between gap-4">
+        <div>
+            <button mat-raised-button class="bg-slate-700 text-slate-200">Add Pre-Build Bot</button>
+        </div>
+        <div>
+            <button mat-raised-button class="bg-slate-700 text-slate-200" [matMenuTriggerFor]="menu1">Export Tasks <mat-icon svgIcon="mat:chevron_right" matTooltip="textsms"></mat-icon></button>
+            <mat-menu #menu1="matMenu">
+                <button mat-menu-item><mat-icon class="text-slate-700" svgIcon="mat:archive" matTooltip="textsms"></mat-icon> As HTML</button>
+                <button mat-menu-item><mat-icon class="text-slate-700" svgIcon="mat:archive" ></mat-icon> As HTML Table</button>
+            </mat-menu>
+        </div>
+    </div>
+</div>
+
+
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+    <div class="flex justify-between">
+        <div>
+            <a mat-tab-link [routerLink]="['./task']" routerlinkactive="li-active">Events</a>
+            <a mat-tab-link [routerLink]="['./task']" routerlinkactive="li-active">Flow Tasks</a>
+            <a mat-tab-link routerlink="" routerlinkactive="li-active">Knowledge Tasks</a>
+            <a mat-tab-link routerlink="" routerlinkactive="li-active">Ad Tasks</a>
+        </div>
+
+        <div class="flex justify-end items-center gap-4">
+            <div><button mat-raised-button class=" bg-blue-700 text-slate-200">Filter</button></div>
+            <div><button mat-raised-button class=" bg-orange-500">APPLAYFilter</button></div>
+            <div class="bg-foreground rounded-full border px-4 max-w-[200px] flex-auto flex items-center border border-gray-300">
+                <input class="px-4  border-0 outline-none w-full bg-transparent" placeholder="Search..." type="search">
+                <button mat-icon-button><mat-icon svgIcon="mat:search" matTooltip="Search"></mat-icon></button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class=" card overflow-auto  mx-10 ">
+    <mat-tab-nav-panel #tabPanel>
+        <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
+</div>

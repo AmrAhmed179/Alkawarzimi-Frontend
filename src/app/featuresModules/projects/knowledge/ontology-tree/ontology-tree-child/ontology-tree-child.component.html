@@ -1,0 +1,182 @@
+<button mat-flat-button (click)="getDataProperty()">get DP</button>
+
+<div class="content overflow-hidden ">
+    <div class="parent h-full p-4 ">
+        <div class="div1 card p-4">
+            <vex-ontology-tree-structure></vex-ontology-tree-structure>
+        </div>
+
+        <div class="div2 card p-4">
+            <div class="flex  items-center justify-center w-full ">
+                <span class="capitalize tracking-wide text-lg text-orange-500 font-semibold">description</span>
+            </div>
+            <div class="flex  items-center justify-center w-full ">
+                <span class="text-[16px] font-medium">{{selectedVerbDetails?.description}}</span>
+            </div>
+
+        </div>
+
+        <mat-accordion class="div3 w-full p-0">
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="flex items-center justify-center w-full">
+                            <span class="capitalize tracking-wide text-lg text-orange-500 font-semibold">Synonyms</span>
+                        </div>
+
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="standard" class="w-full">
+                    <input matInput [(ngModel)]="formattedValue" placeholder="Synonyms" class="text-[16px] font-medium"
+                        type="text">
+                </mat-form-field>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <ng-container *ngIf="selectionType =='action'">
+            <div class="div4 card p-4">
+                <div class="flex  items-center justify-center w-full ">
+                    <span class="capitalize tracking-wide text-lg text-orange-500 font-semibold">Properties
+                    </span>
+                </div>
+                <div class="flex  items-center justify-center w-full">
+                    <mat-form-field appearance="standard" class="w-full">
+                        <input matInput formControlName="description" placeholder="Data Properties" type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="facts card p-4">
+                <div class="flex gap-5 items-baseline px-8 mb-0">
+                    <h1 class="capitalize tracking-wide text-base text-orange-500 font-semibold ">Facts</h1>
+                    <mat-form-field appearance="standard" class="w-9/12">
+                        <input matInput formControlName="description" [formControl]="searchControl"
+                            placeholder="Description" type="text">
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" class="rounded-sm">Add Object</button>
+                </div>
+                <div class="w-full">
+                    <mat-list role="list" class=" w-full overflow-y-auto max-h-[300px] min-h-[300px]">
+                        <mat-list-item *ngFor="let entity of filteredEntities ; let i = index" role="listitem"
+                            class="border-b" [ngClass]="{'hover:bg-[#ffedd5]': hoveredIndex === i}"
+                            (mouseenter)="hoveredIndex = i" (mouseleave)="hoveredIndex = null">
+                            <div class="flex items-center justify-between w-full">
+
+                                <!-- Buttons -->
+                                <div class="flex items-center gap-2 justify-start">
+
+                                    <!-- Button 1  -->
+                                    <button mat-icon-button aria-label="icon" matTooltip="Frame Properties">
+                                        <mat-icon svgIcon="mat:edit" class="hover:text-orange-500"></mat-icon>
+                                    </button>
+
+                                    <!-- Button 2 -->
+                                    <button mat-icon-button aria-label="icon" matTooltip="Show Frame Properties">
+                                        <mat-icon svgIcon="mat:layers" class="hover:text-orange-500"></mat-icon>
+                                    </button>
+
+                                    <!-- Button 3 -->
+                                    <button mat-icon-button aria-label="icon" matTooltip="Set Implied">
+                                        <mat-icon svgIcon="mat:offline_bolt" class="hover:text-orange-500"></mat-icon>
+                                    </button>
+
+                                    <!-- Button 4 -->
+                                    <button mat-icon-button aria-label="icon" matTooltip="Show Frame Synonyms">
+                                        <mat-icon svgIcon="mat:strikethrough_s"
+                                            class="hover:text-orange-500 shadow-[rgba(255, 147, 54,_0.1)_0px_9px_30px]"></mat-icon>
+                                    </button>
+
+                                </div>
+
+                                <!-- Text -->
+                                <div class="flex items-center gap-2 justify-start">
+                                    <span class="text-[16px] font-medium" style="direction: rtl;">{{
+                                        entity.entityInfo[0].entityText }}</span>
+                                </div>
+
+                            </div>
+                        </mat-list-item>
+                    </mat-list>
+
+
+
+                </div>
+                <h1 class="mt-2 p-1  text-green-900 text-center capitalize text-base tracking-sm">
+                    Facts Count : <b>{{matchingEntities?.length}}</b>
+                </h1>
+            </div>
+
+        </ng-container>
+
+        <ng-container *ngIf="selectionType !='action'">
+            <div class="div4 card p-4">
+                <div class="flex  items-center justify-center w-full ">
+                    <span class="capitalize tracking-wide text-lg text-orange-500 font-semibold">Data Properties
+                    </span>
+                </div>
+                <div class="flex  items-center justify-center w-full">
+                    <mat-form-field appearance="standard" class="w-full">
+                        <input matInput formControlName="description" placeholder="Data Properties" type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="div5   ">
+                <div class=" flex items-center   h-full w-full">
+                    <div class="flex items-baseline justify-around w-full">
+
+                        <!-- Radio buttons to toggle between class types -->
+                        <div class="flex justify-stretch items-center mt-5 gap-3 font-medium">
+                            <mat-checkbox class="mr-2 text-[16px]" (change)="null">Amb</mat-checkbox>
+                            <mat-checkbox class="mr-2 text-[16px]"
+                                (change)="setExtensionClass()">Extension</mat-checkbox>
+                            <mat-checkbox class="mr-2 text-[16px]" (change)="setArtificialParent()">
+                                Artificial Parent</mat-checkbox>
+
+                        </div>
+
+                        <div>
+                            <button mat-flat-button color="primary" class="rounded-sm">
+                                <span class="flex gap-1">New Fact</span>
+                                <mat-icon svgIcon="mat:add" matSuffix></mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="div6 card">
+                <div class="individuals gap-5 p-4">
+                    <div class="individuals-text items-end ">
+                        <div class="flex gap-5 items-baseline justify-between px-8 mb-0">
+                            <h1 class="capitalize tracking-wide text-base text-orange-500 font-semibold ">Individuals
+                            </h1>
+
+                            <button mat-flat-button color="primary" class="rounded-sm">Add Individual</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="div7 card ">
+                <div class="individuals gap-5">
+                    <div class="individuals-text items-end ">
+                        <div class="flex gap-5 items-baseline px-8 mb-0">
+                            <h1 class="capitalize tracking-wide text-base text-orange-500 font-semibold">Objects</h1>
+                            <mat-form-field appearance="standard" class="w-9/12">
+                                <input matInput formControlName="description" placeholder="Description" type="text">
+                            </mat-form-field>
+                            <button mat-flat-button color="primary" class="rounded-sm">Add Object</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </ng-container>
+
+
+    </div>
+</div>

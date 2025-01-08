@@ -1,0 +1,39 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Related Frame</h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="">
+            <div class="w-[1000px] flex gap-4 h-[500px] mb-2" dir="rtl">
+                <div class="mb-1">
+                    <div *ngFor="let frame of relatedFrames">
+                        <button class="border bg-[#F6F6F6] text-lg font-medium w-32 hover:bg-[#fff9f9]" (click)="showFrameDetalis(frame)">{{frame.stem}} <span class="text-[#468EB2]">{{'('}} {{frame.type}} {{')'}}</span> </button>
+                    </div>
+                </div>
+                <div *ngIf="showFrameDetalisFlage" class="mx-4 mb-2 h-[500px] overflow-auto">
+                    <p class="text-base font-medium  ">{{senceFrame}}</p>
+                    <div class="grid grid-cols-6 border gap-4 px-1 h-[45px] bg-[#F6F6F6]   hover:bg-[#fff9f9] " *ngFor="let frameDeltail of relatedFramesDetalis">
+                        <p class="text-base font-medium col-span-2">{{frameDeltail.text}}</p>
+                        <p class="text-base font-medium col-span-2">{{frameDeltail.parentText}}</p>
+                        <p class="text-base font-medium"> {{'('}}{{frameDeltail?.features?.name}}{{')'}}</p>
+                        <p class="text-base font-medium">{{frameDeltail.chatbotId}} {{'-'}} {{frameDeltail.chatbotName}}</p>
+                    </div>
+                </div>
+                <p *ngIf="showFrameDetalisFlage" class="text-white rounded-full bg-[#047CC0] h-5 w-8 px-1"> <span>{{relatedFramesDetalis.length}}</span></p>
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <!-- <mat-dialog-actions align="end">
+          <div class="flex flex-row items-center gap-2 mb-3">
+              <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+          </div>
+      </mat-dialog-actions> -->
+    </ng-container>
+</div>

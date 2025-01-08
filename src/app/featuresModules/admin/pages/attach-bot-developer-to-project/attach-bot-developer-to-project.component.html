@@ -1,0 +1,68 @@
+<div class="bg-[#2F323B] ">
+    <div class="m-6">
+        <div class="m-y pt-4">
+            <a href="" class="text-yellow-700 text-2xl tracking-wider hover:text-slate-100 hover:underline "><strong>ATTACHE BOT-DEVELOPER TO PROJECT</strong></a>
+        </div>
+        <!-- <h1 class="text-2xl text-[#E77512] pt-6">ATTACHE BOT-DEVELOPER TO PROJECT</h1> -->
+        <div class="bg-[#393C44] w-full  mt-8 pr-4 pl-16 border-b-orange-400 border-b-2 shadow-2xl ">
+            <h1 class="text-lg pt-6">Attache Bot-Developer To Project</h1>
+            <form [formGroup]="form">
+                <div class="flex flex-col gap-3 justify-between py-2">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Projects:</mat-label>
+                        <mat-select formControlName="Projects">
+                            <mat-option *ngFor="let project of projects" value="{{project._id}}">{{project.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="flex-auto">
+                        <mat-label>Users:</mat-label>
+                        <mat-select formControlName="Users">
+                            <mat-option *ngFor="let user of users" value="{{user.Id}}">{{user.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+
+            <div class="flex justify-end gap-3">
+                <div>
+                    <button mat-raised-button color="primary" (click)="addUserToProject()">AddUser</button>
+                </div>
+            </div>
+
+            <div class="my-5">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="Username">
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let element">
+                        </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="Email">
+                        <th mat-header-cell *matHeaderCellDef>Email</th>
+                        <td mat-cell *matCellDef="let element">
+                        </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="PhoneNumber">
+                        <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+                        <td mat-cell *matCellDef="let element">
+                        </td>
+                    </ng-container>
+
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="Actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

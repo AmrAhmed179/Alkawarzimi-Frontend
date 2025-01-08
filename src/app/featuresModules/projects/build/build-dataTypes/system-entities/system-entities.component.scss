@@ -1,0 +1,51 @@
+.cont{
+    min-height: 24px;
+    max-height: 44rem;
+  }
+  
+  .mat-mdc-form-field {
+    font-size: 14px; 
+  }
+  
+  
+  th.mat-header-cell{
+    line-height: 26px;
+    border-bottom: 1px solid #d8d8d8;
+    background-color: #f7f7f7;
+    padding: 8px 64px;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.2);
+    position: relative;
+    color: black;
+    text-align: center;
+  }
+  
+
+  .mat-row{
+    text-align: center;
+  }
+
+  .mat-column-description {
+    text-align: left;
+    font-size: 1em;
+    font-weight: bold;
+  }  
+  .mat-column-name {
+    font-size: 1em;
+  }
+  .spanEllipsied{
+    display: inline-block;
+    width: 75rem;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+  }
+
+  .multiline-ellipsis {
+    width:50rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* start showing ellipsis when 3rd line is reached */
+    white-space: pre-wrap; /* let the text wrap preserving spaces */
+  }
+

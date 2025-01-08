@@ -1,0 +1,85 @@
+.mat-row:nth-child(odd) {
+    background-color: #F5F5F8;
+}
+
+.mat-row:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+.cont {
+    min-height: 24px;
+    max-height: 29rem;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+}
+
+.mode {
+    color: red;
+}
+
+.btn {
+    width: 10rem;
+    height: 2.5rem;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+
+    box-sizing: border-box;
+
+    font-size: 16px;
+
+    background-color: #fff;
+
+    color: #333;
+
+    font-family: Roboto, sans-serif;
+
+
+    &:focus {
+        outline: none;
+        /* Remove default outline */
+        border-color: #007bff3a;
+        /* Focus border color */
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        /* Focus shadow */
+    }
+}
+
+// other styles
+
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+}
+
+::ng-deep .mat-form-field {
+    .mat-input-element {
+      font-size: 17px !important;
+    }
+  
+    // .mat-form-field-label {
+    //   color: green;
+    // }
+  
+    // .mat-form-field-underline {
+    //   background-color: blue;
+    // }
+  
+    // .mat-form-field-ripple {
+    //   background-color: violet;
+    // }
+  
+    // .mat-form-field-required-marker {
+    //   color: yellow;
+    // }
+  }

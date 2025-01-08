@@ -1,0 +1,43 @@
+:host {
+    background: var(--toolbar-background);
+    box-sizing: border-box;
+    color: var(--toolbar-color);
+    display: block;
+    white-space: nowrap;
+    width: 100%;
+    z-index: var(--toolbar-z-index);
+}
+
+.toolbar {
+    height: var(--toolbar-height);
+}
+
+a {
+    color: var(--toolbar-color);
+    text-decoration: none;
+}
+
+// ToolTip
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 90px;
+    color: black;
+    border-radius: 6px;
+    padding: 4px 0;
+    border-color: black;
+    font-size: 12px;
+    background-color: #f2f2f2;
+    /* Position the tooltip */
+    position: absolute;
+    top: 20px;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

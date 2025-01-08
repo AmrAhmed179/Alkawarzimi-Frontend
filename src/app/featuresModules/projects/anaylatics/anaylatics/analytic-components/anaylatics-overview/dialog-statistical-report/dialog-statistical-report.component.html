@@ -1,0 +1,20 @@
+<div mat-dialog-title class="text-center bg-orange-500 h-14 ">
+    <h1 class="text-2xl text-slate-50 pt-3" *ngIf="data.type ==='statisticalReport'">Statistical Report</h1>
+    <h1 class="text-2xl text-slate-50 pt-3" *ngIf="data.type ==='coversationReport'">Conversations Report</h1>
+</div>
+
+<mat-dialog-content>
+
+    <div [innerHTML]="stasticalReport">
+
+    </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+    <div class="mt-10">
+        <button mat-button mat-dialog-close class="rounded-sm">Close</button>
+        <button mat-button (click)="save()" class="rounded-sm">download</button>
+    </div>
+
+</mat-dialog-actions>

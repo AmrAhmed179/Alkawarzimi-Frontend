@@ -1,0 +1,163 @@
+<div class="overflow-auto">
+    <div class="bg-app-bar px-6 border-b sticky left-0 flex h-16 items-center gap-5">
+        <div class="flex justify-start items-center w-full">
+            <div>
+                <h2 class="title my-0 pr-4 mr-4 border-r hidden sm:block flex-none">
+                    @{{eName}}
+                </h2>
+            </div>
+            <div>
+                <button mat-button class="mat-button text-white pr-4 mr-4 border-r bg-primary"
+                    (click)="saveEntity()">Save</button>
+                <button mat-button class="mat-button text-white bg-warn" (click)="navigateBack()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pt-4 px-10 pb-4 ">
+    <form [formGroup]="entityForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="form">
+            <mat-form-field  appearance="standard" class="w-full">
+                <!-- <mat-label>Entity Name</mat-label> -->
+                <input formControlName="entityName" placeholder="Entity Name" matInput>
+                <mat-error>* name can not be empty. </mat-error>
+            </mat-form-field>
+        </form>
+
+        <div formArrayName="values">
+            <div *ngFor="let valueGroup of valuesFormArray.controls; let i = index" [formGroupName]="i"
+                class="flex flex-col mb-4">
+                <div class="flex flex-row gap-6">
+                    <div class="w-48">
+                        <mat-form-field   appearance="standard">
+                            <!-- <mat-label>Key</mat-label> -->
+                            <input matInput placeholder="Key" formControlName="value">
+                            <mat-error>* Key can not be empty. </mat-error>
+
+                        </mat-form-field>
+                    </div>
+
+                    <div formArrayName="synonyms" class="flex flex-row gap-3 flex-wrap">
+                        <div *ngFor="let synonymControl of getSynonyms(valueGroup).controls; let j = index"
+                            [formGroupName]="j" class="flex flex-row gap-2 flex-wrap items-baseline justify-center">
+                            <mat-form-field   appearance="standard">
+                                <!-- <mat-label>Value</mat-label> -->
+                                <input matInput formControlName="value" placeholder="Value" class="w-full">
+                                <mat-error>* Value can not be empty. </mat-error>
+                            </mat-form-field>
+
+                            <div class="flex">
+                                <button mat-icon-button color="primary" (click)="removeSynonym(i, j)"
+                                    *ngIf="getSynonyms(valueGroup).controls.length > 1">
+                                    <mat-icon svgIcon="mat:delete" matTooltip="Delete Value"></mat-icon>
+                                </button>
+
+                                <button mat-icon-button color="primary" (click)="addSynonym(i)"
+                                    [disabled]="isAddSynonymDisabled(i)"
+                                    *ngIf="j === getSynonyms(valueGroup).controls.length - 1">
+                                    <mat-icon svgIcon="mat:add" matTooltip="Add Value"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <button [disabled]="!entityForm.valid" mat-button type="submit" class="mat-button text-white bg-primary">
+            Add Value
+        </button>
+
+    </form>
+</div>
+
+<div class="overflow-auto flex items-center justify-center">
+    <div class="cont flex-auto flex overflow-auto">
+        <table mat-table [dataSource]="dataSource" class="w-full">
+            <!-- Values Column -->
+            <ng-container matColumnDef="Values">
+                <th mat-header-cell *matHeaderCellDef> Values </th>
+                <td mat-cell *matCellDef="let element" class="text-base w-3/5" (click)="onRowClick(element)">
+                    <ng-container *ngIf="!isEditing(element); else editMode" class="flex gap-2 items-baseline">
+                        <span *ngFor="let synonym of element.synonymsInfo; let i = index"
+                            (click)="startEditing(element)">
+                            {{ synonym.value }}
+                            <button color="primary" mat-icon-button (click)="shiftToFirst($event, element, i)">
+                                <mat-icon svgIcon="mat:repeat" matTooltip="Shift to First"></mat-icon>
+                            </button>
+                            <span *ngIf="i < element.synonymsInfo.length - 1">,</span>
+                            <!-- <button color="primary" mat-icon-button (click)="shiftToFirst(element, i)"
+                                >
+                                <mat-icon svgIcon="mat:swap_horiz" matTooltip="Shift to First"></mat-icon>
+                            </button> -->
+                        </span>
+                    </ng-container>
+                    <ng-template #editMode>
+                        <div class="flex justify-content-center flex-wrap gap-1 py-1">
+                            <div *ngFor="let synonym of element.synonymsInfo; let i = index">
+                                <input class="btn" matInput [(ngModel)]="element.synonymsInfo[i].editedValue" />
+
+                                <button color="primary" mat-icon-button (click)="removeSynonymFromTable(element, i)">
+                                    <mat-icon svgIcon="mat:delete" matTooltip="Delete Value"></mat-icon>
+                                </button>
+
+                                <button color="primary" *ngIf="i === element.synonymsInfo.length - 1" mat-icon-button
+                                    (click)="addNewValue(element)">
+                                    <mat-icon svgIcon="mat:add" matTooltip="Add Value"></mat-icon>
+                                </button>
+                            </div>
+
+                            <!-- <button color="primary" mat-icon-button>
+                                <mat-icon svgIcon="mat:done" matTooltip="Save Changes"></mat-icon>
+                            </button> -->
+                        </div>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Keys Column -->
+            <ng-container matColumnDef="Keys">
+                <th mat-header-cell *matHeaderCellDef> Keys ({{dataSource?.filteredData?.length||0}}) </th>
+                <td mat-cell *matCellDef="let element" class="text-base w-1/6">
+                    <ng-container *ngIf="!isEditing(element); else keysEditMode" class="flex gap-2 items-baseline">
+                        {{ element.value }}
+                    </ng-container>
+                    <ng-template #keysEditMode>
+                        <div class="flex justify-content-center flex-wrap gap-1 py-1">
+                            <input class="btn" matInput [(ngModel)]="element.value" />
+                        </div>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Save button in the row -->
+            <ng-container matColumnDef="Save">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-base w-1/12">
+                    <!-- <button mat-icon-button (click)="saveEditedValues(element)">
+                        <mat-icon svgIcon="mat:done" matTooltip="Done"></mat-icon>
+                    </button> -->
+                </td>
+            </ng-container>
+
+            <!-- Delete button in the row -->
+            <ng-container matColumnDef="Delete">
+                <th mat-header-cell *matHeaderCellDef> Delete</th>
+                <td mat-cell *matCellDef="let element" class="text-base w-1/12">
+                    <button mat-icon-button color="primary" (click)="deleteRow(element)">
+                        <mat-icon svgIcon="mat:delete" matTooltip="Delete Service"></mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+            </tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No Data Available</td>
+            </tr>
+        </table>
+    </div>
+</div>

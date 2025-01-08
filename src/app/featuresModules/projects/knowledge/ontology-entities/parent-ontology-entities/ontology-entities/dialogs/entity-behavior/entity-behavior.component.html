@@ -1,0 +1,125 @@
+<div *ngIf="showData">
+    <ng-container>
+        <mat-dialog-content class="w-[1000px] h-[500px] ">
+            <mat-tab-group>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon svgIcon="mat:equalizer"></mat-icon>
+                        Reports
+                    </ng-template>
+                    <div class="flex justify-between mt-2">
+                        <div>
+                            <div class="text-center -mb-[52px]">
+                                <mat-icon class="icon-4xl border-[3px] rounded-sm border-white p-1 bg-slate-900 text-white" svgIcon="mat:local_florist"></mat-icon>
+                                <p class="text-white font-semibold text-xl">Ontology Tree</p>
+                            </div>
+                            <div class="h-[54px] w-[250px] bg-[#FFB748] rounded-t-sm"></div>
+                            <div class="h-[54px] w-[250px] bg-[#F7F7F9] rounded-b-sm flex gap-1 items-center">
+                                <mat-icon *ngIf="onTree" class="icon-3xl text-green-500" svgIcon="mat:done"></mat-icon>
+                                <mat-icon *ngIf="!onTree" class="icon-3xl text-red-500" svgIcon="mat:close"></mat-icon>
+                                <p class="text-lg font-medium">Used</p>
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <div class="text-center -mb-[52px]">
+                                <mat-icon class="icon-4xl border-[3px] rounded-sm border-white p-1 bg-slate-900 text-white" svgIcon="mat:slideshow"></mat-icon>
+                                <p class="text-white font-semibold text-xl">Frame</p>
+
+                            </div>
+                            <div class="h-[54px] w-[400px] bg-[#F9A154] rounded-t-sm"></div>
+                            <div class="overflow-auto h-[350px]">
+                                <div *ngFor="let ob of obj" class="hover:bg-[#F7F7F9] h-[50px] ">
+                                    <div dir="rtl" class="h-[40px] w-[400px] bg-[#F7F7F9] rounded-b-sm grid grid-cols-7 content-center pt-2 px-2 gap-1 mt-2">
+                                        <p class="col-span-4">{{ob.text}}</p>
+                                        <p><span class="text-white bg-[#999999] p-1 rounded-sm ">{{ob.id}}</span> </p>
+                                        <p><span class="text-white bg-[#999999] p-1 rounded-sm ">obj</span></p>
+                                        <mat-icon *ngIf="onTree" class="icon-xl text-green-500" svgIcon="mat:done"></mat-icon>
+                                    </div>
+                                    <mat-divider class="mt-2 bg-[#A1EAE9]"></mat-divider>
+                                </div>
+
+                                <div *ngFor="let sb of sbj" class="hover:bg-[#F7F7F9] h-[50px] ">
+                                    <div dir="rtl" class="h-[40px] w-[400px] bg-[#F7F7F9] rounded-b-sm grid grid-cols-7 content-center pt-2 px-2 gap-1 mt-2">
+                                        <p class="col-span-4">{{sb.text}}</p>
+                                        <p><span class="text-white bg-[#999999] p-1 rounded-sm ">{{sb.id}}</span> </p>
+                                        <p><span class="text-white bg-[#5CB85C] p-1 rounded-sm ">sbj</span></p>
+                                        <mat-icon *ngIf="onTree" class="icon-xl text-green-500" svgIcon="mat:done"></mat-icon>
+                                    </div>
+                                    <mat-divider class="mt-2 bg-[#A1EAE9]"></mat-divider>
+                                </div>
+
+                                <div *ngFor="let cm of cmp" class="hover:bg-[#F7F7F9] h-[50px] ">
+                                    <div dir="rtl" class="h-[40px] w-[400px] bg-[#F7F7F9] rounded-b-sm grid grid-cols-7 content-center pt-2 px-2 gap-1 mt-2">
+                                        <p class="col-span-4">{{cm.text}}</p>
+                                        <p><span class="text-white bg-[#999999] p-1 rounded-sm ">{{cm.id}}</span> </p>
+                                        <p><span class="text-white bg-[#5BC0DE] p-1 rounded-sm ">cmp</span></p>
+                                        <mat-icon *ngIf="onTree" class="icon-xl text-green-500" svgIcon="mat:done"></mat-icon>
+                                    </div>
+                                    <mat-divider class="mt-2 bg-[#A1EAE9]"></mat-divider>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div>
+                            <div class="text-center -mb-[52px]">
+                                <mat-icon class="icon-4xl border-[3px] rounded-sm border-white p-1 bg-slate-900 text-white" svgIcon="mat:schedule"></mat-icon>
+                                <p class="text-white font-semibold text-xl">Data Properties</p>
+
+                            </div>
+                            <div class="h-[54px] w-[250px] bg-[#F87152] rounded-t-sm"></div>
+                            <div class="h-[54px] w-[250px] bg-[#F7F7F9] rounded-b-sm flex gap-1 items-center">
+                                <mat-icon *ngIf="dataProperty" class="icon-3xl text-green-500" svgIcon="mat:done"></mat-icon>
+                                <mat-icon *ngIf="!dataProperty" class="icon-3xl text-red-500" svgIcon="mat:close"></mat-icon>
+                                <p class="text-lg font-medium">Used</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <mat-icon svgIcon="mat:brightness_low"></mat-icon>
+                        Replace Entity
+                    </ng-template>
+
+                    <div class="h-[350px]">
+                        <form [formGroup]="form" class="my-2 w-full">
+                            <mat-form-field appearance="fill" class="h-10 w-full text-[9.5px]">
+                                <mat-label>Serach...</mat-label>
+                                <input cdkFocusInitial matInput formControlName="search" (keyup)="formChang()">
+                            </mat-form-field>
+                        </form>
+
+
+                        <div dir="rtl" class="h-[300px] overflow-auto">
+                            <div [ngClass]="{'bg-slate-200': currentIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(entity, i)" *ngFor="let entity of ontologyEntities; let i =index">
+
+                                <div class="flex justify-between w-full px-3 items-center">
+                                    <p class="w-full font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                                    <div class="flex gap-2 items-center">
+                                        <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{entity._id}}</P>
+                                        <mat-icon *ngIf="currentIndex == i" class="icon-lg text-green-500" svgIcon="mat:done"></mat-icon>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div dir="rtl" class="flex flex-row items-center  gap-2 mt-6">
+                        <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+                        <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" type="button" (click)="replace()">Replace</button>
+                    </div>
+
+                </mat-tab>
+            </mat-tab-group>
+        </mat-dialog-content>
+
+        <mat-divider class="mt-2"></mat-divider>
+    </ng-container>
+</div>

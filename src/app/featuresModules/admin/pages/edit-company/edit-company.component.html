@@ -1,0 +1,53 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl">Edit Account</h1>
+
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<mat-icon svgIcon="mat:close"></mat-icon>
+</button>
+</div>
+
+
+<mat-divider></mat-divider>
+<mat-dialog-content>
+
+
+    <ng-container>
+        <form class="flex flex-col  justify-between py-2" [formGroup]="form">
+
+            <mat-form-field class="flex-auto">
+                <mat-label>Name</mat-label>
+                <input matInput Enmity="Name" formControlName="Name">
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+                <mat-label>allawedChatbotCount</mat-label>
+                <input matInput type="number" Enmity="allawedChatbotCount" formControlName="allawedChatbotCount">
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+                <mat-label>Website</mat-label>
+                <input matInput Enmity="Website" formControlName="Website">
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+                <mat-label>facebookAccount</mat-label>
+                <input matInput Enmity="facebookAccount" formControlName="facebookAccount">
+            </mat-form-field>
+
+
+            <mat-form-field class="flex-auto">
+                <mat-label>twitterAccount</mat-label>
+                <input matInput Enmity="twitterAccount" formControlName="twitterAccount">
+            </mat-form-field>
+        </form>
+    </ng-container>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+
+    <button mat-raised-button color="primary" class="w-32" (click)="editAccount()">Edit</button>
+    <button mat-raised-button color="primary" class="w-32 " mat-dialog-close type="button">Cancel</button>
+
+</mat-dialog-actions>

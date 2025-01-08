@@ -1,0 +1,194 @@
+<div class="grid grid-cols-2 gap-8">
+    <div class=" w-full">
+        <div class="flex items-center gap-3">
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="tree.treeModel.expandAll()">Expand all</button>
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="tree.treeModel.collapseAll()">Collapse all</button>
+            <mat-form-field appearance="fill" class="h-11 formWidth text-[8px]">
+                <input placeholder="Serach..." cdkFocusInitial matInput [(ngModel)]="searchNode">
+            </mat-form-field>
+            <button class=" py-1 bg-white px-3  rounded-sm hover:bg-[#EBEBEB] border" (click)="serach()"><mat-icon class="icon-sm"  svgIcon="mat:search"></mat-icon></button>
+            <button class=" py-1 bg-white px-3  rounded-sm hover:bg-[#EBEBEB] border" (click)="reset()"><mat-icon class="icon-sm" svgIcon="mat:autorenew"></mat-icon></button>
+        </div>
+
+
+        <div class="treeHight overflow-auto  w-full bg-white  mt-2 border border-[#AAA2B6] rounded-sm" *ngIf="TREE_DATA">
+            <tree-root class=" w-full my-4" id="tree32" [focused]="true" [nodes]="TREE_DATA" [options]="options" #tree (moveNode)="onMoveNode($event)">
+                <ng-template class="w-full  " #treeNodeTemplate let-node let-index="index">
+                    <div (click)="seLectedNode(node.data)" class="  py-2  w-full mat-tree-node flex justify-between bg-[#F6F6F6] rounded-sm px-2  border border-slate-300 hover:border-black" [id]="node.data._id">
+                        <p [ngClass]="{'text-[#EE655D]': node.data.entityType == 'action','text-[#4CD442]': node.data.entityType == 'prop'}" class="text-lg font-medium border-r-black"> {{node.data.entityText}} </p>
+                        <div class="flex gap-2 px-2">
+                            <button (click)="openAddSibblingAndChild('s', node.data)" matTooltip="Add Sibbling" class=""><mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon></button>
+                            <button (click)="openAddSibblingAndChild('c', node.data)" matTooltip="Add Child" class=""><mat-icon class="icon-sm" svgIcon="mat:add_circle_outline"></mat-icon></button>
+                            <button (click)="openAddVerb('v', node.data)" matTooltip="Add Verb" class=""><mat-icon class="icon-sm" svgIcon="mat:format_paint"></mat-icon></button>
+                            <button (click)="deleteNode(node.data)" *ngIf="node.data.editable" class=""><mat-icon class="icon-sm" svgIcon="mat:delete"></mat-icon></button>
+                        </div>
+                    </div>
+
+                </ng-template>
+            </tree-root>
+        </div>
+        <div class="flex items-center" *ngIf="nodeLength">
+            <div class=" flex items-center ">
+                <h1 class="m-1 p-2 bg-green-50 text-green-900 text-center capitalize text-base tracking-sm">
+                    All Nodes Count : <b>{{nodeLength}}</b>
+                </h1>
+                <h1 class="m-1 p-2 bg-orange-50 text-orange-900 text-center capitalize text-base tracking-sm">
+                    Actual Nodes Count : <b>{{actualizedLength}}</b>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="w-full">
+        <div class=" border p-2 rounded-sm  w-full">
+            <div class="grid grid-cols-4 w-3/4">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm">Describtion:&nbsp; <span></span></p>
+                <p class="col-span-3 text-base font-medium " dir="rtl">{{senseDescription}}</p>
+            </div>
+        </div>
+        <div class=" border p-2 mt-2 rounded-sm">
+            <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">synonyms :&nbsp; <span></span></p>
+            <div (click)="clickOnSynonum()" class="bg-[#e9e8e8] px-3 pt-2 border-b h-10">
+                <p class="text-base font-semibold ">{{SelectedNode?.entityText}}</p>
+            </div>
+            <div *ngIf="showSyn && SelectedNode.entityType != 'action'">
+                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let syn of Synonyms">
+                <div class="flex items-center ">
+                  <p class="mb-1">{{syn?.entityInfo[0]?.entityText}}</p>
+                  <mat-icon (click)="deleteSynonym(syn)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+          </div>
+          </button>
+                <button class="text-white  bg-[#F0AD4E] rounded-sm mx-1  px-1" (click)="openCreateEntity()">
+                <div class="flex items-center  ">
+                  New <mat-icon svgIcon="mat:add"></mat-icon>
+                </div>
+              </button>
+            </div>
+
+            <div *ngIf="showSyn && SelectedNode.entityType == 'action'">
+                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let verbSyn of verbSynonyms">
+                <div class="flex items-center ">
+                  <p class="mb-1">{{verbSyn}}</p>
+          </div>
+          </button>
+            </div>
+
+        </div>
+
+        <div class=" border p-2 mt-2 rounded-sm">
+            <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">Data Properties :&nbsp; <span></span></p>
+            <div (click)="clickOnProperty()" class="bg-[#e9e8e8] flex px-3 pt-2 border-b h-12 overflow-x-auto">
+                <p class="text-base text-[#ADADAD] font-semibold " *ngFor="let prop of properties">({{prop?.entityText}})</p>
+            </div>
+            <div *ngIf="showProp">
+                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let prop of properties">
+                <div class="flex items-center ">
+                  <p class="mb-1">{{prop?.entityText}}</p>
+                  <mat-icon (click)="deleteDomainProperty(prop)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+          </div>
+          </button>
+                <button class="text-white  bg-[#F0AD4E] rounded-sm mx-1  px-1" (click)="openAddProperty()">
+                <div class="flex items-center  ">
+                  New <mat-icon svgIcon="mat:add"></mat-icon>
+                </div>
+              </button>
+            </div>
+
+        </div>
+
+        <div class=" flex items-center justify-between w-3/4 p-2" *ngIf="SelectedNode.entityType != 'action'">
+            <div class="flex gap-2">
+                <mat-checkbox (change)="updateAmbClass()" [(ngModel)]="classInfo.ambClass" labelPosition="before" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Amb:</mat-checkbox>
+                <mat-checkbox (change)="updateExtention()" [(ngModel)]="SelectedNode.extension" labelPosition="before" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Extension :</mat-checkbox>
+                <mat-checkbox (change)="UpdateArtificialParent()" [(ngModel)]="SelectedNode.artificialParent" labelPosition="before" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Artificial Parent :</mat-checkbox>
+            </div>
+            <div class="flex items-center">
+                <p class="text-lg text-[#FF963D]">Facts :&nbsp;&nbsp;</p>
+                <button class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"> <mat-icon class="text-[#FF963D]" svgIcon="mat:widgets"></mat-icon></button>
+            </div>
+        </div>
+        <div class=" border p-2 mt-2 rounded-sm" *ngIf="SelectedNode.entityType != 'action'">
+            <div class="flex items-center justify-between ">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">Individuals :&nbsp; <span></span></p>
+                <button (click)=" openAddIndividual()" class="text-white py-1 bg-black px-2   rounded-sm hover:bg-orange-500">Add Individual</button>
+            </div>
+
+            <div class="bg-[#e9e8e8] border-b indivdualHeight mt-1">
+
+                <div (click)="currentIndividualIndex = index " *ngFor="let individual of individuals; let index = index" [ngClass]="{'bg-[#F5D6BB]':index == currentIndividualIndex}" class=" px-5 mt-1 hover:bg-[#EEEEEE]">
+                    <div class="flex items-center justify-between py-1" *ngIf="individuals.length > 0">
+                        <button class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:widgets"></mat-icon></button>
+                        <p class="text-base font-medium">{{individual.entityInfo[0].entityText}}</p>
+                        <button (click)="deleteIndividual(individual)"><mat-icon class="" svgIcon="mat:delete"></mat-icon></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" border p-2 mt-2 rounded-sm" *ngIf="SelectedNode.entityType != 'action'">
+            <div class="flex items-center justify-between ">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">Objects :&nbsp; <span></span></p>
+                <button class="text-white py-1 bg-black px-2   rounded-sm hover:bg-orange-500">Add Object</button>
+            </div>
+
+            <div class="bg-[#e9e8e8] border-b objectHeight mt-1">
+
+                <div (click)="currentObjectIndex = index " *ngFor="let object of objects; let index = index" [ngClass]="{'bg-[#F5D6BB]':index == currentObjectIndex}" class=" px-5 mt-1 hover:bg-[#EEEEEE]">
+                    <div class="flex items-center justify-between py-1" *ngIf="objects.length > 0">
+                        <button class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:widgets"></mat-icon></button>
+                        <p class="text-base font-medium">{{object.entityInfo[0].entityText}}</p>
+                        <button><mat-icon class="" svgIcon="mat:delete"></mat-icon></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" border p-2 mt-2 rounded-sm" *ngIf="SelectedNode.entityType == 'action'">
+            <div class="flex items-center justify-between ">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">Facts :&nbsp; <span></span></p>
+                <button (click)="showFrameSyn = false" *ngIf="showFrameSyn == true" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:keyboard_backspace"></mat-icon></button>
+
+                <mat-form-field appearance="fill" class="h-11 factFormWidth text-[8px]">
+                    <input (keyup)="searchFacts()" placeholder="Serach..." cdkFocusInitial matInput [(ngModel)]="searchFact">
+                </mat-form-field>
+                <button (click)="openAddFact()" class="text-white py-1 bg-black px-2   rounded-sm hover:bg-orange-500">Add Facts </button>
+            </div>
+
+            <div class="bg-[#e9e8e8] border-b factHeight mt-1 ">
+                <div class="py-2">
+                    <div *ngIf="showFrameSyn == false">
+                        <div (click)="currentFramectIndex = index " *ngFor="let frame of frames; let index = index" [ngClass]="{'bg-[#F5D6BB]':index == currentFramectIndex}" class=" px-5 mt-1 hover:bg-[#EEEEEE]">
+                            <div class="flex items-center justify-between py-1" *ngIf="frames.length > 0">
+                                <div class="flex gap-2">
+                                    <button (click)="showEditFrame(frame,'1')" matTooltip="show frame" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                                    <button (click)="GoToFactProperties(frame)" matTooltip="Show Frame Properties" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:widgets"></mat-icon></button>
+                                    <button (click)="openSetImplied(frame)" matTooltip="Set Implied" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:flash_on"></mat-icon></button>
+                                    <button (click)="getFrameSynonms(frame)" matTooltip="Show Frame Synonyms" *ngIf="frame.synonyms > 0" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:attach_money"></mat-icon></button>
+
+                                </div>
+                                <p class="text-base font-bold" [ngClass]="{'text-[#0B87F7]':frame.implied == true}">{{frame.entity.entityInfo[0].entityText}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="showFrameSyn == true">
+                        <div (click)="currentframeSyn = index " *ngFor="let frameSyn of frameSynonyms; let index = index" [ngClass]="{'bg-[#F5D6BB]':index == currentframeSyn}" class=" px-5 mt-1 hover:bg-[#EEEEEE]">
+                            <div class="flex items-center justify-between py-1" *ngIf="frames.length > 0">
+                                <div class="flex gap-2">
+                                    <button (click)="showEditFrame(frameSyn,'2')" matTooltip="show frame" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                                </div>
+                                <p class="text-base font-medium">{{frameSyn.entityInfo[0].entityText}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <p *ngIf="frames && showFrameSyn == false" class="mt-2 text-white font-medium bg-[#F0AD4E] rounded-sm p-1 w-20">Count: {{frames.length}}</p>
+
+        </div>
+    </div>
+</div>

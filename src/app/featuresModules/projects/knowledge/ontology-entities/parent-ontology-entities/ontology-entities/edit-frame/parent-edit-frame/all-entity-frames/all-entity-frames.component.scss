@@ -1,0 +1,39 @@
+.tableHight {
+    height: calc(100vh - (56px + 64px + 48px + 220px));
+    overflow: auto;
+    width: 100%;
+    scrollbar-width: auto;
+    scrollbar-color: #C1C1C1 #ece6e6;
+}
+
+tbody tr:nth-child(even) {
+    border-bottom: 2px solid #dddddd;
+}
+
+// ::-webkit-scrollbar {
+//     width: 12px;
+//     /* Width of the scrollbar */
+//     height: 12px;
+//     /* Height of the scrollbar (for horizontal scrollbars) */
+// }
+// ::-webkit-scrollbar-track {
+//     background: #e9e4e4;
+//     /* Background of the scrollbar track */
+// }
+// ::-webkit-scrollbar-thumb {
+//     background: #ddd9d9;
+//     /* Background of the scrollbar thumb */
+//     border-radius: 10px;
+//     /* Rounded corners of the scrollbar thumb */
+// }
+// ::-webkit-scrollbar-thumb:hover {
+//     background: #949191;
+//     /* Background of the scrollbar thumb on hover */
+// }
+// ::-webkit-scrollbar-button {
+//     background-color: #4d7fff;
+//     border-radius: 5px;
+// }
+// ::-webkit-scrollbar-button:hover {
+//     background-color: #999999;
+// }

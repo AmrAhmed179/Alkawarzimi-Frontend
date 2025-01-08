@@ -1,0 +1,93 @@
+<div class="bg-[#2F323B] ">
+    <div class="m-6 ">
+        <div class="m-y pt-4">
+            <a href="" class="text-yellow-700 text-2xl tracking-wider hover:text-slate-100 hover:underline "><strong>ALL ACCOUNTS</strong></a>
+        </div>
+        <!-- <a href="" class="text-2xl py-6 hover:text-orange-600 hover:underline">ALL COMPANIES</a> -->
+
+        <div class="mt-4 ">
+            <div class="bg-[#1A202E] h-16  ">
+                <h1 class="text-base pl-4 pt-5">All Accounts</h1>
+            </div>
+
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
+                <!-- Position Column -->
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>id</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.id}}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>name</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.name}}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="website">
+                    <th mat-header-cell *matHeaderCellDef>website</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.website}}
+                    </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Admin">
+                    <th mat-header-cell *matHeaderCellDef>Admin</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.userAdmin}}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="CountOfUsers">
+                    <th mat-header-cell *matHeaderCellDef>Count Of Users </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.users.length}}
+                    </td>
+                </ng-container>
+                <!-- Symbol Column -->
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="AllawedChatbotCount">
+                    <th mat-header-cell *matHeaderCellDef>Allawed Chatbot Count </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.allawedChatbotCount}}
+                    </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="CountOfChatbot">
+                    <th mat-header-cell *matHeaderCellDef>CountOfChatbot</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.countOfChatbot}}
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="Actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="primary" aria-label="Example icon button with a vertical three dot icon" (click)="openEditCompany(element)">
+              <mat-icon svgIcon="mat:edit"  matTooltip="Edit"></mat-icon>
+              </button>
+                        <a routerLink="./{{element.id}}"> <button mat-icon-button color="primary" aria-label="Example icon button with a vertical three dot icon" (click)="openCompanyDetails(element)">
+                          <mat-icon svgIcon="mat:info"  matTooltip="Detalis"></mat-icon>
+                          </button></a>
+
+
+                        <button mat-icon-button color="primary" aria-label="Example icon button with a vertical three dot icon" (click)="deleteCompany(element)">
+              <mat-icon svgIcon="mat:delete" matTooltip="Delete"></mat-icon>
+              </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
+    </div>
+</div>

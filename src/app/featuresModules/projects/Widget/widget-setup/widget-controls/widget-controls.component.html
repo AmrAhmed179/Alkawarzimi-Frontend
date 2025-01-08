@@ -1,0 +1,922 @@
+<mat-accordion class="block mx-4 my-4 scroll-container">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title class="text-xl text-gray-600">
+                Chatbot Ready Themes
+            </mat-panel-title>
+            <!-- <mat-panel-description> custom Header </mat-panel-description> -->
+        </mat-expansion-panel-header>
+        <div class="text-base my-2">Ready Themes</div>
+        <div class="flex flex-row">
+            <!-- Themes -->
+            <div *ngFor="let theme of chatBotThemesWidget; let i = index" (click)="changeWidgetTheme(theme)" class="relative">
+                <div class="col-xs-2 col-sm-2 mr-4" [ngStyle]="{
+            border: theme._id == widgetStyle._id ? '5px solid blue' : '',
+            'border-radius': theme._id == widgetStyle._id ? '30px' : '',
+            padding: theme._id == widgetStyle._id ? '5px' : ''
+          }" matTooltip="{{ theme.themeName }}">
+                    <div style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              cursor: pointer;
+              transition: all 0.2s ease-in-out 0s;
+              position: relative;
+            " [ngStyle]="{ 'background-color': theme.primaryColor }">
+                        <svg height="100%" role="img" viewBox="0 0 90 90" width="100%" xmlns="http://www.w3.org/2000/svg" class="ng-tns-c8-0" [ngStyle]="{ fill: theme.secondaryColor }">
+              <path d="M0 0h24v24H0V0z" fill="none" class="ng-tns-c8-0"></path>
+              <path
+                d="M33.57,31A4.58,4.58,0,0,0,29,35.57V58.3a1.94,1.94,0,0,0,3.32,1.38l3-3a.29.29,0,0,1,.21-.09H56.43A4.58,4.58,0,0,0,61,52V35.57A4.58,4.58,0,0,0,56.43,31Z"
+                class="ng-tns-c8-0"
+              ></path>
+            </svg>
+                    </div>
+                </div>
+                <button (click)="openDeleteThemeDialog(theme._id.toString())" *ngIf="theme.themeName.toLocaleLowerCase() != 'default'">
+          <mat-icon
+            svgIcon="mat:close"
+            class="absolute text-slate-700 cursor-pointer hover:bg-green-700 bg-green-800"
+            style="
+              top: 0px;
+              right: 9px;
+              border-radius: 50px;
+              color: #fff;
+              padding: 2px;
+              height: 20px;
+              width: 20px;
+            "
+          ></mat-icon>
+        </button>
+            </div>
+            <div style="
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out 0s;
+          position: relative;
+        " class="bg-slate-400 ml-1 hover:bg-slate-300" (click)="openCreateThemeDialog()">
+                <div>
+                    <mat-icon svgIcon="mat:add" class="absolute text-slate-700" style="top: 18%; left: 18%"></mat-icon>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <!-- Header  -->
+    <mat-expansion-panel (opened)="onPanelOpened('.kha-heading-demo', 1)" (closed)="onPanelClosed('.kha-heading-demo', 1)">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="text-xl text-gray-600">
+                Widget header
+            </mat-panel-title>
+            <!-- <mat-panel-description> custom Header </mat-panel-description> -->
+        </mat-expansion-panel-header>
+        <div class="flex flex-row">
+            <!-- Header Primary background Color -->
+            <div>
+                <mat-label>Header background Color </mat-label>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker.click()"></button>
+                    <input #picker type="color" [(ngModel)]="widgetStyle?.header.primaryBgColor" (ngModelChange)="
+              updatingSelectorStyles(
+                '.kha-heading',
+                'background',
+                widgetStyle?.header.primaryBgColor
+              )
+            " />
+                </div>
+            </div>
+        </div>
+        <!-- Header Logo -->
+        <div class="my-2 flex justify-between">
+            <div class="flex">
+                <div class="flex">
+                    <div class="border p-2">org-logo</div>
+                    <div class="ml-2">
+                        <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'org-logo', '.org-logo')" #fileUpload1 />
+                        <div class="file-upload">
+                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload1.click()">
+                <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex">
+                <div class="border p-2">minimize</div>
+                <div class="ml-2">
+                    <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'minimize', '.minimize')" #fileUpload2 />
+                    <div class="file-upload">
+                        <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload2.click()">
+              <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+            </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex">
+                <div class="border p-2">logout</div>
+                <div class="ml-2">
+                    <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'logout', '#logoutIconId')" #fileUpload3 />
+                    <div class="file-upload">
+                        <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload3.click()">
+              <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <!-- Body  -->
+    <mat-expansion-panel (opened)="onPanelOpened('.message-demo', 2)" (closed)="onPanelClosed('.message-demo', 2)">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="text-xl text-gray-600">
+                Widget body
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+            <div class="inline-block">
+                <div class="text-base my-2">Body Bg</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker3.click()"></button>
+                    <input #picker3 type="color" [(ngModel)]="widgetStyle.body.backgroundColor" (ngModelChange)="
+              updatingSelectorStyles(
+                '.message',
+                'background-color',
+                widgetStyle.body.backgroundColor
+              )
+            " />
+                </div>
+            </div>
+
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Scroll Bg</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker25.click()"></button>
+                    <input #picker25 type="color" [(ngModel)]="widgetStyle.body.scrollBgColor" (ngModelChange)="
+              updatingSelectorStyles(
+                '.message::-webkit-scrollbar-thumb',
+                'background-color',
+                widgetStyle.body.scrollBgColor
+              )
+            " />
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <mat-accordion>
+                <mat-expansion-panel class="shadow-sm border px-4 py-3 my-2" (opened)="onPanelOpened('.sender-demo', 3)" (closed)="onPanelClosed('.sender-demo', 3)">
+                    <mat-expansion-panel-header class="font-medium text-lg mx-2">Bot Component</mat-expansion-panel-header>
+                    <mat-accordion>
+                        <mat-expansion-panel (opened)="onPanelOpened('.sender-demo', 4)" (closed)="onPanelClosed('.sender-demo', 4)">
+                            <mat-expansion-panel-header class="text-lg font-medium mt-4">General Feature</mat-expansion-panel-header>
+                            <div>
+                                <div class="flex">
+                                    <div class="">
+                                        <div class="text-base my-2 mr-2">Sender Message Bg</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker4.click()"></button>
+                                            <input #picker4 type="color" [(ngModel)]="
+                          widgetStyle.body.message.senderBackgroundColor
+                        " (ngModelChange)="
+                          updatingSelectorStyles(
+                            '.sender',
+                            'background',
+                            widgetStyle.body.message.senderBackgroundColor
+                          )
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="text-base my-2 mr-2">Bot Text</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker20.click()"></button>
+                                            <input #picker20 type="color" [(ngModel)]="widgetStyle.body.message.botTextColor" (ngModelChange)="
+                          updatingSelectorStyles(
+                            '.message-text p',
+                            'color',
+                            widgetStyle.body.message.botTextColor
+                          );
+                             updatingSelectorStyles(
+                            '.sender',
+                            'color',
+                            widgetStyle.body.message.botTextColor
+                          );
+                        " />
+                                            <!-- '.sender .message-text p, .sender .message-text', -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex mt-2">
+                                    <div class="border p-2 inline-block">bot-avatar</div>
+                                    <div class="ml-2 inline-block">
+                                        <input accept="image/*" type="file" class="hidden" (change)="
+                        onFileSelected($event, 'bot-avatar', '.sender::before')
+                      " #fileUpload4 />
+                                        <div class="file-upload">
+                                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload4.click()">
+                        <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+                      </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Rounded Curves -->
+                            <div class="flex flex-row">
+                                <div class="section">
+                                    <h5 class="text-base font-medium my-2">
+                                        Messages Rounded Corners
+                                    </h5>
+                                    <div class="grid grid-cols-4 gap-4 w-72">
+                                        <div *ngFor="let roundedCorner of roundedCornerValues" class="aspect-square bg-primary/10 flex justify-end items-end cursor-pointer hover:border-gray-200 group trans-ease-out ng-star-inserted border-transparent" (click)="
+                        selectMessagesBorderRadius('.sender', roundedCorner)
+                      " [style.borderTopLeftRadius]="
+                        MessagesSelectedBorderRadius
+                          ? MessagesSelectedBorderRadius.value +
+                            MessagesSelectedBorderRadius.unit
+                          : roundedCorner.value + roundedCorner.unit
+                      ">
+                                            <div class="h-7 w-7 border-2 trans-ease-out" [ngClass]="{
+                          'bg-slate-700': isMessageRadSelected(roundedCorner),
+                          'border-gray-500 group-hover:bg-app-bar':
+                            !isMessageRadSelected(roundedCorner)
+                        }" [style.borderTopLeftRadius]="
+                          roundedCorner.value + roundedCorner.unit
+                        "></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+
+                        <!-- Main Menu -->
+                        <mat-expansion-panel (opened)="onPanelOpened('.smenu-demo', 5)" (closed)="onPanelClosed('.smenu-demo', 5)">
+                            <mat-expansion-panel-header class="text-lg font-medium mt-4">
+                                Main Menu Component
+                            </mat-expansion-panel-header>
+                            <div>
+                                <div>
+                                    <div class="inline-block">
+                                        <div class="text-base my-2">List Hover</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker55.click()"></button>
+                                            <input #picker55 type="color" [(ngModel)]="
+                          widgetStyle.body.message.mainListItems.hoverTextColor
+                        " (ngModelChange)="
+                          updateItemsTextColor(
+                            '.smenu li:hover',
+                            widgetStyle.body.message.mainListItems
+                              ?.hoverTextColor
+                          )
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List Hover Bg</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker56.click()"></button>
+                                            <input #picker56 type="color" [(ngModel)]="
+                          widgetStyle.body.message.mainListItems.hoverBgColor
+                        " (ngModelChange)="
+                          updateItemsBgColor(
+                            '.smenu li:hover',
+                            widgetStyle.body.message.mainListItems.hoverBgColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.mainListItems.hoverBgColor
+                        " />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="inline-block">
+                                        <div class="text-base my-2">List Color</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker58.click()"></button>
+                                            <input #picker58 type="color" [(ngModel)]="
+                          widgetStyle.body.message.mainListItems.textColor
+                        " (ngModelChange)="
+                          updateItemsTextColor(
+                            '.smenu li',
+                            widgetStyle.body.message.mainListItems.textColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.mainListItems.textColor
+                        " />
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List Bg</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker59.click()"></button>
+                                            <input #picker59 type="color" [(ngModel)]="
+                          widgetStyle.body.message.mainListItems.backgroundColor
+                        " (ngModelChange)="
+                          updateItemsBgColor(
+                            '.smenu li',
+                            widgetStyle.body.message.mainListItems
+                              .backgroundColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.mainListItems.backgroundColor
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List border</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker60.click()"></button>
+                                            <input #picker60 type="color" [(ngModel)]="
+                          widgetStyle.body.message.mainListItems.borderColor
+                        " (ngModelChange)="
+                          updatingSelectorStyles(
+                            '.smenu li',
+                            'border-color',
+                            widgetStyle.body.message.mainListItems.borderColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.mainListItems.borderColor
+                        " />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section">
+                                    <h5 class="text-base font-medium my-2">
+                                        List Rounded Corners
+                                    </h5>
+                                    <div class="grid grid-cols-4 gap-4 w-72">
+                                        <div *ngFor="let roundedCorner of roundedCornerValues" class="aspect-square bg-slate-400/10 flex justify-end items-end cursor-pointer hover:border-gray-200 group trans-ease-out ng-star-inserted border-transparent" (click)="
+                        selectMessagesBorderRadius('.smenu li', roundedCorner)
+                      " [style.borderTopLeftRadius]="
+                        listItemssSelectedBorderRadius
+                          ? listItemssSelectedBorderRadius.value +
+                            listItemssSelectedBorderRadius.unit
+                          : roundedCorner.value + roundedCorner.unit
+                      ">
+                                            <div class="h-7 w-7 border-2 trans-ease-out" [ngClass]="{
+                          'bg-slate-700':
+                            isMessageListItemRadSelected(roundedCorner),
+                          'border-gray-500 group-hover:bg-app-bar':
+                            !isMessageListItemRadSelected(roundedCorner)
+                        }" [style.borderTopLeftRadius]="
+                          roundedCorner.value + roundedCorner.unit
+                        "></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- List -->
+                                <div class="text-base font-medium my-2">List Items Display</div>
+                                <div class="flex flex-col mt-3 w-fit">
+                                    <mat-button-toggle-group aria-label="List Items Display" [(ngModel)]="widgetStyle.body.message.mainListDisplay" (change)="toggleDisplayListItems('.smenu')">
+                                        <mat-button-toggle value="flex">flex</mat-button-toggle>
+                                        <mat-button-toggle value="block">block</mat-button-toggle>
+                                    </mat-button-toggle-group>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel (opened)="onPanelOpened('.menu-demo', 5)" (closed)="onPanelClosed('.menu-demo', 5)">
+                            <mat-expansion-panel-header class="text-lg font-medium mt-4">
+                                List Component
+                            </mat-expansion-panel-header>
+                            <div class="">
+                                <div>
+                                    <div class="inline-block">
+                                        <div class="text-base my-2">List Hover</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker10.click()"></button>
+                                            <input #picker10 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.hoverTextColor
+                        " (ngModelChange)="
+                          updateItemsTextColor(
+                            '.menu li:hover',
+                            widgetStyle.body.message.listItems.hoverTextColor
+                          )
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List Hover Bg</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker11.click()"></button>
+                                            <input #picker11 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.hoverBgColor
+                        " (ngModelChange)="
+                          updateItemsBgColor(
+                            '.menu li:hover',
+                            widgetStyle.body.message.listItems.hoverBgColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.listItems.hoverBgColor
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="inline-block">
+                                        <div class="text-base my-2">List Hover Border Bottom</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker40.click()"></button>
+                                            <input #picker40 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.borderBottomColor
+                        " (ngModelChange)="
+                          updatingSelectorStyles(
+                            '.menu li:hover',
+                            'border-bottom-color',
+                            widgetStyle.body.message.listItems.borderBottomColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.listItems.borderBottomColor
+                        " />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="inline-block">
+                                        <div class="text-base my-2">List Color</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker13.click()"></button>
+                                            <input #picker13 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.textColor
+                        " (ngModelChange)="
+                          updateItemsTextColor(
+                            '.menu li',
+                            widgetStyle.body.message.listItems.textColor
+                          )
+                        " [value]="widgetStyle.body.message.listItems.textColor" />
+                                        </div>
+                                    </div>
+
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List Bg</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker14.click()"></button>
+                                            <input #picker14 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.backgroundColor
+                        " (ngModelChange)="
+                          updateItemsBgColor(
+                            '.menu li',
+                            widgetStyle.body.message.listItems.backgroundColor
+                          )
+                        " [value]="
+                          widgetStyle.body.message.listItems.backgroundColor
+                        " />
+                                        </div>
+                                    </div>
+                                    <div class="inline-block ml-3">
+                                        <div class="text-base my-2">List border</div>
+                                        <div class="flex flex-row my-1">
+                                            <button (click)="picker27.click()"></button>
+                                            <input #picker27 type="color" [(ngModel)]="
+                          widgetStyle.body.message.listItems.borderColor
+                        " (ngModelChange)="
+                          updatingSelectorStyles(
+                            '.menu li',
+                            'border-color',
+                            widgetStyle.body.message.listItems.borderColor
+                          )
+                        " [value]="widgetStyle.body.message.listItems.borderColor" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section">
+                                    <h5 class="text-base font-medium my-2">
+                                        List Rounded Corners
+                                    </h5>
+                                    <div class="grid grid-cols-4 gap-4 w-72">
+                                        <div *ngFor="let roundedCorner of roundedCornerValues" class="aspect-square bg-slate-400/10 flex justify-end items-end cursor-pointer hover:border-gray-200 group trans-ease-out ng-star-inserted border-transparent" (click)="
+                        selectMessagesBorderRadius('.menu li', roundedCorner)
+                      " [style.borderTopLeftRadius]="
+                        listItemssSelectedBorderRadius
+                          ? listItemssSelectedBorderRadius.value +
+                            listItemssSelectedBorderRadius.unit
+                          : roundedCorner.value + roundedCorner.unit
+                      ">
+                                            <div class="h-7 w-7 border-2 trans-ease-out" [ngClass]="{
+                          'bg-slate-700':
+                            isMessageListItemRadSelected(roundedCorner),
+                          'border-gray-500 group-hover:bg-app-bar':
+                            !isMessageListItemRadSelected(roundedCorner)
+                        }" [style.borderTopLeftRadius]="
+                          roundedCorner.value + roundedCorner.unit
+                        "></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- List -->
+                                <!-- <div class="text-base font-medium my-2">List Items Display</div>
+                <div class="flex flex-col mt-3 w-fit">
+                  <mat-button-toggle-group
+                    aria-label="List Items Display"
+                    [(ngModel)]="widgetStyle.body.message.listDisplay"
+                    (change)="toggleDisplayListItems('.menu')"
+                  >
+                    <mat-button-toggle value="flex">flex</mat-button-toggle>
+                    <mat-button-toggle value="block">block</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div> -->
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel (opened)="onPanelOpened('.more-demo', 6)" (closed)="onPanelClosed('.more-demo', 6)">
+                            <mat-expansion-panel-header class="text-lg font-medium mt-4">
+                                Yes | No Component
+                            </mat-expansion-panel-header>
+                            <div>
+                                <div>
+                                    <div class="text-base my-2">More Color</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker15.click()"></button>
+                                        <input #picker15 type="color" [(ngModel)]="widgetStyle.body.moreTextColor" (ngModelChange)="
+                        updateItemsTextColor(
+                          '.more',
+                          widgetStyle.body.moreTextColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-base my-2">No Color</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker16.click()"></button>
+                                        <input #picker16 type="color" [(ngModel)]="widgetStyle.body.noTextColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.no',
+                          'color',
+                          widgetStyle.body.noTextColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-base my-2">No Bg</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker17.click()"></button>
+                                        <input #picker17 type="color" [(ngModel)]="widgetStyle.body.noBackgroundColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.no',
+                          'background',
+                          widgetStyle.body.noBackgroundColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-base my-2">No Border</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker18.click()"></button>
+                                        <input #picker18 type="color" [(ngModel)]="widgetStyle.body.noBorderColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.no',
+                          'border-color',
+                          widgetStyle.body.noBorderColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <div>
+                                    <div class="text-base my-2">Yes Color</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker19.click()"></button>
+                                        <input #picker19 type="color" [(ngModel)]="widgetStyle.body.yesTextColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.yes',
+                          'color',
+                          widgetStyle.body.yesTextColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-base my-2">Yes Bg</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker20.click()"></button>
+                                        <input #picker20 type="color" [(ngModel)]="widgetStyle.body.yesBackgroundColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.yes',
+                          'background',
+                          widgetStyle.body.yesBackgroundColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-base my-2">Yes Border</div>
+                                    <div class="flex flex-row my-1">
+                                        <button (click)="picker21.click()"></button>
+                                        <input #picker21 type="color" [(ngModel)]="widgetStyle.body.yesBorderColor" (ngModelChange)="
+                        updatingSelectorStyles(
+                          '.yes',
+                          'border-color',
+                          widgetStyle.body.yesBorderColor
+                        )
+                      " />
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="shadow-sm border px-4 py-3 my-2" (opened)="onPanelOpened('.message-main-receiver-demo', 7)" (closed)="onPanelClosed('.message-main-receiver-demo', 7)">
+                    <mat-expansion-panel-header class="font-medium text-lg mx-2">User Component</mat-expansion-panel-header>
+                    <div>
+                        <div class="inline-block">
+                            <div class="text-base my-2">User Color</div>
+                            <div class="flex flex-row my-1">
+                                <button (click)="picker25.click()"></button>
+                                <input #picker25 type="color" [(ngModel)]="widgetStyle.body.message.userTextColor" (ngModelChange)="
+                    updatingSelectorStyles(
+                      '.receiver',
+                      'color',
+                      widgetStyle.body.message.userTextColor
+                    )
+                  " />
+                            </div>
+                        </div>
+                        <div class="inline-block ml-3">
+                            <div class="text-base my-2">User Message Bg</div>
+
+                            <div class="flex flex-row my-1">
+                                <button (click)="picker8.click()"></button>
+                                <input #picker8 type="color" [(ngModel)]="widgetStyle.body.message.receiverBackgroundColor" (ngModelChange)="
+                    updatingSelectorStyles(
+                      '.receiver',
+                      'background-color',
+                      widgetStyle.body.message.receiverBackgroundColor
+                    )
+                  " />
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="shadow-sm border px-4 py-3 my-2" (opened)="onPanelOpened('.message-main-employee-demo', 8)" (closed)="onPanelClosed('.message-main-employee-demo', 8)">
+                    <mat-expansion-panel-header class="font-medium text-lg mx-2">Employee Component</mat-expansion-panel-header>
+                    <div>
+                        <div>
+                            <div class="inline-block">
+                                <div class="text-base my-2">employee Text</div>
+                                <div class="flex flex-row my-1">
+                                    <button (click)="picker26.click()"></button>
+                                    <input #picker26 type="color" [(ngModel)]="widgetStyle.body.message.employeeTextColor" (ngModelChange)="
+                      updatingSelectorStyles(
+                        '.employee',
+                        'color',
+                        widgetStyle.body.message.employeeTextColor
+                      )
+                    " />
+                                </div>
+                            </div>
+                            <div class="inline-block ml-3">
+                                <div class="text-base my-2">employee Bg</div>
+                                <div class="flex flex-row my-1">
+                                    <button (click)="picker9.click()"></button>
+                                    <input #picker9 type="color" [(ngModel)]="
+                      widgetStyle.body.message.CustomerServBackgroundColor
+                    " (ngModelChange)="
+                      updatingSelectorStyles(
+                        '.employee',
+                        'background',
+                        widgetStyle.body.message.CustomerServBackgroundColor
+                      )
+                    " />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex mt-2">
+                        <div class="border p-2">agent-avatar</div>
+
+                        <div class="ml-5">
+                            <input accept="image/*" type="file" class="hidden" (change)="
+                  onFileSelected($event, 'agent-avatar', '.employee::before')
+                " #fileUpload5 />
+                            <div class="file-upload">
+                                <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload5.click()">
+                  <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="shadow-sm border px-4 py-3 my-2" (opened)="onPanelOpened('.message-time-demo', 9)" (closed)="onPanelClosed('.message-time-demo', 9)">
+                    <mat-expansion-panel-header class="font-medium text-lg mx-2">
+                        Display Time
+                    </mat-expansion-panel-header>
+                    <mat-slide-toggle [(ngModel)]="widgetStyle.body.message.displayTime" (toggleChange)="toggleTime('.message-time')" (click)="onPanelOpened('.message-time', 9)"></mat-slide-toggle>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </mat-expansion-panel>
+    <!-- Text box -->
+    <mat-expansion-panel (opened)="onPanelOpened('.reply-demo', 10)" (closed)="onPanelClosed('.reply-demo', 10)">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="text-xl text-gray-600">
+                Widget Footer
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Border Color</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker30.click()"></button>
+                    <input #picker30 type="color" [(ngModel)]="widgetStyle.footer.borderColor" (ngModelChange)="
+              updatingSelectorStyles(
+                '.reply',
+                'border-color',
+                widgetStyle.footer.borderColor
+              )
+            " />
+                </div>
+            </div>
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Active Border Color</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker31.click()"></button>
+                    <input #picker31 type="color" [(ngModel)]="widgetStyle.footer.activeBorderColor" (ngModelChange)="
+              updatingSelectorStyles(
+                '.active',
+                'border-color',
+                widgetStyle.footer.activeBorderColor
+              )
+            " />
+                </div>
+            </div>
+            <!-- /1/ -->
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Background</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker50.click()"></button>
+                    <input #picker50 type="color" [(ngModel)]="widgetStyle.footer.footerBackground" (ngModelChange)="
+                  updatingSelectorStyles(
+                    '.reply',
+                    'background-color',
+                    widgetStyle.footer.footerBackground
+                  )
+          " />
+                </div>
+            </div>
+            <!-- /1/ -->
+            <!-- /2/ -->
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Replay Background</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker51.click()"></button>
+                    <input #picker51 type="color" [(ngModel)]="widgetStyle.footer.replyBackground" (ngModelChange)="
+            updatingSelectorStyles(
+              '.reply-main',
+              'background-color',
+              widgetStyle.footer.replyBackground
+            );
+            updatingSelectorStyles(
+              '.utterance-editor',
+              'background-color',
+              widgetStyle.footer.replyBackground
+            )
+          " />
+                </div>
+            </div>
+            <!-- /2/ -->
+
+            <!-- /3/ -->
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Reply Color</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker52.click()"></button>
+                    <input #picker52 type="color" [(ngModel)]="widgetStyle.footer.textAreaInputcolor" (ngModelChange)="
+            updatingSelectorStyles(
+              '.utterance-editor',
+              'color',
+              widgetStyle.footer.textAreaInputcolor
+            )
+          " />
+                </div>
+            </div>
+            <!-- /3/ -->
+
+            <!-- /4/ -->
+            <div class="inline-block ml-3">
+                <div class="text-base my-2">Placeholder Color</div>
+                <div class="flex flex-row my-1">
+                    <button (click)="picker53.click()"></button>
+                    <input #picker53 type="color" [(ngModel)]="widgetStyle.footer.textAreaPlaceHodercolor" (ngModelChange)="
+            updatingSelectorStyles(
+              'textarea::placeholder',
+              'color',
+              widgetStyle.footer.textAreaPlaceHodercolor
+            )
+          " />
+                </div>
+            </div>
+            <!-- /4/ -->
+        </div>
+        <div class="flex w-full">
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row">
+                    <div class="border p-2 input-icon">sending Icon</div>
+                    <div class="ml-3 pt-3">
+                        <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'sending', '#sendMessage img')" #fileUpload6 />
+                        <div class="file-upload">
+                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload6.click()">
+                <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full">
+                <div class="flex flex-row">
+                    <div class="border p-2 input-icon">recording Icon</div>
+
+                    <div class="ml-3 pt-3">
+                        <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'recording', '#startSpeechId')" #fileUpload7 />
+                        <div class="file-upload">
+                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload7.click()">
+                <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row w-full mt-3">
+            <div class="flex w-full">
+                <div class="flex">
+                    <div class="border p-2 input-icon">attaching Icon</div>
+
+                    <div class="ml-3 pt-3">
+                        <input type="file" class="hidden" (change)="
+                onFileSelected(
+                  $event,
+                  'attaching',
+                  '#custServiceUploadAttmentId img'
+                )
+              " #fileUpload8 />
+                        <div class="file-upload">
+                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload8.click()">
+                <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full">
+                <div class="flex">
+                    <div class="border p-2 input-icon">customer-service Icon</div>
+
+                    <div class="ml-3 pt-3">
+                        <input accept="image/*" type="file" class="hidden" (change)="
+                onFileSelected(
+                  $event,
+                  'customer-service',
+                  '#custServiceConnectId img'
+                )
+              " #fileUpload9 />
+                        <div class="file-upload">
+                            <button matTooltip="Upload Image" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload9.click()">
+                <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+              </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel (opened)="onPanelOpened('.khaIcon-demo', 11)" (closed)="onPanelClosed('.khaIcon-demo', 11)">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="text-xl text-gray-600">
+                Widget chat Icons
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="flex w-full">
+            <div class="border p-2 input-icon">chatbot-icon</div>
+
+            <div class="flex">
+                <div class="ml-3">
+                    <input accept="image/*" type="file" class="hidden" (change)="onFileSelected($event, 'chatbot-icon', '.khaIcon img')" #fileUpload10 />
+                    <div class="file-upload">
+                        <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload10.click()">
+              <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,84 @@
+<div class="content-header">
+  <div class="content-app-header">
+    <h2 class="content-header-title">
+      <span class="capitalize">{{ themeSelected?.themeName }} Theme</span>
+    </h2>
+    <span class="flex-1"></span>
+    <div class="flex justify-center items-baseline mb-2">
+      <div class="ml-5 pt-3">
+        <input
+          accept="image/*"
+          type="file"
+          class="hidden"
+          (change)="onFileSelected($event, 'bg', '.preview-background')"
+          #fileUpload1
+        />
+        <div class="file-upload">
+          <button
+            mat-mini-fab
+            color="primary"
+            class="upload-btn"
+            matTooltip="change demo background"
+            (click)="fileUpload1.click()"
+          >
+            <mat-icon svgIcon="mat:cloud_upload"></mat-icon>
+          </button>
+        </div>
+      </div>
+      <button
+        class="ml-4 flex-none"
+        color="primary"
+        mat-raised-button
+        matTooltip="Update Widget Appearance."
+        type="button"
+        (click)="updateWidgetTheme()"
+      >
+        UPDATE
+      </button>
+      <button
+        class="ml-4 flex-none"
+        color="primary"
+        mat-raised-button
+        matTooltip="Update Widget Appearance."
+        type="button"
+        (click)="reset()"
+      >
+        Reset
+      </button>
+      <button
+        class="ml-4 flex-none"
+        color="primary"
+        mat-raised-button
+        matTooltip="Update Widget Appearance."
+        type="button"
+        (click)="openUpdateImagePath()"
+      >
+        Update Image path
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <!-- Customize the experience -->
+    <vex-widget-controls
+      class="bg-white col-span-1"
+      (themeSelected)="onThemeSelected($event)"
+    ></vex-widget-controls>
+    <!-- preview -->
+    <div
+      class="preview-background flex justify-center py-3 relative col-span-2"
+      [style.background]="'url(' + backgroundImageURL + ')'"
+    >
+      <vex-widegt-preview
+        class="w-full flex justify-center mt-3"
+      ></vex-widegt-preview>
+      <div
+        id="showChatbotId"
+        class="khaIcon khaIcon-demo absolute bottom-9 right-9"
+        style="display: block"
+      >
+        <img src="../../../../assets/img/bot_150.png" />
+      </div>
+    </div>
+  </div>
+</div>

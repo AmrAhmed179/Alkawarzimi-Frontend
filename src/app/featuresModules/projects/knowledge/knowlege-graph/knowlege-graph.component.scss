@@ -1,0 +1,75 @@
+.container-with-scroll {
+    overflow: auto;
+    min-height: 49rem;
+    max-height: 49rem;
+}
+
+.big-with-scroll {
+    overflow: auto;
+    min-height: 36rem;
+    max-height: 36rem;
+}
+
+.small-with-scroll {
+    overflow: auto;
+    min-height: 10rem;
+    max-height: 10rem;
+}
+
+.network-container {
+    width: 100%;
+}
+
+::ng-deep .mat-form-field {
+    .mat-input-element {
+        font-size: 17px !important;
+    }
+}
+
+::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -0.9375em;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0;
+    padding-bottom: 0
+}
+
+::ng-deep .mat-form-field-infix {
+    padding: 0;
+}
+
+
+::ng-deep div.vis-network div.vis-edit-mode button.vis-button.vis-edit.vis-edit-mode {
+    display: none;
+}
+
+
+.content {
+    height: calc(100vh - 60px - 60px);
+
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 3 / 2;
+}
+
+.div2 {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.div3 {
+    grid-area: 4 / 1 / 7 / 2;
+}
+
+.div4 {
+    grid-area: 1 / 2 / 7 / 4;
+}

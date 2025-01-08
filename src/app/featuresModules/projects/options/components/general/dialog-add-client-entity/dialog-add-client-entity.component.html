@@ -1,0 +1,191 @@
+<div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+    <div>
+        <h1 class="text-2xl text-gray-50"> Add Client Entity</h1>
+    </div>
+    <!-- <span class="flex-1"></span>
+<button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<mat-icon svgIcon="mat:close"></mat-icon>
+</button> -->
+</div>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="entityTypeForm" *ngIf="filteredOptions" class="my-4">
+        <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="entityType" (change)="getEntityTypeFromRadioButton()" class="example-radio-group  grid grid-flow-col">
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'all'">All</mat-radio-button>
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'class'">Classes</mat-radio-button>
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'restrictedClasses'">Restricted Classes</mat-radio-button>
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'individuals'">Individuals</mat-radio-button>
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'adjective'">Adjective</mat-radio-button>
+            <mat-radio-button class="example-radio-button" color="primary" [value]="'adverbs'">Adverbs</mat-radio-button>
+        </mat-radio-group>
+    </form>
+    <!-- arabic entites -->
+    <!-- arabic entites -->
+    <!-- arabic entites -->
+    <!-- arabic entites -->
+    <!-- arabic entites -->
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='all' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='class' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='restrictedClasses' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='individuals' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='adjective' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='adverbs' && data.lang ==='ar'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[0].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[0].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <!-- english entites -->
+    <!-- english entites -->
+    <!-- english entites -->
+    <!-- english entites -->
+    <!-- english entites -->
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='all' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='class' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='restrictedClasses' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='individuals' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='adjective' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width w-full my-4" *ngIf="radioButtonValue ==='adverbs' && data.lang ==='en'">
+        <mat-label>Search</mat-label>
+        <input type="text" Enmity="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let entity of filteredOptions  | async" [value]="entity.entityInfo[1].entityText">
+                <div class="flex flex-row justify-between">
+                    <p class="text-base">{{entity.entityInfo[1].entityText}}</p>
+                    <p class="text-red-800 text-base font-semibold">{{entity.entityType}}</p>
+                </div>
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="getvalue()">Add</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

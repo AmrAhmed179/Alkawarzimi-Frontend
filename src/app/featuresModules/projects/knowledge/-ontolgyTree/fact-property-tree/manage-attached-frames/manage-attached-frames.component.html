@@ -1,0 +1,78 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Manage Attached Frames</h1>
+
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="w-[800px]  h-[370px]">
+            <mat-tab-group>
+                <mat-tab label="Attach Frame">
+                    <div class="">
+                        <div class="my-2">
+                            <mat-radio-group aria-label="Select an option">
+                                <mat-radio-button value="1">Property=>Object</mat-radio-button>
+                                <mat-radio-button class="mx-4" value="2">Property=>Subject</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
+                        <mat-form-field appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
+                            <mat-label>Serach...</mat-label>
+                            <input cdkFocusInitial matInput [(ngModel)]="search" (keyup)="formChang()">
+                        </mat-form-field>
+                    </div>
+                    <div class=" mt-1 ">
+                        <div dir="rtl" class="overflow-auto h-[200px]">
+                            <div [ngClass]="{'bg-slate-200': currentClassAndPrpsIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(classAndpropEntity, i)" *ngFor="let classAndpropEntity of classesAndProps; let i =index">
+
+                                <div class="flex w-full px-3 justify-between">
+                                    <p class="w-full font-semibold">{{classAndpropEntity.entityType}}</p>
+                                    <p class="w-full font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
+                                    <div class="flex gap-2 items-center">
+                                        <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{i+1}}</P>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-tab>
+                <mat-tab label="Create Frame">
+                    <div class="my-2">
+                        <mat-radio-group aria-label="Select an option">
+                            <mat-radio-button value="1">Property=>Object</mat-radio-button>
+                            <mat-radio-button class="mx-4" value="2">Property=>Subject</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div class="flex items-end gap-1">
+                        <mat-form-field appearance="fill" class="mt-1 h-11 w-[65%] text-[9.5px]">
+                            <mat-label>Enter Verb Base...</mat-label>
+                            <input cdkFocusInitial matInput>
+                        </mat-form-field>
+                        <button class="bg-orange-500 text-white h-9 py-1 px-2">New Sense</button>
+                    </div>
+                    <div class="h-[134px] border border-slate-900 my-2">
+
+                    </div>
+                    <p>Subject : </p>
+                    <p>Object :</p>
+                </mat-tab>
+            </mat-tab-group>
+
+
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="addClass()"> Attach</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

@@ -1,0 +1,23 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl text-gray-900">{{data.QuestionTitle}}</h1>
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <h1 class="text-base font-semibold mb-2 mt-2">{{data.pleasWriteMagic}}</h1>
+    <form [formGroup]="magicWordForm">
+        <div class="flex flex-col">
+            <mat-form-field class="flex-auto">
+                <input matInput Enmity="Magic Word" formControlName="magicword">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+    <button mat-raised-button class="w-24   text-slate-50 bg-slate-800 hover:bg-orange-500" [disabled]="!magicWordForm.valid" (click)="checkValue()">{{data.actionName}}</button>
+    <button mat-raised-button class="w-24 text-slate-50 bg-slate-800  hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+</mat-dialog-actions>

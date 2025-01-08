@@ -1,0 +1,39 @@
+<nav mat-tab-nav-bar class="mb-4">
+
+    <div class="flex items-center">
+        <div>
+            <a mat-tab-link routerLink="Survey" routerLinkActive="active">Overview</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="SurveyDetails" routerLinkActive="active">Details
+          </a>
+        </div>
+
+
+    </div>
+
+    <div class="flex justify-end mx-60">
+        <div class="mx-3 mt-3">
+            <mat-form-field class="maTop" appearance="fill">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                    <input matStartDate formControlName="startDate" placeholder="{{'startDate'|translate}}">
+                    <input matEndDate formControlName="endDate" placeholder="{{'endDate'|translate}}">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+
+        <div class="flex gap-2 items-center">
+            <div>
+                <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="refeshData()">Refresh data </button>
+            </div>
+
+
+        </div>
+    </div>
+</nav>
+
+
+<router-outlet></router-outlet>

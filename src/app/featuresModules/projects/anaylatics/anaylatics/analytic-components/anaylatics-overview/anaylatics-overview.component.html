@@ -1,0 +1,62 @@
+<div class="mx-6">
+    <div class="grid grid-cols-6 gap-4 content-stretch">
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="ALL USERS COUNT" value="{{allUserCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="UNIQUE USERS COUNT" value="{{uniqueUserCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="ONLINE USERS COUNT" value="{{onlineUserCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="ALL SESSIONS COUNT" value="{{allSessionsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="SESSIONS COUNT" value="{{sessionsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:group" iconClass="text-primary bg-primary/10" label="LOGGED SESSIONS COUNT" value="{{loggedSessionsCount}}"></vex-widget-quick-value-center>
+
+        <vex-widget-quick-value-center [change]="0" icon="mat:question_answer" iconClass="text-primary bg-primary/10" label="CONVERSATIONS COUNT" value="{{conversationsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:question_answer" iconClass="text-primary bg-primary/10" label="FAILURE" value="{{failureConversationsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:question_answer" iconClass="text-primary bg-primary/10" label="SUCCESS" value="{{successConversationsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:question_answer" iconClass="text-primary bg-primary/10" label="WELECOME INTENT COUNT" value="{{welcomeIntentsCount}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:question_answer" iconClass="text-primary bg-primary/10" label="AVERAGE UTTERANCE COUNT" value="{{averageUtteranceCount | number : '1.2-2' }}"></vex-widget-quick-value-center>
+        <div>
+
+        </div>
+        <vex-widget-quick-value-center [change]="0" icon="mat:volume_up" iconClass="text-primary bg-primary/10" label="TOTAL ESCALATIONS" value="{{totalEscalations}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:volume_up" iconClass="text-primary bg-primary/10" label="ESCA: CLIENTS REQUEST" value="{{clientsRequestEscalations}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:volume_up" iconClass="text-primary bg-primary/10" label="ESCA: REPEATED FAILURE" value="{{repatedFailureEscalations}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:volume_up" iconClass="text-primary bg-primary/10" label="ESCA: UNSUPPORTED LANGUAGE" value="{{unsupportedLanguageEscalations}}"></vex-widget-quick-value-center>
+        <vex-widget-quick-value-center [change]="0" icon="mat:volume_up" iconClass="text-primary bg-primary/10" label="ESCA: KEYWORD" value="{{keywordEscalations}}"></vex-widget-quick-value-center>
+    </div>
+
+    <div class="flex flex-row gap-4">
+        <div class="card my-6 w-1/2 flex flex-col items-center">
+            <div>
+                <h1 class="text-2xl mt-3">Utterance Status Percentage</h1>
+            </div>
+            <div id="piechart" *ngIf="pieChartSeries.length > 0">
+                <vex-chart [options]="chartOptions" [series]="pieChartSeries"></vex-chart>
+            </div>
+        </div>
+
+        <div class="card my-6 w-1/2 flex flex-col">
+            <div class="text-center">
+                <h1 class="text-2xl mt-3">Users and Sessions</h1>
+            </div>
+            <div id="areaChart" *ngIf="areaChartSeries.length > 0">
+                <vex-chart [options]="chartOptionsArea" [series]="areaChartSeries"></vex-chart>
+            </div>
+        </div>
+
+        <div class="card my-6 w-1/2 flex flex-col ">
+            <div class="text-center">
+                <h1 class="text-2xl mt-3 ">Sessions Per Channels</h1>
+            </div>
+            <div id="columnchart" *ngIf="columnChartSeries.length > 0">
+                <vex-chart [options]="chartOptionsColumn" [series]="columnChartSeries"></vex-chart>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-6 w-full flex flex-col ">
+        <div class="text-center">
+            <h1 class="text-2xl mt-3 ">Top Intent</h1>
+        </div>
+        <div *ngIf="listOfRealNameIntent.length > 0">
+            <vex-chart [options]="chartOptionsColumn2" [series]="columnChartSeries2"></vex-chart>
+        </div>
+    </div>
+</div>

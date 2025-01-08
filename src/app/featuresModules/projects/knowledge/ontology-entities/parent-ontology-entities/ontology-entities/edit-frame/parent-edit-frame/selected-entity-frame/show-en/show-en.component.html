@@ -1,0 +1,27 @@
+<ng-container>
+    <mat-dialog-content class="w-[900px] ">
+        <div class=" px-2 text-base font-medium rounded-sm shadow-b  border h-[400px]">
+            <div class="flex rounded-sm border-[10px] border-[#E77512] mt-3">
+                <div class="w-[10%] bg-[#EEEEEE]  flex items-center justify-center">
+                    <mat-checkbox color="primary">
+                        <p class="text-sm">مصدر</p>
+                    </mat-checkbox>
+                </div>
+                <input class="w-[85%] border py-2 px-4 focus:outline-none" type="text" placeholder="Search & Enter">
+                <div class="w-[5%] bg-[#EEEEEE] flex items-center justify-center">
+                    <mat-icon svgIcon="mat:search"></mat-icon>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2 px-2 py-4 text-base font-medium border h-[350px] ">
+            <div class=" mx-6 mt-3 px-10 flex justify-between items-center bg-[#F6F6F6] border" *ngFor="let stem of stems">
+                <p class="text-base">{{stem.stemId}}</p>
+                <p class="text-[#448DB0] text-base">{{stem.pos.name}}</p>
+                <p class="text-lg font-semibold">{{stem.stem}}</p>
+            </div>
+        </div>
+
+
+    </mat-dialog-content>
+</ng-container>

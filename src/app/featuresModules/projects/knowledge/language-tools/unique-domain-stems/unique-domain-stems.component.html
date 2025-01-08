@@ -1,0 +1,152 @@
+<div class="content">
+    <div class="parent h-full gap-4 p-4">
+        <div class="div1 card">
+            <div class="unique-stems-parent h-full">
+                <div class="unique-button">
+                    <button mat-flat-button color="primary">Get Unique Stems</button>
+                </div>
+                <div class="unique-table">
+                    <div class="table-container">
+                        <table mat-table [dataSource]="clickedItem">
+                            <!-- Column definitions -->
+                            <ng-container matColumnDef="entityId">
+                                <th mat-header-cell *matHeaderCellDef> ID </th>
+                                <td mat-cell *matCellDef="let entity">{{ entity.entityId }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="entityType">
+                                <th mat-header-cell *matHeaderCellDef> Type </th>
+                                <td mat-cell *matCellDef="let entity">{{ entity.entityType }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="entityText">
+                                <th mat-header-cell *matHeaderCellDef> Text </th>
+                                <td mat-cell *matCellDef="let entity">{{ entity.entityText }}</td>
+                            </ng-container>
+
+                            <!-- Header and row definitions -->
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="div2 card">
+
+            <div class="analysis-parent">
+
+                <div class="analysis-div1 flex items-center justify-center">
+                    <div class="w-full">
+                        <div class=" flex items-center justify-center gap-6">
+                            <mat-form-field appearance="standard" class="w-9/12">
+                                <mat-label>Sense description..</mat-label>
+                                <input matInput type="text">
+                            </mat-form-field>
+                            <button mat-flat-button color="primary">Analyze</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-div2">
+                    <mat-table [dataSource]="dataSource" class="w-full ">
+                        <!-- Number Column -->
+                        <ng-container matColumnDef="number">
+                            <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</mat-cell>
+                        </ng-container>
+
+                        <!-- Word Column -->
+                        <ng-container matColumnDef="word">
+                            <mat-header-cell *matHeaderCellDef>Word</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.word }}</mat-cell>
+                        </ng-container>
+
+                        <!-- POS Column -->
+                        <ng-container matColumnDef="pos">
+                            <mat-header-cell *matHeaderCellDef>POS</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.pos }}</mat-cell>
+                        </ng-container>
+
+                        <!-- StemId Column -->
+                        <ng-container matColumnDef="stemId">
+                            <mat-header-cell *matHeaderCellDef>StemId</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.stemId }}</mat-cell>
+                        </ng-container>
+
+                        <!-- Prefix Column -->
+                        <ng-container matColumnDef="prefix">
+                            <mat-header-cell *matHeaderCellDef>Prefix</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.prefix }}</mat-cell>
+                        </ng-container>
+
+                        <!-- Suffix Column -->
+                        <ng-container matColumnDef="suffix">
+                            <mat-header-cell *matHeaderCellDef>Suffix</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.suffix }}</mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumnsTwo"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsTwo"></mat-row>
+                    </mat-table>
+                </div>
+            </div>
+
+        </div>
+        <div class="div3 card">
+            <div class="sub-parent card h-full">
+
+                <div class="search flex items-center justify-center">
+                    <div class="w-full">
+                        <div class="flex gap-15 items-baseline px-8 mb-0">
+                            <mat-form-field appearance="standard" class="w-full">
+                                <mat-label>Search for a stem..</mat-label>
+                                <input matInput [formControl]="descriptionFormControl" type="text">
+                                <mat-icon matSuffix svgIcon="mat:search"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-content">
+                    <cdk-virtual-scroll-viewport itemSize="50" class="viewport">
+                        <div *cdkVirtualFor="let entity of filteredStems; let i = index"
+                            class="border-b p-2 w-full hover:bg-orange-100 cursor-pointer"
+                            (click)="onItemClicked(entity)">
+                            <div class="grid grid-cols-4 gap-2 items-center justify-center"> <span
+                                    class="px-2 text-orange-500 text-base">{{ i + 1 }}</span>
+                                <span class="px-2 text-red-500 text-base" *ngIf="entity.Irregular==false">{{
+                                    entity.stemText }}</span>
+                                <span class="" *ngIf="entity.Irregular==true">
+                                    <span class="text-red-500 text-base">{{ entity.stemText }}</span> &nbsp;
+                                    <span class="text-blue-500 text-base">{{ entity.mainStem }}</span>
+                                </span>
+                                <span class="px-2 text-orange-500 text-base">{{ entity.frq }}</span>
+                                <span class="px-2 text-green-500 text-base">{{ entity.type }}</span>
+                            </div>
+                        </div>
+                    </cdk-virtual-scroll-viewport>
+                </div>
+
+
+                <div class="info flex items-center justify-center">
+                    <div class="w-full">
+                        <div class="flex items-center justify-center">
+                            <div>
+                                <span class="text-orange-500 font-semibold capitalize">
+                                    All stems count: <span class="tracking-wider ">{{uniqueStems.length}}</span>
+                                </span> &nbsp;
+                                <span class="border-separate"></span>
+                                <span class="text-red-500 font-semibold capitalize">
+                                    Selected languages stems Count: <span
+                                        class="tracking-wider">{{langUniqueStems.length}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

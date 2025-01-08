@@ -1,0 +1,79 @@
+.widget-preview-container {
+  min-width: 424px;
+  min-height: 700px;
+  z-index: 2000;
+}
+
+.convesation-size {
+  width: auto !important;
+}
+
+#alkahwarizmi-chat-container {
+  left: 0px !important;
+  position: absolute !important;
+  height: 500px !important;
+  top: 0px !important;
+}
+
+.reply {
+  position: absolute !important;
+  bottom: auto !important;
+}
+
+.utterance-editor {
+  width: auto;
+}
+
+.preview {
+  height: 700px;
+  overflow: hidden;
+}
+
+.convesation-size {
+  height: 620px !important;
+}
+
+.msg_block {
+  margin: 0px !important;
+}
+
+.message-time {
+  margin: 7px 0px 0px 23px !important;
+}
+
+.draggable {
+  cursor: move;
+  position: relative;
+  // transition: transform 0.2s ease-out;
+  z-index: 1;
+}
+
+.dragging {
+  z-index: 2;
+}
+
+.reply div {
+  margin-left: .5rem;
+}
+
+.org-logo {
+  background-size: contain;
+}
+
+.message ul,
+.message ol {
+  min-width: 251px !important;
+  // display: block;
+}
+
+// .menu {
+//   display: block;
+// }
+
+.message::-webkit-scrollbar {
+  width: 7px !important;
+}
+
+// .smenu {
+//   display: flex !important;
+// }

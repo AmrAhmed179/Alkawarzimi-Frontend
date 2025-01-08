@@ -1,0 +1,103 @@
+<div class="content">
+    <div class="parent h-full gap-4 p-4">
+        <div class="div1 card">
+            <div class="unique-stems-parent h-full">
+                <div class="unique-button">
+                    <button mat-flat-button color="primary">Get English Verbs</button>
+                </div>
+                <div class="unique-table">
+                    <div class="table-container">
+                        <div class=" border p-2 rounded-sm  w-full">
+                            <div class="grid grid-cols-4 w-3/4">
+                                <p class="text-[#FFB04E] font-semibold text-base rounded-sm">Describtion:&nbsp; <span></span></p>
+                                <p class="col-span-3 text-base font-medium " dir="rtl">{{clickedItem?.description}}</p>
+                            </div>
+                        </div>
+                        <div class=" border p-2 mt-2 rounded-sm">
+                            <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">synonyms :&nbsp; <span></span></p>
+                            <div (click)="clickOnSynonum()" class="bg-[#e9e8e8] px-3 pt-2 border-b h-10">
+                                <span *ngFor="let syn of clickedItem?.synonyms" class="text-base font-semibold ">({{syn}})</span>
+
+                                <span class="text-base font-semibold ">{{clickedItem?.verb}}</span>
+                            </div>
+                            <div *ngIf="showSyn">
+                                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let syn of clickedItem?.synonyms">
+                            <div class="flex items-center ">
+                              <p class="mb-1">{{syn}}</p>
+                              <mat-icon  class="icon-xs" svgIcon="mat:close"></mat-icon>
+                      </div>
+                      </button>
+                            </div>
+
+                        </div>
+
+                        <div class=" border p-2 mt-2 rounded-sm">
+                            <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">English :&nbsp; <span></span></p>
+                            <div *ngIf="clickedItem  " (click)="clickOnEnglish()" class="bg-[#e9e8e8] flex px-3 pt-2 border-b h-12 overflow-x-auto">
+                                <p class="text-base text-[#ADADAD] font-semibold " *ngFor="let engSy of engSyn">({{engSy.verb}},{{engSy.senseId}})</p>
+                            </div>
+                            <div *ngIf="showEnglish && clickedItem ">
+                                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let engSy of engSyn">
+                            <div class="flex items-center ">
+                              <p class="mb-1">({{engSy.verb}})</p>
+                              <mat-icon class="icon-xs" svgIcon="mat:close"></mat-icon>
+                      </div>
+                      </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="div3 card">
+            <div class="sub-parent card h-full">
+
+                <div class="search flex items-center justify-center">
+                    <div class="w-full">
+                        <div class="flex gap-15 items-baseline px-8 mb-0">
+                            <mat-form-field appearance="standard" class="w-full">
+                                <mat-label>Search for a Verb..</mat-label>
+                                <input matInput [formControl]="descriptionFormControl" type="text">
+                                <mat-icon matSuffix svgIcon="mat:search"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-content">
+                    <cdk-virtual-scroll-viewport itemSize="50" class="viewport">
+                        <div *cdkVirtualFor="let entity of filteredStems; let i = index" class="border-b p-2 w-full hover:bg-orange-100 cursor-pointer" (click)="onItemClicked(entity)">
+                            <div class="grid grid-cols-4 gap-2 items-center justify-center"> <span class="px-2 text-orange-500 text-base">{{ i + 1 }}</span>
+                                <span *ngIf="entity.description == null" class="px-2 text-red-500 text-base font-medium">{{entity.verb }}</span>
+                                <span *ngIf="entity.description != null" class="px-2 text-green-500 text-base font-medium">{{entity.verb }}</span>
+
+                                <span class="px-2 text-orange-500 text-base">{{ entity.senseId }}</span>
+                            </div>
+                        </div>
+                    </cdk-virtual-scroll-viewport>
+                </div>
+
+
+                <!-- <div class="info flex items-center justify-center">
+                    <div class="w-full">
+                        <div class="flex items-center justify-center">
+                            <div>
+                                <span class="text-orange-500 font-semibold capitalize">
+                                  All stems count: <span class="tracking-wider ">{{uniqueStems.length}}</span>
+                                </span> &nbsp;
+                                <span class="border-separate"></span>
+                                <span class="text-red-500 font-semibold capitalize">
+                                  Selected languages stems Count: <span
+                                      class="tracking-wider">{{langUniqueStems.length}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>

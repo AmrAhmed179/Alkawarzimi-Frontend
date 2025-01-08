@@ -1,0 +1,301 @@
+<div
+  class="relative preview"
+  id="draggable-element"
+  class="draggable"
+  (mousedown)="onDragStart($event)"
+>
+  <div class="widget-preview-container w-full" *ngIf="isElementVisible">
+    <div id="alkahwarizmi-chat-container">
+      <div
+        id="alkahwarizmi-chat-container-header"
+        class="kha-heading kha-heading-demo"
+      >
+        <div class="alkhawarizmi-logo">
+          <img
+            src=""
+            onerror="this.onerror=null;this.src='../../../../assets/img/150.png'"
+          />
+          <img src="" alt="" />
+          <button
+            type=""
+            class="btn btn-success disabled"
+            id="incompleted"
+            style="
+              display: none;
+              width: 110px;
+              float: left;
+              background-color: #147b0e;
+              color: #0c5008;
+            "
+          >
+            <span style="color: #fff">الإشعارات</span>
+            <div
+              id="bellId"
+              src="../../../../assets/img/bel.png"
+              style="position: relative; left: -10px"
+            >
+              <span
+                class="badge"
+                id="nofProcessId"
+                style="
+                  display: none;
+                  background: #c00;
+                  position: relative;
+                  left: 18px;
+                  top: -1px;
+                "
+                >1</span
+              >
+            </div>
+          </button>
+        </div>
+        <div class="widget-tools">
+          <div id="logoutIconId" style="display: block"></div>
+          <div class="minmize-icon">
+            <a href="javascript:void(0)" id="minmizeId">
+              <div class="minimize" style="background-repeat: no-repeat"></div>
+            </a>
+          </div>
+        </div>
+        <div class="org-logo">
+          <img
+            id="ownerLogoId"
+            alt=""
+            src="https://orchestrator.alkhwarizmi.chat/plugins/images/bot_171.png"
+            onerror="this.onerror=null;this.src='https://orchestrator.alkhwarizmi.chat/plugins/images/bot_171.png'"
+          />
+        </div>
+      </div>
+
+      <div
+        class="convesation-size"
+        id="chatbotModalId"
+        tabindex="-1"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true"
+      >
+        <!-- Conversation - START -->
+        <div
+          class="message message-demo"
+          id="conversation"
+          style="direction: rtl; outline: none"
+          tabindex="1"
+        >
+          <div class="msg_block pb-4" id="msg_block">
+            <div class="row message-body">
+              <div class="col-sm-12 message-main-sender">
+                <div class="sender sender-demo">
+                  <div class="message-text ar">
+                    <div class="image-card">
+                      <a target="_blank" href="https://www.riyadbank.com/"
+                        ><img src="../../../../assets/img/riyadbank3.jpg" />
+                        <h3>
+                          <p>
+                            بنك الرياض يرحب بكم <br />المساعد الرقمي (رياض) في
+                            خدمتك على مدار الساعة
+                          </p>
+                        </h3>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="message-time message-time-demo">15:36</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Menu -->
+            <div class="row message-body">
+              <div class="col-sm-12 message-main-sender">
+                <div class="sender">
+                  <div class="message-text ar">
+                    <h3>أقدر أخدمك بالأمور التالية:</h3>
+                    <ol class="smenu-demo smenu">
+                      <li>تطبيق توكلنا</li>
+                      <li>لقاح كورونا</li>
+                      <li>التصاريح</li>
+                      <li>رفع شكوى</li>
+                      <li>تتبع شكوى</li>
+                    </ol>
+                  </div>
+                  <div class="message-time">10:36</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row message-body">
+              <div class="col-sm-12 message-main-sender">
+                <div class="sender">
+                  <div class="message-text ar">
+                    <h3>هل ترغب في الدخول ك:</h3>
+                    <ol class="menu-demo menu">
+                      <li>مستفيد</li>
+                      <li>زائر / سائح / معتمر</li>
+                      <li>صاحب عمل</li>
+                      <li>مقدم خدمة صحية</li>
+                      <li>شركة تأمين</li>
+                      <li>شركة إدارة المطالبات</li>
+                    </ol>
+                  </div>
+                  <div class="message-time message-time-demo">15:36</div>
+                </div>
+              </div>
+            </div>
+            <div class="row message-body">
+              <div class="col-sm-12 message-main-sender">
+                <div class="sender">
+                  <div class="message-text ar">
+                    حسنا ... تفضل بتقديم استفسارك
+                  </div>
+                  <div class="message-time message-time-demo">15:36</div>
+                </div>
+              </div>
+            </div>
+            <div class="row message-body">
+              <div
+                class="col-sm-12 message-main-receiver message-main-receiver-demo"
+              >
+                <div class="receiver">
+                  <div class="message-text ar">خدمة العملاء من فضلك</div>
+                  <div class="message-time message-time-demo">15:46</div>
+                </div>
+              </div>
+            </div>
+            <div class="row message-body">
+              <div
+                class="col-sm-12 message-main-employee message-main-employee-demo"
+              >
+                <div class="employee">
+                  <div class="message-text ar">
+                    جاري التحويل علي موظف خدمة العملاء برجاء الانتظار...
+                  </div>
+                  <div class="message-time message-time-demo">15:46</div>
+                </div>
+              </div>
+            </div>
+            <div class="row message-body">
+              <div class="col-sm-12 message-main-sender">
+                <div class="sender">
+                  <div class="message-text ar">
+                    <p>
+                      هي المنتجات والخدمات التي يقدمها بنك الرياض لعملائه من
+                      أصحاب المنشآت المتناهية الصغر والصغيرة والمتوسطة، وتحتوي
+                      على العديد من المنتجات البنكية مثل: الحسابات والقروض
+                      الخاصة بهذا النوع من العملاء، والاعتمادات المالية، وتحصيل
+                      الفواتير، وغيرها من الخدمات.
+                    </p>
+                    <div class="more more-demo">هل تريد معرفة المزيد؟</div>
+                    <div class="moreOptions flex">
+                      <span class="yes">نعم</span><span class="no">لا</span>
+                    </div>
+                  </div>
+                  <div class="message-time message-time-demo">0:6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END msg stack -->
+        </div>
+
+        <div
+          class="reply-demo reply"
+          id="replaySectionId"
+          [class.active]="isActive"
+          (click)="toggleActive()"
+        >
+          <div class="reply-recording" id="speechRecognationId">
+            <img
+              class="microphone mouse-pointer"
+              id="startSpeechId"
+              alt=""
+              src="https://orchestrator.alkhwarizmi.xyz/images/microphone_150.png"
+              onerror="this.onerror = null; this.src = 'https://orchestrator.alkhwarizmi.xyz/images/microphone_150.png';"
+            />
+
+            <img
+              class="microphone mouse-pointer"
+              id="stopSpeechId"
+              alt=""
+              src="../../../../assets/img/g-voice.gif"
+              style="
+                display: none;
+                background: #00af9a;
+                height: 32px;
+                width: 36px;
+              "
+            />
+          </div>
+
+          <div
+            class="reply-send"
+            id="sendMessage"
+            style="display: block !important"
+          >
+            <img
+              class="microphone mouse-pointer"
+              alt=""
+              src="../../../../assets/img/send_150.png"
+              onerror="this.onerror = null; this.src = '/images/send.svg';"
+            />
+          </div>
+
+          <div
+            class="pull-left"
+            id="custServiceConnectId"
+            style="display: block"
+          >
+            <img
+              src="../../../../assets/img/customer_service_close_150.png"
+              onerror="this.onerror = null; this.src = 'https://orchestrator.alkhwarizmi.xyz/images/microphone_150.png';"
+            />
+          </div>
+          <input
+            type="file"
+            id="attchedInput"
+            style="display: none"
+            accept="image/*"
+          />
+          <div
+            class="pull-left"
+            id="custServiceUploadAttmentId"
+            style="display: block"
+          >
+            <img
+              src="../../../../assets/img/attachment_icon_150.png"
+              onerror="this.onerror = null; this.src = '/plugins/images/attachment_icon.png';"
+            />
+          </div>
+          <!-- <div class="reply-send" id="mainMenuId">
+            <img class="microphone mouse-pointer" alt="" src="/images/menu.png" />
+        </div>-->
+          <div class="reply-tts">
+            <span class="tts-voice">Voice :</span>
+            <label
+              class="kha-check-container"
+              style="display: inline-block !important; margin-top: 5px"
+            >
+              <input type="checkbox" id="voiceCheckId" />
+              <span class="checkmark"> </span>
+            </label>
+          </div>
+          <div class="reply-main">
+            <textarea
+              class="form-control utterance-editor"
+              id="msg_input"
+              placeholder="ادخل استفسارك هنا..."
+              dir="rtl"
+              style="height: 25px"
+            ></textarea>
+          </div>
+          <input id="userId" type="hidden" value="24092" />
+          <input id="chatbotId" type="hidden" value="150" />
+          <input
+            id="tokenId"
+            type="hidden"
+            value="eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZXppYW50b3UiLCJleHAiOjE2ODYwNTU1MzIsImlzcyI6ImFzYXNFbHFhcmEtbGl2ZUNoYXQiLCJhdWQiOiIyNDA5MiJ9._fE2tVO3Dkniicxc83v6HtSQD4YM0jklBHOX2IXz0ko"
+          />
+          <input id="liveChatId" type="hidden" value="KHWARIZMI" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

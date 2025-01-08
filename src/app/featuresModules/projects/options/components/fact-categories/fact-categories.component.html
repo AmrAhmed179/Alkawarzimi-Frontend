@@ -1,0 +1,23 @@
+<div class="-mt-4">
+    <div class="px-14 pt-4" style="background-color: #EEF0F2;">
+        <form [formGroup]="addFactForm" class="flex flex-col ">
+            <mat-form-field class=" w-1/4 mb-6" style="min-height:40px; ">
+                <input matInput Enmity="add Fact" formControlName="name">
+                <mat-error *ngIf="addFactForm.get('name').hasError('required')">name is required</mat-error>
+            </mat-form-field>
+
+        </form>
+        <div class="pb-2 -mt-6">
+            <button mat-raised-button [disabled]="!addFactForm.valid" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8" (click)="addFact()">Add</button>
+        </div>
+    </div>
+    <div class="w-1/2 overflow-auto mt-3 px-14" style="height: 550px;">
+        <div class="flex flex-row gap-32 bg-gray-100 border-b-2 border-x-2 rounded-sm px-4 h-12 items-center" style="background-color: #EEF0F2;" *ngFor="let fact of factCategories">
+            <p class="w-72 text-base">{{fact.name}}</p>
+            <p class="w-64 font-semibold text-base">{{fact.id}}</p>
+            <div *ngIf="fact.id !== 0">
+                <button (click)="removeFact(fact.id)" class="text-orange-500"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+            </div>
+        </div>
+    </div>
+</div>

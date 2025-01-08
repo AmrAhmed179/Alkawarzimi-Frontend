@@ -1,0 +1,75 @@
+<div class="w-[920px]">
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Deconstruct Class
+            </h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="h-[700px]">
+            <div class="border-[2px]">
+                <form [formGroup]="form" class="mb-2 w-full">
+                    <mat-form-field appearance="fill" class="h-10 w-full text-[9.5px]">
+                        <mat-label>Serach...</mat-label>
+                        <input cdkFocusInitial matInput formControlName="search" (keyup)="formChang()">
+                    </mat-form-field>
+                </form>
+
+
+                <div dir="rtl" class="h-[200px] overflow-auto">
+                    <div [ngClass]="{'bg-slate-200': currentIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(entity, i)" *ngFor="let entity of ontologyEntities; let i =index">
+
+                        <div class="flex justify-between w-full px-3 items-center">
+                            <p class="w-full font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                            <div class="flex gap-2 items-center">
+                                <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{entity._id}}</P>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-2 mx-1">
+                <p class="text-lg font-normal">Entity Count : {{ontologyEntities.length}}</p>
+            </div>
+            <div class="">
+                <button (click)="addRestrictedClass()" class="rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-slate-50 px-2 py-1" type="button">Add Restrictions</button>
+            </div>
+
+            <div class="flex justify-end mb-3 -mt-5">
+                <div>
+                    <button class="rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-slate-50 px-2 py-1 mx-3" type="button">Add Class</button>
+                    <button class="rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-slate-50 px-2 py-1" type="button">Main Class</button>
+                </div>
+            </div>
+
+            <div dir="rtl" class="h-[200px] overflow-auto border-[2px]">
+                <div [ngClass]="{'bg-slate-200': currentIndex2 == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList2(entity, i)" *ngFor="let entity of restrictedClassesList; let i =index">
+
+                    <div class="flex justify-between w-full px-3 items-center">
+                        <p class="w-full font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                        <div class="flex gap-2 items-center">
+                            <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{entity._id}}</P>
+                        </div>
+                        <div>
+                            <button (click)="deleteRestrictedClas(i)"><mat-icon  class="icon-base text-red-500" svgIcon="mat:delete"></mat-icon></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-2 mx-1">
+                <p class="text-lg font-normal">Entity Count : {{restrictedClassesList.length}}</p>
+            </div>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+                <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" type="button">Save</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

@@ -1,0 +1,87 @@
+<!-- <p>admin home works!</p>
+<h1>go to <a routerLink="projects">projcts</a></h1> -->
+
+<div class="bg-[#272a33] py-10">
+    <div class="m-4">
+        <a href="" class="text-yellow-700 text-base tracking-wider hover:text-slate-100 hover:underline "><strong>ALKWARAZIMI </strong></a>
+    </div>
+
+    <div class="flex justify-between gap-4 mx-4 mb-4">
+        <div class="bg-[#2f323b] h-24 w-full hover:bg-orange-700 rounded-md	hover:shadow-xl hover:shadow-orange-500 relative">
+            <div class="absolute top-4 left-4 flex justify-start items-center gap-4">
+                <mat-icon svgIcon="mat:person_outline" matTooltip="" class=" text-orange-400  "></mat-icon>
+                <h1 class="text-lg text-gray-50">17</h1>
+                <p class="text-slate-50">Bot Developer Users</p>
+            </div>
+        </div>
+
+        <div class="bg-[#2f323b] h-24 w-full hover:bg-orange-700 rounded-md	hover:shadow-xl hover:shadow-orange-500 relative">
+            <div class="absolute top-4 left-4 flex justify-start items-center gap-4">
+                <mat-icon svgIcon="mat:group" matTooltip="" class=" text-orange-400  "></mat-icon>
+                <h1 class="text-lg text-gray-50">0</h1>
+                <p class="text-slate-50">Messanger Users</p>
+            </div>
+        </div>
+
+        <div class="bg-[#2f323b] h-24 w-full hover:bg-orange-700 rounded-md	hover:shadow-xl hover:shadow-orange-500 relative">
+            <div class="absolute top-4 left-4 flex justify-start items-center gap-4">
+                <mat-icon svgIcon="mat:shopping_cart" matTooltip="" class=" text-orange-400  "></mat-icon>
+                <h1 class="text-lg text-gray-50">1</h1>
+                <p class="text-slate-50">Count OF Chatbots</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mx-4">
+        <h1 class="text-xl my-1">Chatbots</h1>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <!-- Position Column -->
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let element">
+                    <a href="" class="text-yellow-700 text-base tracking-wider hover:text-slate-100 hover:underline "><strong>{{element.ID}}</strong></a>
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="Intents">
+                <th mat-header-cell *matHeaderCellDef>Intents</th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.Intents}}
+                </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="DialogNodes">
+                <th mat-header-cell *matHeaderCellDef>Dialog Nodes</th>
+                <td mat-cell *matCellDef="let element">{{element.DialogNodes}}
+                </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="Entities">
+                <th mat-header-cell *matHeaderCellDef>Entities</th>
+                <td mat-cell *matCellDef="let element"> {{element.Entities}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="Created">
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.Created}}
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+</div>

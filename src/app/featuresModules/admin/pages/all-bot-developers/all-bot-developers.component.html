@@ -1,0 +1,58 @@
+<div class="bg-[#2F323B] ">
+    <div class="m-6 ">
+        <div class="my-4 pt-4">
+            <a href="" class="text-yellow-700 text-2xl tracking-wider hover:text-slate-100 hover:underline "><strong>ALL BOT DEVELOPERS </strong></a>
+        </div>
+        <!-- <a href="" class="text-2xl py-6 hover:text-orange-600 hover:underline">ALL BOT DEVELOPERS</a> -->
+
+        <div class="mt-4">
+            <div class="bg-[#1A202E] h-16  ">
+                <h1 class="text-base pl-4 pt-5">All bot developers</h1>
+            </div>
+
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
+                <!-- Position Column -->
+                <ng-container matColumnDef="Name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.name}}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Email">
+                    <th mat-header-cell *matHeaderCellDef>Email</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.email}}
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Role">
+                    <th mat-header-cell *matHeaderCellDef>Role</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.role}}
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="Actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="primary" aria-label="Example icon button with a vertical three dot icon" (click)="openEditBotDeveloper(element)">
+                <mat-icon svgIcon="mat:edit"  matTooltip="Edit"></mat-icon>
+                </button>
+
+                        <button mat-icon-button color="warn" aria-label="Example icon button with a vertical three dot icon" (click)="deleteBotDeveloper(element)">
+                <mat-icon svgIcon="mat:delete" matTooltip="Delete"></mat-icon>
+                </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
+    </div>
+</div>

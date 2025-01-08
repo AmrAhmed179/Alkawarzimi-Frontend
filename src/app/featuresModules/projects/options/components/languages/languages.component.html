@@ -1,0 +1,26 @@
+<div class="my-10 mx-20">
+    <div class="h-16 w-1/2 rounded-sm bg-neutral-100 border border-zinc-400 flex flex-row items-center justify-between px-6">
+        <p>Arabic - {{languages[0]}}</p>
+        <p class="text-gray-300">DEFAULT</p>
+    </div>
+
+    <div *ngIf="languages[1]" class="h-16 w-1/2 rounded-sm bg-neutral-100 border border-zinc-400 flex flex-row items-center justify-between mt-1 px-6">
+        <p>English - {{languages[1]}}</p>
+        <button (click)="removeLanguage()" class="text-orange-500"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+    </div>
+
+    <div *ngIf="projectOptions">
+        <form *ngIf="languages.length < 2" [formGroup]="langugeForm" class="flex flex-col mt-7">
+            <mat-form-field class="flex-auto w-96">
+                <mat-select formControlName="lang">
+                    <mat-option value="en">English</mat-option>
+                </mat-select>
+                <mat-error *ngIf="checkError('lang', 'required')">Language is required</mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button [disabled]="!langugeForm.valid" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8" (click)="addLanguage()">Add</button>
+            </div>
+        </form>
+    </div>
+
+</div>

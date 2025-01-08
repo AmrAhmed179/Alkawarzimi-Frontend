@@ -1,0 +1,122 @@
+<div class="content">
+
+    <div class="grid grid-cols-6 gap-4 px-4 py-4 justify-center items-center h-full">
+        <!-- <div class="grid grid-rows-[30%, 1fr] gap-4">
+            <div class="p-4 card ">
+
+                <mat-radio-group class="flex items-center justify-center gap-3">
+                    <mat-radio-button value="nodes" checked (change)="toggleContent('nodes')">Nodes</mat-radio-button>
+                    <mat-radio-button value="relations"
+                        (change)="toggleContent('relations')">Relations</mat-radio-button>
+                </mat-radio-group>
+
+                <span class="flex items-center justify-center gap-3">
+                    <mat-form-field appearance="standard">
+                        <input type="text" matInput placeholder="Search here..." aria-label="Search"
+                            [formControl]="searchControl" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let item of filteredItems" [value]="item"
+                                (onSelectionChange)="handleClick(item)">
+                                {{ item }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </span>
+
+                <span class="flex items-center justify-center gap-3">
+                    <button mat-flat-button color="primary" (click)="loadChoice()">Load</button>
+                </span>
+
+            </div>
+
+            <div class="flex items-center justify-center gap-3">
+                <button mat-flat-button (click)="GetProjectNodesAndRelations()">Nodes & Relations</button>
+            </div>
+            <div class="p-4 card overflow-y-auto">
+                <ng-container *ngIf="selectedOption === 'nodes'">
+                    <div *ngFor="let nodeName of nodeNames" style="cursor: pointer;" class="border-b">
+                        <a (click)="handleClick(nodeName)"
+                            style="max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;"
+                            class="p-2 hover:text-orange-600">
+                            {{ nodeName }}
+                        </a>
+                    </div>
+                </ng-container>
+
+
+                <ng-container *ngIf="selectedOption === 'relations'">
+                    <div class="" *ngFor="let relation of relations" style="cursor: pointer;" class="border-b">
+                        <a (click)="handleClick(relation)"
+                            style="max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;"
+                            class="p-2 hover:text-orange-600" dir="rtl">
+                            {{ relation }}
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+        </div> -->
+
+        <div class="grid grid-rows-[30%, 10%, 60%] gap-4 h-full">
+            <!-- First div with 30% height -->
+            <div class="p-4 card">
+                <mat-radio-group class="flex items-center justify-center gap-3">
+                    <mat-radio-button value="nodes" checked (change)="toggleContent('nodes')">Nodes</mat-radio-button>
+                    <mat-radio-button value="relations"
+                        (change)="toggleContent('relations')">Relations</mat-radio-button>
+                </mat-radio-group>
+
+                <span class="flex items-center justify-center gap-3">
+                    <mat-form-field appearance="standard">
+                        <input type="text" matInput placeholder="Search here..." aria-label="Search"
+                            [formControl]="searchControl" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let item of filteredItems" [value]="item"
+                                (onSelectionChange)="handleClick(item)">
+                                {{ item }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </span>
+
+                <span class="flex items-center justify-center gap-3">
+                    <button mat-flat-button color="primary" (click)="loadChoice()">Load</button>
+                </span>
+            </div>
+
+            <!-- Second div with 10% height -->
+            <div class="flex items-center justify-center gap-3">
+                <button mat-flat-button (click)="GetProjectNodesAndRelations()">Nodes & Relations</button>
+            </div>
+
+            <!-- Third div with remaining height -->
+            <div class="p-4 card max-h-[66vh] overflow-y-auto">
+                <ng-container *ngIf="selectedOption === 'nodes'">
+                    <div *ngFor="let nodeName of nodeNames" style="cursor: pointer;" class="border-b">
+                        <a (click)="handleClick(nodeName)"
+                            style="max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;"
+                            class="p-2 hover:text-orange-600">
+                            {{ nodeName }}
+                        </a>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="selectedOption === 'relations'">
+                    <div class="" *ngFor="let relation of relations" style="cursor: pointer;" class="border-b">
+                        <a (click)="handleClick(relation)"
+                            style="max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;"
+                            class="p-2 hover:text-orange-600" dir="rtl">
+                            {{ relation }}
+                        </a>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+
+        <div class="col-span-5 card h-full ">
+            <div id="network" #siteConfigNetwork class="network-container h-full"></div>
+            <p id="selection"></p>
+        </div>
+    </div>
+
+</div>

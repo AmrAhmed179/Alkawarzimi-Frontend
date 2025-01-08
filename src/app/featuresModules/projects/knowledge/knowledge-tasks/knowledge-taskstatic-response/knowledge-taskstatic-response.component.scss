@@ -1,0 +1,25 @@
+/* Apply styles to the label */
+
+
+/* Apply styles to the input */
+
+.inputValue {
+    width: 100%;
+    padding: 4px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+/* Apply styles to the input on focus */
+
+.inputValue:focus {
+    outline: none;
+    /* Remove the default focus outline */
+    border-color: #eba612;
+    /* Change the border color on focus */
+    box-shadow: 0 0 5px rgba(240, 145, 2, 0.966);
+    /* Add a subtle box shadow on focus */
+}

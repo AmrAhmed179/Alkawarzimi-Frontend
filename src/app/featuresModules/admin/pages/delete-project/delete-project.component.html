@@ -1,0 +1,54 @@
+<div class="bg-[#2F323B] ">
+    <div class="m-6">
+        <div class="m-y pt-4">
+            <a href="" class="text-yellow-700 text-2xl tracking-wider hover:text-slate-100 hover:underline "><strong>PROCESS</strong></a>
+        </div>
+        <!-- <h1 class="text-2xl text-[#E77512] pt-6">PROCESS</h1> -->
+        <div class="grid grid-cols-2 gap-8">
+            <div class="bg-[rgb(57,60,68)]  h-60 mt-8 pr-4 pl-16 pt-6 border-b-orange-400 border-b-2 shadow-2xl ">
+                <h1 class="text-lg mb-4">Remove Soft-Deleted Projects</h1>
+                <!-- <p class="text-gray-400 py-3">Projects</p> -->
+                <form [formGroup]="formRemove">
+                    <div class="flex flex-col gap-2 justify-between py-2">
+                        <ng-container>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Projects</mat-label>
+                                <mat-select formControlName="ProjectsRemove">
+                                    <mat-option value="all">All</mat-option>
+                                    <mat-option *ngFor="let project of projects" value="{{project._id}}">{{project.name}}</mat-option>
+                                    <mat-option>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </ng-container>
+                        <div class="mb-4">
+                            <button mat-raised-button color="primary" class="w-full rounded-none h-11" (click)="projectRemove()">Remove Soft-Deleted Projects</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="bg-[#393C44]  h-60 mt-8 pr-4 pl-16 pt-6 border-b-orange-400 border-b-2 shadow-2xl ">
+                <h1 class="text-lg mb-4">Restor Projects</h1>
+                <!-- <p class="text-gray-400 py-3">Projects</p> -->
+                <form [formGroup]="formRestore">
+                    <div class="flex flex-col gap-2 justify-between py-2">
+                        <ng-container>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Projects</mat-label>
+                                <mat-select formControlName="ProjectsRestrore">
+                                    <mat-option value="all">All</mat-option>
+                                    <mat-option *ngFor="let project of projects" value="{{project._id}}">{{project.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </ng-container>
+
+                    </div>
+                </form>
+                <div class="mb-4">
+                    <button mat-raised-button color="primary" class="w-full rounded-none h-11" (click)="projectRestore()">Projects</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

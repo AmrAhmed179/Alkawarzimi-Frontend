@@ -1,0 +1,5 @@
+<div *ngIf="IframLink" id="expandFlowDiagram" class="h-full w-full " style="z-index: 1000;">
+    <button *ngIf="expand == true" (click)="addDynamicStyles()" class="text-orange-400  absolute border-2 border-black bg-[#F0F0F0]"> <mat-icon class="icon-2xl"  svgIcon="mat:fullscreen_exit"> </mat-icon> </button>
+    <button *ngIf="expand == false" (click)="addDynamicStyles()" class="text-orange-400 h-10 absolute border-2 border-black bg-[#F0F0F0]"> <mat-icon class="icon-2xl"  svgIcon="mat:fullscreen"> </mat-icon> </button>
+    <iframe [src]="IframLink" frameborder="0" width="100%" height="100%"></iframe>
+</div>

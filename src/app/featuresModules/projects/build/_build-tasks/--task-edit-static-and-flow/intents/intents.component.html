@@ -1,0 +1,30 @@
+<div class="m-6 ">
+    <p class="font-medium text-base">Add user examples</p>
+    <form *ngIf="intent" [formGroup]="addExampleForm" class="mt-4">
+        <mat-form-field appearance="standard" class="w-[90%]">
+            <mat-label>Add user examples to this intent</mat-label>
+            <input formControlName="text" matInput>
+            <mat-error *ngIf="addExampleForm.get('text').hasError('duplicateValue')">* Example name already found, Please enter another name !</mat-error>
+        </mat-form-field>
+    </form>
+    <button (click)="createExample()" [disabled]="!addExampleForm.valid" mat-raised-button class="bg-[#1F2F3C] text-white px-4  rounded-lg hover:bg-[#EB8731]">Add example</button>
+</div>
+
+<div *ngIf="examples" class="mx-6 my-2  ">
+    <div class="bg-[#F5F5F8] flex py-2 px-40 w-[90%]">
+        <p class="text-base font-medium">User example ({{examples.length}} / {{allExamplescount}})</p>
+    </div>
+    <div class="w-[90%] overflow-auto max-h-[28rem]">
+        <div *ngFor="let example of examples; let index = index" [ngClass]="{'bg-[#F5F5F8]': 0 !== index % 2}" class="flex gap-10 px-10 w-full ">
+            <button (click)="deleteExample(example)" class="py-2"><span class=""><mat-icon svgIcon="mat:delete" class="text-gray-500"></mat-icon></span></button>
+            <button *ngIf="seletedEditIndex != index" (click)="showEditExample(example)" class="text-[#428bca]" py-2>{{example.text}}</button>
+            <form *ngIf="showEditForm == true && seletedEditIndex == index" [formGroup]="editExampleForm" class="w-full">
+                <mat-form-field appearance="standard" class="w-full h-14 text-[11px]">
+                    <mat-label>Add user examples to this intent</mat-label>
+                    <input (change)="editExample(example)" formControlName="text" matInput>
+                    <mat-error *ngIf="editExampleForm.get('text').hasError('duplicateValue')">* Example name already found, Please enter another name !</mat-error>
+                </mat-form-field>
+            </form>
+        </div>
+    </div>
+</div>

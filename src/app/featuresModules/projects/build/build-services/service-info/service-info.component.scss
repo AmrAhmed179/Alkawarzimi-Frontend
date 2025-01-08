@@ -1,0 +1,40 @@
+.cont {
+  height: 44rem;
+}
+
+style {
+  width: 100%;
+}
+
+
+
+th {
+  line-height: 26px;
+  background-color: #fff;
+  padding: 8px 64px;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  color: black;
+  line-height: 26px;
+  text-align: center;
+}
+
+a.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.styleinput {
+  line-height: 26px;
+  text-align: center;
+  color: #6f7878;
+}
+
+tr:hover {
+  background: whitesmoke;
+}
+
+tr {
+  height: 50px;
+  border-bottom: 1px solid #d8d8d8;
+}

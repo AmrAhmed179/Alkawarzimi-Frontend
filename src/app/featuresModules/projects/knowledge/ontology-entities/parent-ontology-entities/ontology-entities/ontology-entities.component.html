@@ -1,0 +1,19 @@
+<div class="pt-1 bg-white px-4 " *ngIf="category">
+    <button (click)="setCategoryName(category[0].genre_name)" routerLink="Frames" routerLinkActive="active" class=" px-[6px] rounded-sm  py-2 hover:text-blue-600">Frames <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[0].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[1].genre_name)" routerLink="Classes" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Classes <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[1].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[2].genre_name)" routerLink="Conditions" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Conditions <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[2].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[3].genre_name)" routerLink="Individuals" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Individuals <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[3].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[4].genre_name)" routerLink="RestrictedProperties" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Restricted Properties <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[4].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[5].genre_name)" routerLink="QuestionTools" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Question tools <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[5].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[6].genre_name)" routerLink="Adverbs" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Adverbs <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[6].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[7].genre_name)" routerLink="PropVp" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">PropVp <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[7].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[8].genre_name)" routerLink="FactPorperty" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Fact Porperty <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[8].genre_count}}</span></button>
+    <button (click)="setCategoryName(category[9].genre_name)" routerLink="Adjectives" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Adjectives <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[9].genre_count}}</span></button>
+    <button routerLink="GeneratedFrames" routerLinkActive="active" class=" px-[6px]  rounded-sm  py-2 hover:text-blue-600">Generated Frames</button>
+    <button (click)="testEnitiesStemes()" class="mx-[6px] px-[6px]  py-1 rounded-sm bg-[#E0E0E0]"> <p class="border-2 border-black px-1">Test Stemes</p></button>
+    <button (click)="openCreateEntity()" class=" ml-3 px-[6px]  pb-1 text-base rounded-sm text-white  py-2 bg-[#F0913F]">CREATE ENTITY</button>
+
+</div>
+
+
+<router-outlet></router-outlet>

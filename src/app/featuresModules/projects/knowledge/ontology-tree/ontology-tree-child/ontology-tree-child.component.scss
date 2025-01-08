@@ -1,0 +1,96 @@
+.content {
+    height: calc(100vh - 120px - 60px);
+}
+
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    grid-column-gap: 0.5em;
+    grid-row-gap: 0.5em;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 9 / 4;
+}
+
+.div2 {
+    grid-area: 1 / 4 / 2 / 7;
+}
+
+.div3 {
+    grid-area: 2 / 4 / 3 / 7;
+}
+
+.div4 {
+    grid-area: 3 / 4 / 4 / 7;
+}
+
+.div5 {
+    grid-area: 4 / 4 / 5 / 7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div6 {
+    grid-area: 5 / 4 / 7 / 7;
+}
+
+.div7 {
+    grid-area: 7 / 4 / 9 / 7;
+}
+
+.facts {
+    grid-area: 4 / 4 / 9 / 7;
+}
+
+
+.card {
+    height: 100%;
+}
+
+.synonyms {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+::ng-deep .mat-form-field {
+    .mat-input-element {
+        font-size: 15px !important;
+    }
+}
+
+.individuals {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.individuals-text {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+.individuals-button {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.individuals-list {
+    grid-area: 2 / 1 / 6 / 3;
+}
+
+:root .mat-button,
+:root .mat-stroked-button,
+:root .mat-flat-button,
+:root .mat-raised-button {
+    min-width: 6rem;
+    border-radius: 5
+}

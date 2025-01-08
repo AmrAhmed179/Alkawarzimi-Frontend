@@ -1,0 +1,202 @@
+<div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+    <div>
+        <h1 *ngIf="data.type ==='Web widget'" class="text-2xl text-gray-50">Web widget</h1>
+    </div>
+    <div>
+        <h1 *ngIf="data.type ==='Whatsapp'" class="text-2xl text-gray-50">Whatsapp</h1>
+    </div>
+    <div>
+        <h1 *ngIf="data.type ==='Twitter'" class="text-2xl text-gray-50">Twitter</h1>
+    </div>
+    <div>
+        <h1 *ngIf="data.type ==='Facebook Messenger'" class="text-2xl text-gray-50">Facebook Messenger</h1>
+    </div>
+    <div>
+        <h1 *ngIf="data.type ==='Telegram'" class="text-2xl text-gray-50">Telegram</h1>
+    </div>
+    <div>
+        <h1 *ngIf="data.type ==='Alkhwarizmi Live Chat'" class="text-2xl text-gray-50">Alkhwarizmi Live Chat</h1>
+    </div>
+
+    <!-- <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<mat-icon svgIcon="mat:close"></mat-icon>
+</button> -->
+</div>
+
+
+<mat-divider class="mb-2"></mat-divider>
+<mat-dialog-content>
+    <ng-container>
+        <ng-container *ngIf="data.type ==='Web widget'">
+            <p class="text-base">Click: <a class="hover:text-orange-500 font-semibold" target="_blank" href="https://orchestrator.alkhwarizmi.xyz/Messenger/{{data.chatBotId}}">https://orchestrator.alkhwarizmi.xyz/Messenger/{{data.chatBotId}}</a> to Test your bot Widget</p>
+            <br>
+            <p class="text-base">Publish your bot </p>
+            <p class="text-sm">Copy and paste this code snippet before the closing body tag on every page of your website. </p>
+            <div class="bg-neutral-100 ">
+                <pre>
+                <code>{{code}}</code>
+              </pre>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="data.type ==='Whatsapp'">
+            <div>
+                <p class="text-base">Create and teach a conversational bot for Whatsapp Messenger.</p>
+                <p class="text-xs">After you design and test your Alkawarazimi agent, you can launch your Messenger bot</p>
+                <p class="text-base">Get your Whatsapp Page Access Token and insert it in the field below.</p>
+                <p class="text-base">Create your own Verify Token (can be any string).</p>
+                <p class="text-base">Use the Callback URL and Verify Token to create an event in the Whatsapp Webhook Setup.</p>
+                <a class="text-xs" class="hover:text-orange-500" href="https://alkhwarizmi.xyz/docs/integrations/Whatsapp">More in documentation.</a>
+            </div>
+            <form class="flex flex-col  justify-between py-2" [formGroup]="whatsAppForm">
+                <mat-radio-group aria-labelledby="example-radio-group-label" (change)="providerChange($event)" formControlName="provider" class="example-radio-group grid grid-cols-3 gap-1 my-3">
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="1">Twilio</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" color="primary" [value]="2">Unifonic</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="3">360Dialog</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="4">WhatsApp bussines account</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="5">BAB WhatsApp</mat-radio-button>
+                </mat-radio-group>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Callback URL</mat-label>
+                    <input matInput Enmity="Callback URL" formControlName="callBack">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Account Id</mat-label>
+                    <input matInput Enmity="Account Id" formControlName="accountId">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Access Token</mat-label>
+                    <input matInput Enmity="Access Token" formControlName="accessToken">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Phone</mat-label>
+                    <input matInput Enmity="Phone" formControlName="phone">
+                </mat-form-field>
+                <mat-form-field class="flex-auto">
+                    <mat-label>AppID</mat-label>
+                    <input matInput Enmity="AppID" formControlName="appId">
+                </mat-form-field>
+                <mat-checkbox formControlName="Sandbox">Sandbox</mat-checkbox>
+
+            </form>
+        </ng-container>
+
+
+        <ng-container *ngIf="data.type ==='Twitter'">
+            <div>
+                <p class="text-base">Create and teach a conversational bot for Twitter Messenger.</p>
+                <p class="text-xs">After you design and test your Alkawarazimi agent, you can launch your Messenger bot</p>
+                <p class="text-base">Get your Twitter Page Ids and Tokens then insert it in the field below.</p>
+                <p class="text-base">Use the Callback URL and Verify Token to create an event in the Twitter Webhook Setup.</p>
+                <a class="text-xs" class="hover:text-orange-500" href="https://alkhwarizmi.xyz/docs/integrations/Twitterapp">More in documentation.</a>
+            </div>
+            <form class="flex flex-col  justify-between py-2" [formGroup]="twitterForm">
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Callback URL</mat-label>
+                    <input [disabled]="true" matInput Enmity="Callback URL" formControlName="callBack">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Consumer Key</mat-label>
+                    <input matInput Enmity="Consumer Key" formControlName="consumerKey">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Consumer Key Secret</mat-label>
+                    <input matInput Enmity="Consumer Key Secret" formControlName="consumerKeySecret">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Access Token</mat-label>
+                    <input matInput Enmity="Access Token" formControlName="accessToken">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Access Token Secret</mat-label>
+                    <input matInput Enmity="Access Token Secret" formControlName="accessTokenSecret">
+                </mat-form-field>
+
+            </form>
+        </ng-container>
+
+
+        <ng-container *ngIf="data.type ==='Facebook Messenger'">
+            <div>
+                <p class="text-base">Create and teach a conversational bot for Facebook Messenger.</p>
+                <p class="text-xs">After you design and test your Alkawarazimi agent, you can launch your Messenger bot</p>
+                <p class="text-base">Get your Facebook Page Access Token and insert it in the field below.</p>
+                <p class="text-base">Create your own Verify Token (can be any string).</p>
+                <p class="text-base">Click 'START' below</p>
+                <p class="text-base">Use the Callback URL and Verify Token to create an event in the Facebook Messenger Webhook Setup.</p>
+                <a class="text-xs" class="hover:text-orange-500" href="https://alkhwarizmi.xyz/docs/integrations/facebook">More in documentation.</a>
+            </div>
+            <form class="flex flex-col  justify-between py-2" [formGroup]="facebookMessengerForm">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Callback URL</mat-label>
+                    <input matInput Enmity="Callback URL" formControlName="callBack">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Verify Token</mat-label>
+                    <input matInput Enmity="Verify Token" formControlName="verifyToken">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Page Id</mat-label>
+                    <input matInput Enmity="Page Id" formControlName="pageId">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Page Access Token</mat-label>
+                    <input matInput Enmity="Page Access Token" formControlName="pageAccessToken">
+                </mat-form-field>
+            </form>
+        </ng-container>
+
+        <ng-container *ngIf="data.type ==='Telegram'">
+            <div>
+                <p class="text-base">Build a conversational bot for Telegram.</p>
+                <p class="text-xs">When your Dialogflow agent is ready, follow these instructions to connect it to your Telegram bot:</p>
+                <p class="text-base">Get a Telegram access token from BotFather and insert it in the ‘Telegram Token’ field.</p>
+                <p class="text-base">Click 'START' below.</p>
+                <p class="text-base">More in documentation.</p>
+
+            </div>
+            <form class="flex flex-col  justify-between py-2" [formGroup]="telegramForm">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Telegram Token</mat-label>
+                    <input matInput Enmity="Telegram Token" formControlName="telegramToken">
+                </mat-form-field>
+            </form>
+        </ng-container>
+        <ng-container *ngIf="data.type ==='liveChat'">
+            <form class="flex flex-col  justify-between py-2" [formGroup]="alkhwarizmiLiveChat">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Application Key</mat-label>
+                    <input matInput Enmity="Application Key" formControlName="applicationKey">
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>Live Chat URL</mat-label>
+                    <input matInput Enmity="Live Chat URL" formControlName="liveChatURL">
+                </mat-form-field>
+            </form>
+        </ng-container>
+
+
+    </ng-container>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+
+    <button mat-raised-button class="w-24 text-slate-50 bg-slate-800 hover:bg-orange-500" *ngIf="data.type =='Facebook Messenger' || data.type == 'Twitter' || data.type  == 'Whatsapp' || data.type =='Telegram'" (click)="save(data.type)">Save</button>
+    <button mat-raised-button class="w-24 text-slate-50 bg-slate-800  hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+
+</mat-dialog-actions>

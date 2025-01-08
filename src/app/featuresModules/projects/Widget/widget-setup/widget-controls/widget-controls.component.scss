@@ -1,0 +1,53 @@
+.widget-settings-palette {
+  height: 33px;
+  width: 33px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  float: left;
+  margin-top: 2px;
+  margin-left: 1px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.color-input-picker {
+  height: 36px;
+  font-size: 14px;
+  width: 100%;
+  border: 1px solid #ccc !important;
+  padding: 0 8px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: 400;
+  max-width: 110px;
+  min-width: 110px;
+  padding-left: 37px;
+}
+
+::ng-deep .mat-expansion-panel {
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(155, 151, 151, 0.7);
+  margin-top: 1rem !important;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+  border-color: black !important;
+}
+
+::ng-deep .mat-expansion-panel-header:hover {
+  background-color: transparent !important;
+}
+
+.scroll-container {
+  height: calc(100vh - 250px);
+  overflow-y: scroll;
+}
+
+.mat-expansion-panel {
+  border: 1px solid rgba(155, 151, 151, 0.7)
+}
+
+.input-icon {
+  width: 150px;
+}

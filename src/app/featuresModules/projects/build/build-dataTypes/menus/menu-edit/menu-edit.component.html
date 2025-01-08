@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Edit Node</h1>
+<mat-dialog-content>
+    <form [formGroup]="form">
+        <mat-form-field class="w-full">
+            <mat-label>Entity Text</mat-label>
+            <input matInput formControlName="entityText" required>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Stemmed Entity</mat-label>
+            <input matInput formControlName="stemmedEntity">
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Icon Source</mat-label>
+            <input matInput formControlName="iconSrc">
+        </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button color="primary" (click)="save()" [disabled]="form.invalid">Save</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

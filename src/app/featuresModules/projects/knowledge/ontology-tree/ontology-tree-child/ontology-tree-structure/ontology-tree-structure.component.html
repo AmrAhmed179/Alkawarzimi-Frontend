@@ -1,0 +1,112 @@
+<div class="tree-parent h-full">
+    <div class="tree-search h-fit ">
+        <div class="border-b flex items-center justify-evenly  w-full">
+            <div class="flex gap-2 items-center justify-center">
+                <button class="mat-button text-white bg-primary" (click)="expandAllNodes()">
+                    Expand All
+                </button>
+                <button class="mat-button text-white bg-primary" (click)="collapseAllNodes()">
+                    Collapse All
+                </button>
+
+            </div>
+
+            <mat-form-field class="w-80" appearance="standard">
+                <input matInput type="text" [(ngModel)]="searchQuery" class="small-text">
+            </mat-form-field>
+
+            <div class="flex gap-2 items-center justify-center">
+                <button mat-icon-button color="primary" (click)="performSearch()">
+                    <mat-icon svgIcon="mat:search"></mat-icon>
+                </button>
+                <button mat-icon-button color="primary" (click)="clearSearch()">
+                    <mat-icon svgIcon="mat:loop"></mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="tree-structure h-full">
+        <tree-root #tree [nodes]="filteredNodes.length > 0 ? filteredNodes : nodes" [options]="treeOptions">
+            <ng-template #treeNodeTemplate let-node let-index="index">
+                <div class="flex items-center justify-between" (click)="logSelectedNode(node.data)">
+                    <div>
+                        <span [ngClass]="{verbNode:node.data.entityType=='action',propNode:node.data.entityType=='prop'}" class="text-[16px] font-semibold ">{{ node.data.name}}</span>
+                    </div>
+                    <div>
+                        <button mat-icon-button aria-label="icon" matTooltip="Add Sibling" (click)="openAddSiblingDialog(node.data)">
+                            <mat-icon svgIcon="mat:add" class="hover:text-orange-500"></mat-icon>
+                        </button>
+
+                        <button mat-icon-button aria-label="icon" matTooltip="Add Child" (click)="openAddChildDialog(node.data)">
+                            <mat-icon svgIcon="mat:add_circle" class="hover:text-orange-500"></mat-icon>
+                        </button>
+
+                        <button mat-icon-button aria-label="icon" matTooltip="Add Verb" (click)="openAddVerbDialog(node.data)">
+                            <mat-icon svgIcon="mat:apps" class="hover:text-orange-500"></mat-icon>
+                        </button>
+
+                        <span *ngIf="node.data.editable == true">
+                            <button mat-icon-button aria-label="icon" matTooltip="Delete Node"
+                                (click)="deleteTask(node.data)">
+                                <mat-icon svgIcon="mat:delete" class="hover:text-orange-500"></mat-icon>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+        </tree-root>
+    </div>
+    <div class="tree-info h-full items-center">
+        <div class="statistics border-t pt-4">
+            <h1 class="m-1 p-2 bg-green-50 text-green-900 text-center capitalize text-base tracking-sm">
+                All Nodes Count : <b>{{nodeLength}}</b>
+            </h1>
+            <h1 class="m-1 p-2 bg-orange-50 text-orange-900 text-center capitalize text-base tracking-sm">
+                Actual Nodes Count : <b>{{actualizedLength}}</b>
+            </h1>
+        </div>
+    </div>
+</div>
+
+
+<div class="overflow-auto absolute top-0 h-96 w-[50%]" *ngIf="TREE_DATA">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+        <!-- This is the tree node template for leaf nodes -->
+        <!-- There is inline padding applied to this node using styles.
+This padding value depends on the mat-icon-button width. -->
+
+        <mat-tree-node class="mat-tree-node flex justify-between bg-[#F6F6F6] rounded-md px-2 mt-2 h-[60px] border border-slate-300 hover:border-black" *matTreeNodeDef="let node" matTreeNodeToggle>
+            <p class="text-lg">{{node.entityText}}</p>
+            <div class="flex gap-2 px-2">
+                <button class="text-white py-1 bg-black px-3  rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                <button class="text-white  bg-black px-3 py-1 rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:add_box"></mat-icon></button>
+                <button class="text-white  bg-black px-3 py-1 rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:close"></mat-icon></button>
+            </div>
+
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+            <div class="mat-tree-node px-2 flex justify-between bg-[#F6F6F6] rounded-md mt-2 h-[60px] border border-slate-300 hover:border-black">
+                <div class="flex flex-row items-center ">
+                    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.entityText">
+              <mat-icon class="mat-icon-rtl-mirror" svgIcon="mat:{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}">
+              </mat-icon>
+            </button>
+                    <p class="text-lg border-r-black">{{node.entityText}}</p>
+                </div>
+                <div>
+                    <div class="flex gap-2 px-2">
+                        <button class="text-white bg-black px-3 py-1 rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:add_box"></mat-icon></button>
+                        <button class="text-white bg-black px-3 py-1 rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:close"></mat-icon></button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- There is inline padding applied to this div using styles.
+    This padding value depends on the mat-icon-button width.  -->
+            <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                <ng-container matTreeNodeOutlet></ng-container>
+            </div>
+        </mat-nested-tree-node>
+    </mat-tree>
+</div>

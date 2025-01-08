@@ -1,0 +1,63 @@
+<div class="">
+    <div class="flex justify-between items-center pb-3 border-b">
+        <p class="text-2xl font-bold text-black capitalize">Add Class</p>
+        <div class="modal-close cursor-pointer z-50"></div>
+    </div>
+
+    <div class="w-full border-b pb-4">
+
+        <div class="flex justify-center items-center">
+            <!-- Radio buttons to toggle between class types -->
+            <mat-radio-group [(ngModel)]="classType"
+                class="flex justify-between items-center mt-5  border-r font-medium">
+                <mat-radio-button value="regular" class="mr-2">All</mat-radio-button>
+                <mat-radio-button value="class" class="mr-2">Classes</mat-radio-button>
+                <mat-radio-button value="restricted" class="mr-2">Restricted Classes</mat-radio-button>
+                <mat-radio-button value="individual" class="mr-2">Individuals</mat-radio-button>
+                <mat-radio-button value="adjective" class="mr-2">Adjective</mat-radio-button>
+                <mat-radio-button value="adverb">Adverbs</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div>
+            <mat-form-field appearance="standard" class="w-full">
+                <mat-label>Search Classes</mat-label>
+                <input matInput type="text" [(ngModel)]="searchTerm">
+            </mat-form-field>
+        </div>
+
+        <!-- List to display the selected class type -->
+        <div class="mb-5 mr-5 ml-5 flex justify-start" style="max-height: 200px; overflow-y: auto; min-height: 200px">
+            <mat-list role="list" class="w-full">
+
+                <mat-list-item role="listitem" class="hover:bg-orange-100 cursor-pointer w-full"
+                    *ngFor="let entity of getClassList()" [class.bg-orange-100]="isActive(entity)"
+                    (click)="toggleActive(entity);classInfo(entity)">
+                    <div class="flex justify-between w-full">
+                        <span *ngIf="entity.entityInfo[0].hasParent==null || entity.entityInfo[0].hasParent==false">{{
+                            entity.entityInfo[0].entityText }}</span>
+                        <span *ngIf="entity.entityInfo[0].hasParent==true" class="text-red-500">{{
+                            entity.entityInfo[0].entityText }}</span>
+                        <span class="font-medium text-red-500 capitalize">{{ entity.entityType }}</span>
+                    </div>
+                </mat-list-item>
+
+
+            </mat-list>
+        </div>
+
+        <div class="parent">
+            <h1 class="m-3 p-3 bg-green-50 text-green-900 text-center capitalize text-base tracking-sm">
+                Entities Count : <b>{{regularClasses.length}}</b>
+            </h1>
+            <h1 class="m-3 p-3 bg-orange-50 text-orange-900 text-center capitalize text-base tracking-sm">
+                Filtered Entities Count : <b>{{filteredClassList.length}}</b>
+            </h1>
+        </div>
+    </div>
+
+    <div class="flex justify-end pt-4 gap-4 ">
+        <button mat-flat-button color="primary" (click)="createClassNode()">Add</button>
+        <button mat-flat-button color="warn" (click)="closeDialog()">Cancel</button>
+    </div>
+</div>

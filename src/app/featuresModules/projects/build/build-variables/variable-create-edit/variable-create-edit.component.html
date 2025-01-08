@@ -1,0 +1,76 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl" *ngIf="data.mode =='create'">Create Variable</h1>
+    <h1 class="text-2xl" *ngIf="data.mode =='edit'"> Edit Variable</h1>
+
+
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+</div>
+
+<mat-divider></mat-divider>
+<mat-dialog-content class="dialogContent">
+    <form [formGroup]="form">
+        <div class="flex flex-row gap-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Variable</mat-label>
+                <input formControlName="key" matInput>
+                <mat-error *ngIf="form.get('key').hasError('required')">Variable is required</mat-error>
+                <mat-error *ngIf="form.get('key').hasError('isUnMatching')">Variable is already exists</mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>Select Type</mat-label>
+                <input type="text" Enmity="Select Type" formControlName="type" matInput [matAutocomplete]="autoO">
+                <mat-autocomplete #autoO="matAutocomplete">
+                    <mat-option *ngFor="let v of filteredDataTypes | async" [value]="v.type">
+                        {{ v.type}} --({{v.dataType}})
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="form.get('type').hasError('required')">Type is required</mat-error>
+                <mat-error *ngIf="form.get('type').hasError('isMatching')">Selected data type doesn't
+                    matched</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="flex flex-row gap-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Name</mat-label>
+                <input formControlName="name" matInput>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>Default Value</mat-label>
+                <input formControlName="value" matInput>
+            </mat-form-field>
+        </div>
+        <div class="flex flex-row gap-4 items-center justify-center" *ngIf="contextVariableType!='string'">
+            <mat-checkbox class="Matcheckbox" formControlName='list' labelPosition="before">List</mat-checkbox>
+
+        </div>
+        <div class="grid grid-cols-2 gap-4 items-center" *ngIf="contextVariableType=='string'">
+            <div class="flex flex-row">
+                <mat-form-field class="flex-auto">
+                    <mat-label>validation SubType</mat-label>
+                    <mat-select formControlName="validationSubType">
+                        <mat-option value="1">UserId</mat-option>
+                        <mat-option value="2">Password</mat-option>
+                        <mat-option value="3">Token</mat-option>
+                        <mat-option value="4">Digits</mat-option>
+                        <mat-option value="5">FullName</mat-option>
+                        <mat-option value="6">PhoneNumber</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-checkbox class="Matcheckbox" formControlName='list' labelPosition="before">List</mat-checkbox>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="mt-2">
+    <button mat-raised-button color="primary" class="w-32" mat-dialog-close *ngIf="data.mode =='create'"
+        [disabled]='!form.valid' (click)="createVariable()">Create</button>
+    <button mat-raised-button color="primary" class="w-32" mat-dialog-close *ngIf="data.mode =='edit'"
+        [disabled]='!form.valid' (click)="editVariable()">Save</button>
+    <button mat-raised-button color="primary" class="w-32 " mat-dialog-close type="button">Cancel</button>
+</mat-dialog-actions>

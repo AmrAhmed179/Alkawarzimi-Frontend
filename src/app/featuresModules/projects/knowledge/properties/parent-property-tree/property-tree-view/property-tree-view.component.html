@@ -1,0 +1,165 @@
+<div class="grid grid-cols-2 gap-8">
+    <div class=" w-full">
+        <div class="flex items-center gap-3">
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="tree.treeModel.expandAll()">Expand all</button>
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="tree.treeModel.collapseAll()">Collapse all</button>
+            <mat-form-field appearance="fill" class="h-11 text-[8px]">
+                <input placeholder="Serach..." cdkFocusInitial matInput [(ngModel)]="searchNode">
+            </mat-form-field>
+            <button class=" py-1 bg-white px-3  rounded-sm hover:bg-[#EBEBEB] border" (click)="serach()"><mat-icon class="icon-sm"  svgIcon="mat:search"></mat-icon></button>
+            <button class=" py-1 bg-white px-3  rounded-sm hover:bg-[#EBEBEB] border" (click)="reset()"><mat-icon class="icon-sm" svgIcon="mat:autorenew"></mat-icon></button>
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="updatePropertiesfromGD()">Update Properties</button>
+            <button class="text-white py-2 bg-black px-2   rounded-sm hover:bg-orange-500" (click)="cleanDomains()">Clean Domains</button>
+
+        </div>
+
+
+        <div class="treeHight overflow-auto  w-full bg-white  mt-2 border border-[#AAA2B6] rounded-sm" *ngIf="TREE_DATA">
+            <tree-root class=" w-full my-4" id="tree32" [focused]="true" [nodes]="TREE_DATA" [options]="options" #tree (moveNode)="onMoveNode($event)">
+                <ng-template class="w-full  " #treeNodeTemplate let-node let-index="index">
+                    <div (click)="seLectedNode(node.data)" class="  py-2  w-full mat-tree-node flex justify-between bg-[#F6F6F6] rounded-sm px-2  border border-slate-300 hover:border-black" [id]="node.data._id">
+                        <p [ngClass]="{'text-[#EE655D]': node.data.entityType == 'action','text-[#4CD442]': node.data.entityType == 'prop'}" class="text-lg font-medium border-r-black" *ngIf="node.data.entityText"> {{node.data.entityText}} </p>
+                        <p [ngClass]="{'text-[#EE655D]': node.data.entityType == 'action','text-[#4CD442]': node.data.entityType == 'prop'}" class="text-lg font-medium border-r-black" *ngIf="node.data.entityText == null"> {{getEntityText(node.data.entityId)}} </p>
+                        <div class="flex gap-2 px-2">
+                            <button (click)="openReplaceProperty(node.data)" *ngIf="node.data.parent != null " matTooltip="Edit" class=""><mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                            <button *ngIf="node.data.parent != null " (click)="openAddSibblingAndChild('s', node.data)" matTooltip="Add Sibbling" class=""><mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon></button>
+                            <button (click)="openAddSibblingAndChild('c', node.data)" matTooltip="Add Child" class=""><mat-icon class="icon-sm" svgIcon="mat:add_circle_outline"></mat-icon></button>
+                            <button (click)="deleteNode(node.data)" *ngIf="node.data.parent != null " class=""><mat-icon class="icon-sm" svgIcon="mat:delete"></mat-icon></button>
+                        </div>
+                    </div>
+
+                </ng-template>
+            </tree-root>
+        </div>
+        <div class="flex items-center" *ngIf="nodeLength">
+            <div class=" flex items-center ">
+                <h1 class="m-1 p-2 bg-green-50 text-green-900 text-center capitalize text-base tracking-sm">
+                    All Nodes Count : <b>{{nodeLength}}</b>
+                </h1>
+                <h1 class="m-1 p-2 bg-orange-50 text-orange-900 text-center capitalize text-base tracking-sm">
+                    Actual Nodes Count : <b>{{actualizedLength}}</b>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="w-full">
+        <div class=" border p-2 rounded-sm  w-full">
+            <div class=" ">
+                <div class="mt-2 flex">
+                    <button (click)="activeTap = 'Domains'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'Domains'}">
+                  Domains
+                </button>
+                    <button (click)="activeTap = 'Range'" class="relative flex text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'Range'}">
+                  Range
+                </button>
+                </div>
+                <mat-divider></mat-divider>
+            </div>
+            <!-- domains tab -->
+            <div *ngIf="activeTap == 'Domains'">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm mt-2">Domains:&nbsp; <span></span></p>
+                <div (click)="clickOnDomains()" class="bg-[#e9e8e8]  px-3 pt-2 border-b min-h-8 ">
+                    <span class="text-sm text-[#ADADAD] font-semibold " *ngFor="let domain of SelectedNode.domains">({{domain?.entityText}})</span>
+                </div>
+                <div *ngIf="showProp">
+                    <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let domain of  SelectedNode.domains">
+                  <div class="flex items-center ">
+                    <p class="mb-1">{{domain?.entityText}}</p>
+                    <mat-icon (click)="deleteDomainProperty(domain)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+            </div>
+            </button>
+                    <button class="text-white  bg-[#F0AD4E] rounded-sm mx-1  px-1" (click)="openAddDomain()">
+                  <div class="flex items-center  ">
+                    New <mat-icon svgIcon="mat:add"></mat-icon>
+                  </div>
+                </button>
+                    <button class="text-white  bg-[#428BCA] rounded-sm mx-1  px-1" (click)="sortDomain()">
+                  <div class="flex items-center  ">
+                    Sort <mat-icon svgIcon="mat:unfold_more"></mat-icon>
+                  </div>
+                </button>
+
+                </div>
+
+            </div>
+            <!-- Range tab -->
+            <div *ngIf="activeTap == 'Range'">
+                <p class="text-[#FFB04E] font-semibold text-base rounded-sm mt-2">Range:&nbsp; <span></span></p>
+                <div (click)="clickOnRange()" class="bg-[#e9e8e8]  px-3 pt-2 border-b min-h-8">
+                    <p class="text-base font-semibold">{{SelectedNode.entityText}}</p>
+                    <span class="text-sm text-[#ADADAD]  " *ngFor="let range of SelectedNode.rang">({{range}})</span>
+                </div>
+                <div *ngIf="showRange">
+                    <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let range of SelectedNode.rang">
+                    <div class="flex items-center ">
+                      <p class="mb-1">{{range}}</p>
+                      <mat-icon (click)="deleteRange(range)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+              </div>
+              </button>
+                    <div class="flex bg-orange-500 w-[150px] p-1 rounded-sm mt-1 ">
+                        <div class="flex items-center text-sm text-white " (click)="addRange()">
+                            New
+                            <mat-icon svgIcon="mat:add"></mat-icon>
+                        </div>
+                        <mat-select [(ngModel)]="addRangeValue" class="w-[100px] border-[2px]  bg-white ">
+                            <mat-option [value]="'Integer'">Integer</mat-option>
+                            <mat-option [value]="'Float'">Float</mat-option>
+                            <mat-option [value]="'String'">String</mat-option>
+                            <mat-option [value]="'Boolean'">Boolean</mat-option>
+                            <mat-option [value]="'Byte'">Byte</mat-option>
+                            <mat-option [value]="'Date'">Date</mat-option>
+                            <mat-option [value]="'DateTime'">DateTime</mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class=" border p-2 mt-2 rounded-sm">
+            <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">synonyms :&nbsp; <span></span></p>
+            <div (click)="clickOnSynonum()" class="bg-[#e9e8e8]  px-3 py-2 border-b min-h-8">
+                <span class="text-sm text-[#ADADAD] font-semibold " *ngFor="let syn of Synonyms">({{syn?.entityText}})</span>
+            </div>
+            <div *ngIf="showSyn">
+                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let syn of Synonyms">
+              <div class="flex items-center ">
+                <p class="mb-1">{{syn?.entityText}}</p>
+                <mat-icon (click)="deleteSynonym(syn)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+        </div>
+        </button>
+                <button class="text-white  bg-[#F0AD4E] rounded-sm mx-1  px-1" (click)="openAddSyn()">
+              <div class="flex items-center  ">
+                New <mat-icon svgIcon="mat:add"></mat-icon>
+              </div>
+            </button>
+            </div>
+        </div>
+
+        <div class="border p-2 mt-2 rounded-sm">
+            <p class="text-[#FFB04E] font-semibold text-base rounded-sm mt-2">Qusetion TooLs : &nbsp; <span></span></p>
+            <div (click)="clickOnQtools()" class="bg-[#e9e8e8]  px-3 pt-2 border-b min-h-8">
+                <span class="text-sm text-[#ADADAD] " *ngFor="let qtool of SelectedNode?.qTools">({{getQtoolText(qtool)}})</span>
+            </div>
+            <div *ngIf="showQtool">
+                <button class="text-white mt-2 bg-[#999999] rounded-sm mx-1  px-1" *ngFor="let qtool of SelectedNode.qTools">
+              <div class="flex items-center ">
+                <p class="mb-1"> {{getQtoolText(qtool)}}</p>
+                <mat-icon (click)="deleteQtool(qtool)" class="icon-xs" svgIcon="mat:close"></mat-icon>
+        </div>
+        </button>
+                <div class="flex bg-orange-500 w-[220px] p-1 rounded-sm mt-1 ">
+                    <div class="flex items-center text-sm text-white " (click)="addQtool()">
+                        New
+                        <mat-icon svgIcon="mat:add"></mat-icon>
+                    </div>
+                    <mat-select placeholder="Select Question Tool" [(ngModel)]="addQtoolValue" class="w-[150px] border-[2px]  bg-white ">
+                        <mat-option *ngFor="let qtool of entityQues_tool" [value]="qtool._id">{{qtool.entityInfo[0].entityText}}</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

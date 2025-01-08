@@ -1,0 +1,31 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl">Create New Node</h1>
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="dialogContent">
+    <form [formGroup]="form" class="w-full mt-2">
+        <div class="flex flex-col gap-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Entity Text</mat-label>
+                <input formControlName="entityText" matInput>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>Stemmed Entity</mat-label>
+                <input formControlName="stemmedEntity" matInput>
+            </mat-form-field>
+            <mat-form-field class="flex-auto">
+                <mat-label>Icon Source</mat-label>
+                <input formControlName="iconSrc" matInput>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="mt-4">
+    <button mat-raised-button color="primary" class="w-32" (click)="createModel()">Save</button>
+    <button mat-raised-button class="w-32 " mat-dialog-close class="bg-red-500 text-white" type="button">Cancel</button>
+</mat-dialog-actions>

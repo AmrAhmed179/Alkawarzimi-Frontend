@@ -1,0 +1,14 @@
+<div class="my-6 mx-16">
+    <form class="flex flex-col w-2/5" [formGroup]="MediaBaseForm" (change)="getFormValue()" *ngIf="projectOptions">
+        <mat-form-field class="flex-auto ">
+            <mat-label>Media Base URL</mat-label>
+            <input matInput Enmity="Media Base URL" formControlName="mediaBaseUrl">
+        </mat-form-field>
+        <div class="flex flex-row justify-between  my-5  h-16 items-center px-3" style="background-color: #EEF0F2;">
+            <p class=" text-lg">Use Resource Managment
+            </p>
+            <mat-slide-toggle (change)="getFormValue()" color="primary" formControlName="useResource"></mat-slide-toggle>
+        </div>
+    </form>
+
+</div>

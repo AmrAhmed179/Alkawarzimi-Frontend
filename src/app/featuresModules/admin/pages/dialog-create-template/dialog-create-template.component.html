@@ -1,0 +1,43 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl">Create Template</h1>
+
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<mat-icon svgIcon="mat:close"></mat-icon>
+</button>
+</div>
+
+
+<mat-divider></mat-divider>
+<mat-dialog-content>
+
+
+    <ng-container>
+        <form [formGroup]="form">
+            <div class="mt-4 flex flex-col gap-2">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Template Type</mat-label>
+                    <input formControlName="TemplateType" cdkFocusInitial matInput>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Category:</mat-label>
+                    <mat-select formControlName="Category:">
+                        <mat-option value="Intent">Intent</mat-option>
+                        <mat-option value="Domain">Domain</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+        </form>
+    </ng-container>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end">
+
+    <button mat-raised-button color="primary" class="w-32" (click)="createTemplate()">Create</button>
+    <button mat-raised-button color="primary" class="w-32 " mat-dialog-close type="button">Cancel</button>
+
+</mat-dialog-actions>

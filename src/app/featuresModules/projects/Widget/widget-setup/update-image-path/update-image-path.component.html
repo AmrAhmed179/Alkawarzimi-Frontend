@@ -1,0 +1,28 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-lg">update Images Path</h1>
+
+    <span class="flex-1"></span>
+    <button class="text-red" mat-dialog-close mat-icon-button type="button">
+  <mat-icon svgIcon="mat:close"></mat-icon>
+</button>
+</div>
+
+<mat-divider></mat-divider>
+<mat-dialog-content class="dialogContent">
+    <div class="py-3 my-3 flex flex-col text-lg">
+        <mat-form-field class="m-2 flex-auto">
+            <mat-label>Path</mat-label>
+            <input matInput type="text" [(ngModel)]="path" />
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="center">
+    <button mat-button mat-dialog-close type="button" class="bg-slate-300 text-white text-xs py-2 rounded-sm">
+  {{ "close"}}
+</button>
+    <button mat-raised-button color="primary" class="bg-red-400 text-white text-xs py-2 rounded-sm" (click)="save()" [disabled]="!path">
+  Update
+</button>
+</mat-dialog-actions>

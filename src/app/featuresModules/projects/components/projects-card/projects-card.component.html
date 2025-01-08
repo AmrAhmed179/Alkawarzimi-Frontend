@@ -1,0 +1,36 @@
+<div class="card overflow-hidden">
+  <div (click)="openProject.emit(project)"
+    class=" h-36 p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative" matRipple>
+    <!--<img [src]="contact?.imageSrc" class="avatar h-24 w-24 mx-auto">-->
+
+    <h2 class="title mb-1 mt-3">{{ project?.name }}</h2>
+    <div class="body-2 text-secondary flex items-center justify-center">
+      <mat-icon class="ltr:mr-1 rtl:ml-1 icon-xs" svgIcon="mat:business"></mat-icon>
+      <span>{{ project?.role }}</span>
+    </div>
+
+    <div class="body-2 text-secondary flex items-center justify-center">
+      <!-- <mat-icon class="ltr:mr-1 rtl:ml-1 icon-xs" svgIcon="mat:phone"></mat-icon> -->
+      <!-- <span>{{ contact?.phone }}</span> -->
+    </div>
+
+
+  </div>
+
+  <div class="border-gray-100 border-t-2 p-2 flex items-center justify-around">
+    <!-- <button class="text-secondary text-lg" mat-icon-button type="button" (click)="editProject.emit(project)">
+      <mat-icon svgIcon="mat:edit"></mat-icon>
+    </button> -->
+
+    <div class="box bg-app-bar text-secondary rounded caption">
+      <mat-icon class="ml-1 icon-xs" svgIcon="mat:date_range"></mat-icon>
+      <span class="box-text">{{ project?.createdAt | date:
+        'dd/MM/yyyy'}}</span>
+    </div>
+
+    <button class="text-warn text-lg" mat-icon-button type="button" (click)="deleteProject.emit(project)">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+
+  </div>
+</div>

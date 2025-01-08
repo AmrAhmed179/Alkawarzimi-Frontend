@@ -1,0 +1,45 @@
+<div class="overflow-auto mt-2 mx-10  py-4 ">
+    <div class="bg-app-bar px-6  border-b sticky left-0 flex h-16  items-center">
+        <h2 class="title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l hidden sm:block flex-none">
+            Triggered Tasks
+        </h2>
+    </div>
+    <div>
+        <table mat-table [dataSource]="triggeredTasks" class="w-full">
+            <!-- URL Column -->
+            <ng-container matColumnDef="URL">
+                <th mat-header-cell *matHeaderCellDef>URL</th>
+                <td mat-cell *matCellDef="let task">{{ task.triggeringUrl.url }}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Tasks">
+                <th mat-header-cell *matHeaderCellDef>Tasks ({{ totalItems}})</th>
+                <td mat-cell *matCellDef="let task">{{ task.name }}</td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let task">
+                    <!-- TODO: Connect to the delete task API. -->
+                    <button mat-icon-button color="warn" disabled="true">
+                        <mat-icon svgIcon="mat:delete" matTooltip="Delete Task"></mat-icon>
+                    </button>
+
+                    <!-- <button (click)="workspaceType(type)"
+                        [ngClass]="{'taskActive':sourcBoat == type,'text-white':sourcBoat == type,'hover:taskActive':sourcBoat == type}"
+                        class="bg-white border text-orange-500 border-gray-300 rounded-sm px-2 py-2 text-base hover:bg-slate-100 "
+                        *ngFor="let type of types">{{type}} <button (click)="deleteBot($event,type)"
+                            class="text-red-600 "><mat-icon class="h-5" svgIcon="mat:delete"></mat-icon>
+                    </button> -->
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [length]="totalItems" [pageSize]="length" [pageSizeOptions]="[5,10,20]">
+        </mat-paginator>
+    </div>
+</div>

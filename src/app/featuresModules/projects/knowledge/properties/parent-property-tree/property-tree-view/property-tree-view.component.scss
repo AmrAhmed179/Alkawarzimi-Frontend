@@ -1,0 +1,80 @@
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+
+/*
+* This padding sets alignment of the nested nodes.
+*/
+
+.example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 25px;
+}
+
+
+/*
+* Padding for leaf nodes.
+* Leaf nodes need to have padding so as to align with other non-leaf nodes
+* under the same parent.
+*/
+
+.example-tree div[role=group]>.mat-tree-node {
+    padding-left: 40px;
+}
+
+.formWidth {
+    width: calc(100% - 500px);
+}
+
+.treeHight {
+    height: calc(100vh - 285px);
+    scrollbar-width: auto;
+    scrollbar-color: #C1C1C1 #ece6e6;
+    padding: 12px;
+}
+
+::ng-deep {
+    .toggle-children {
+        height: 50px;
+    }
+    .node-content-wrapper {
+        width: 98%;
+    }
+}
+
+.indivdualHeight {
+    height: calc(100vh - 700px);
+    min-height: 150px;
+    overflow: auto;
+}
+
+.objectHeight {
+    height: calc(100vh - 800px);
+    min-height: 100px;
+    overflow: auto;
+}
+
+.factHeight {
+    height: calc(100vh - 530px);
+    min-height: 200px;
+    overflow: auto;
+}
+
+.factFormWidth {
+    width: calc(100% - 170px);
+}
+
+.tapBorder {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-radius: 4px;
+    color: #6F6F6F;
+}

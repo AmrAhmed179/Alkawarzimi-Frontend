@@ -1,0 +1,62 @@
+<form (ngSubmit)="save()" [formGroup]="form">
+    <div class="flex items-center" mat-dialog-title>
+
+        <h2 *ngIf="form.get('name').value" class="headline m-0 flex-auto">{{ form.get('name').value }}</h2>
+        <h2 *ngIf="!form.get('name').value" class="headline m-0 flex-auto"> {{'addNewProject'|translate}}
+        </h2>
+
+
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+    </div>
+
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+
+    <mat-dialog-content class="flex flex-col">
+
+        <mat-form-field class="mt-6 flex-auto">
+            <mat-label>{{'projectName'|translate}}</mat-label>
+            <input formControlName="name" matInput>
+            <mat-icon class="mr-3" matPrefix svgIcon="mat:category"></mat-icon>
+            <mat-error *ngIf="form.controls['name'].hasError('required')">{{"projectNameReq"|translate}}</mat-error>
+            <!-- <mat-error *ngIf="form.controls['name'].hasError('minlength')">{{"restaurantMin"|translate}}</mat-error> -->
+            <!-- <mat-error *ngIf="form.controls['name'].hasError('maxlength')">{{"restaurantMax"|translate}}</mat-error> -->
+
+        </mat-form-field>
+
+        <mat-form-field class="mt-6 flex-auto">
+
+            <mat-label>{{'department'|translate}}</mat-label>
+
+            <mat-select formControlName="categroy">
+                <mat-option *ngFor="let categroy of brandsCategories" [value]="categroy">{{categroy}}
+                </mat-option>
+            </mat-select>
+
+            <mat-icon class="mr-3" matPrefix svgIcon="mat:category"></mat-icon>
+            <mat-error *ngIf="form.controls['categroy'].hasError('required')"> {{'departmentReq'|translate}}</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field class="mt-6 flex-auto">
+
+            <mat-label>{{'chatBot'|translate}}</mat-label>
+
+            <mat-select formControlName="template">
+                <mat-option *ngFor="let temp of form.get('categroy').value.templates" [value]="temp">{{temp.name}}
+                </mat-option>
+            </mat-select>
+
+            <mat-icon class="mr-3" matPrefix svgIcon="mat:category"></mat-icon>
+            <mat-error *ngIf="form.controls['template'].hasError('required')">{{'chatBotReq'|translate}}</mat-error>
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close type="button">{{'cancel'|translate}}</button>
+        <button *ngIf="isCreateMode()" color="primary" mat-flat-button type="submit">{{'add'|translate}}</button>
+        <button *ngIf="isUpdateMode()" color="primary" mat-flat-button type="submit">{{'edit'|translate}}</button>
+    </mat-dialog-actions>
+</form>

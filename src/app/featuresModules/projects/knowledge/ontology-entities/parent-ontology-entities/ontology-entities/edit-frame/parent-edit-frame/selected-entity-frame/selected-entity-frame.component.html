@@ -1,0 +1,308 @@
+<div class="flex gap-3 w-full">
+    <div class="border-[1.5px] h-[95px] flex flex-col  w-[45%] py-2 overflow-auto">
+        <div class="mx-4 px-2 py-2" *ngFor="let verb of verbs; let i = index" (click)="SelectCurrentSenceIndex(i)" [ngClass]="{'bg-blue-600':currentSenceIndex == i,'text-white':currentSenceIndex == i}">
+            <p class="text-base">{{verb.description}}</p>
+        </div>
+    </div>
+    <div class=" h-[95px] w-[45%] ">
+        <div class="flex">
+            <p class="text-lg font-medium ">Verb Base &nbsp;:&nbsp; </p>
+            <p *ngFor="let synonym of sense?.synonyms" class="text-orange-600 font-medium text-base"> {{synonym}}, &nbsp;</p>
+        </div>
+        <mat-form-field appearance="legacy" class="w-full -mt-3">
+            <input matInput [value]="sense?.description" class="">
+        </mat-form-field>
+
+        <div class="flex gap-2 -mt-3">
+            <button class="text-white bg-[#FFA431] border-b-2 text-base font-normal px-2 active:shadow-md" (click)="openShowEn()">Show EN</button>
+            <button class="text-white bg-[#FFA431] border-b-2 text-base font-normal px-2 active:shadow-md" (click)="openAddNewSense()">New Sence</button>
+            <button class="text-white bg-[#FFA431] border-b-2 text-base font-normal px-2 active:shadow-md" (click)="openReplaceSense()">Replace Sence</button>
+            <button class="text-white bg-[#FFA431] border-b-2 text-base font-normal px-2 active:shadow-md" (click)="DeleteVerbFrame()">Delete Sence</button>
+        </div>
+    </div>
+</div>
+
+<mat-divider class="mt-2"></mat-divider>
+<div class="h-10 bg-[#F7F7F7] w-full flex items-center justify-center gap-3" *ngIf="sense">
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].isType" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Type</mat-checkbox>
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].pastEvent" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Past Event</mat-checkbox>
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].negative" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Negative</mat-checkbox>
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].Informative" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Informative</mat-checkbox>
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].ignoreTellAbout" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Ignore Tell About</mat-checkbox>
+    <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].ignoreExplain" color="primary" class="example-margin text-base font-medium text-[#FF963D]">Ignore Frame Explain</mat-checkbox>
+</div>
+<mat-divider></mat-divider>
+<table class="w-full  mt-3" *ngIf="sense">
+    <thead class="h-10 bg-[#F7F7F7]  text-base font-normal border-b-2 ">
+        <tr class="px-4">
+            <th class="w-[3%]">
+                <mat-icon class="icon-base" svgIcon="mat:delete"></mat-icon>
+            </th>
+            <th class="w-[12%] font-normal text-lg">Adverb</th>
+            <th class="w-[20%] font-normal text-lg">Complement</th>
+            <th class="w-[22%] font-normal text-lg">Object</th>
+            <th class="w-[22%] font-normal text-lg">Subject</th>
+            <th class="w-[15%] font-normal text-lg">Type</th>
+            <th class="w-[6%]  font-normal text-lg">Verb</th>
+        </tr>
+
+    </thead>
+    <tbody class="p-5">
+        <tr class="">
+            <td class="">
+                <mat-icon (click)="deleteFrame()" svgIcon="mat:delete"></mat-icon>
+            </td>
+            <td class="px-2">
+                <div class=" h-[212px] bg-[#eeeded] mt-2 p-1 rounded-xl border overflow-auto">
+                    <div class="flex justify-end">
+                        <button (click)="addAdverb()"><mat-icon svgIcon="mat:add_circle_outline" class="text-orange-500"></mat-icon></button>
+                    </div>
+
+                    <div>
+                        <button *ngFor="let ad of sense.frames[this.frameIndex].adv ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#2E85AE] hover:bg-[#333333]">
+                          <div class="flex items-center">
+                            <mat-icon (click)="deleteAderb(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
+                            {{ad.s}}
+                          </div>
+                          </button>
+                    </div>
+                </div>
+            </td>
+            <td class="px-2">
+                <div class=" mt-2">
+                    <div class="h-[30px] bg-[#e6e4e4] rounded-sm border flex justify-center gap-1">
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].cmpType.ratPlus" color="primary" class="example-margin text-base">Rat+</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].cmpType.ratMinus" color="primary" class="example-margin text-base">Rat-</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].cmpType.place" color="primary" class="example-margin text-base">Place</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].cmpType.time" color="primary" class="example-margin text-base">Time</mat-checkbox>
+                    </div>
+                    <div class="h-[150px] bg-[#eeeded] mt-1 p-1 rounded-t-xl border overflow-auto">
+                        <div class="flex justify-end">
+                            <button *ngIf="sense.frames[this.frameIndex].type =='xxx' || sense.frames[this.frameIndex].type =='xxxd'" (click)="addComplement()"><mat-icon svgIcon="mat:add_circle_outline" class="text-orange-500"></mat-icon></button>
+                        </div>
+
+                        <div>
+                            <button *ngFor="let cm of sense.frames[this.frameIndex].cmp ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
+                            <div class="flex items-center">
+                              <mat-icon (click)="deleteComplement(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
+                              {{cm.s}}
+                            </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-[60px] bg-[#e6e4e4] rounded-b-xl border overflow-auto">
+                        <div class="flex justify-end gap-1">
+                            <p *ngIf="sense.frames[this.frameIndex].type =='xxx' || sense.frames[this.frameIndex].type =='xxxd'" (click)="addCmpModyfier()" class="bg-white rounded-sm px-1 mt-1 font-medium mr-1 hover:text-blue-500 hover:cursor-pointer">+p</p>
+                            <p *ngIf="sense.frames[this.frameIndex].type =='xxx' || sense.frames[this.frameIndex].type =='xxxd'" class="bg-white rounded-sm px-1 mt-1 font-medium mr-1 hover:text-blue-500 hover:cursor-pointer">+m</p>
+                        </div>
+                        <button *ngFor="let prep of sense.frames[this.frameIndex]?.cmpModyfier?.preps; let i =index" class=" rounded-sm  m-1 px-2 pb-1 bg-white hover:bg-[#333333] hover:text-white">
+                          <div class="flex items-center">
+                            <mat-icon (click)="deleteCmpModyfier(i)"  svgIcon="mat:close" class="icon-xs"></mat-icon>
+                            {{getPrep(prep)}}
+                          </div>
+                          </button>
+                    </div>
+                </div>
+            </td>
+
+            <td class="px-2">
+                <div class=" mt-2">
+                    <div class="h-[30px] bg-[#e6e4e4] rounded-sm border flex justify-center gap-1">
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].objType.ratPlus" color="primary" class="example-margin text-base">Rat+</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].objType.ratMinus" color="primary" class="example-margin text-base">Rat-</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].objType.place" color="primary" class="example-margin text-base">Place</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].objType.time" color="primary" class="example-margin text-base">Time</mat-checkbox>
+                    </div>
+                    <div class="h-[150px] bg-[#eeeded] mt-1 p-1 rounded-t-xl border overflow-auto">
+                        <div class="flex justify-end">
+                            <button *ngIf="sense.frames[this.frameIndex].type !='x'" (click)="addObject()"><mat-icon svgIcon="mat:add_circle_outline" class="text-orange-500"></mat-icon></button>
+                        </div>
+
+                        <div>
+                            <button *ngFor="let ob of sense.frames[this.frameIndex].obj ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
+                            <div class="flex items-center">
+                              <mat-icon (click)="deleteObject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
+                              {{ob.s}}
+                            </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="h-[60px] bg-[#e6e4e4] rounded-b-xl border overflow-auto">
+                        <div class="flex justify-end gap-1">
+                            <p *ngIf="sense.frames[this.frameIndex].type !='x'" (click)="addObjModyfier()" class="bg-white rounded-sm px-1 mt-1 font-medium mr-1 hover:text-blue-500 hover:cursor-pointer">+p</p>
+                            <p *ngIf="sense.frames[this.frameIndex].type !='x'" class="bg-white rounded-sm px-1 mt-1 font-medium mr-1 hover:text-blue-500 hover:cursor-pointer">+m</p>
+                        </div>
+                        <button *ngFor="let prep of sense.frames[this.frameIndex]?.objModyfier?.preps; let i =index" class=" rounded-sm  m-1 px-2 pb-1 bg-white hover:bg-[#333333] hover:text-white">
+                      <div class="flex items-center">
+                        <mat-icon (click)="deleteObjModyfier(i)"  svgIcon="mat:close" class="icon-xs"></mat-icon>
+                        {{getPrep(prep)}}
+                      </div>
+                      </button>
+                    </div>
+                </div>
+            </td>
+
+            <td class="px-2">
+                <div class=" mt-2">
+                    <div class="h-[30px] bg-[#e6e4e4] rounded-sm border flex justify-center gap-1">
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].sbjType.ratPlus" color="primary" class="example-margin text-base">Rat+</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].sbjType.ratMinus" color="primary" class="example-margin text-base">Rat-</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].sbjType.place" color="primary" class="example-margin text-base">Place</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense?.frames[this.frameIndex].sbjType.time" color="primary" class="example-margin text-base">Time</mat-checkbox>
+                    </div>
+                    <div class="h-[210px] bg-[#eeeded] mt-1 p-1 rounded-xl border overflow-auto">
+                        <div class="flex justify-end">
+                            <button (click)="addSubject()"><mat-icon svgIcon="mat:add_circle_outline" class="text-orange-500"></mat-icon></button>
+                        </div>
+                        <div>
+                            <button *ngFor="let sb of sense.frames[this.frameIndex].sbj; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
+                            <div class="flex items-center">
+                              <mat-icon (click)="deleteSubject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
+                              {{sb.s}}
+                              <p class="text-white font-medium bg-[#FF9336] rounded-md ml-2 px-2 mt-[3px]">Cat</p>
+                            </div>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </td>
+
+            <td class="px-2">
+                <div class=" mt-4">
+                    <div class="h-[50px] bg-[#e6e4e4] rounded-2xl border px-2 pb-2">
+                        <div class="h-[35px] border-[1.5px] border-[#CCCCCC]  mx-1 mt-2 rounded-sm shadow-b-sm  bg-white">
+                            <mat-select [(ngModel)]="sense.frames[this.frameIndex].type" class="text-base px-3">
+                                <mat-option value="x">x</mat-option>
+                                <mat-option value="xd">xd</mat-option>
+                                <mat-option value="xx">xx</mat-option>
+                                <mat-option value="xxx">xxx</mat-option>
+                                <mat-option value="xxd">xxd</mat-option>
+                                <mat-option value="xxxd">xxxd</mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+                    <div class="h-[185px] bg-[#eeeded] mt-1 rounded-xl border flex flex-col overflow-auto p-2">
+                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.request" color="primary" class="example-margin ">طلب</mat-checkbox>
+                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.requestGain" color="primary" class="example-margin ">طلب : الحصول</mat-checkbox>
+                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.framePropLinkedToObj" color="primary" class="example-margin ">Prop Linked:Object</mat-checkbox>
+                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.genObjSbj" color="primary" class="example-margin ">Object Gen to Subject</mat-checkbox>
+                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.genSbjObj" color="primary" class="example-margin ">Subject Gen to Object</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.domaninEllipsis" color="primary" class="example-margin ">Domain:Ellipsis</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.ellipsisExceptObj" color="primary" class="example-margin ">Ellipsis All Except Obj</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.sbjMandatory" color="primary" class="example-margin ">Subject Mandatory</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.exactObject" color="primary" class="example-margin">Exact:ObjToAnswer</mat-checkbox>
+                    </div>
+                </div>
+            </td>
+
+            <td class="px-2">
+                <div class=" mt-4">
+                    <div class="h-[120px] bg-[#e6e4e4] rounded-3xl border flex flex-col items-center justify-center">
+                        <mat-icon svgIcon="mat:remove_red_eye" class="text-orange-500 icon-3xl"></mat-icon>
+                        <p>{{entityId}}</p>
+                        <p>{{Verb}}</p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<mat-divider class="my-2"></mat-divider>
+<div *ngIf="sense" class="grid grid-cols-12 gap-5 px-4 h-[220px]">
+    <div class="col-span-2 ">
+        <div class=" h-[150px] bg-white overflow-auto">
+            <div [ngClass]="{'bg-slate-200': currentFrameAttacIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnframeAttch(i)" *ngFor="let frameCoreAttach of sense.frames[this.frameIndex].frameCoreAttachments; let i =index">
+
+                <div class="flex w-full px-3 justify-between">
+                    <p class="w-full font-semibold">{{getFrameCore(frameCoreAttach)}}</p>
+                    <div class="flex gap-2 items-center">
+                        <button class=" text-[#428BCA]" (click)="openAddClassAsValue()">
+                            <mat-icon class="icon-xs stroke-2" svgIcon="mat:add"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button (click)="openAddCoreAttachment()" class="text-white bg-[#FFA431] border-b-4 text-base font-normal px-2 py-1 active:shadow-md">Add Core Attachment</button>
+        </div>
+    </div>
+    <div class=" col-span-3  bg-white">
+        <div class="px-2 py-1" *ngFor="let objectEntitiy of objectEntitiesValues ; let i= index" [ngClass]="{'bg-[#F5D6BB]': coreAttachObjectIndex == i,'text-slate-950': coreAttachObjectIndex == i}" (click)="clickOnCoreAttachObject(i)">
+            <p [ngClass]="{'text-slate-950': coreAttachObjectIndex == i}" class="text-orange-500 font-medium">{{objectEntitiy.value}}</p>
+        </div>
+
+    </div>
+    <div class=" col-span-7  bg-white px-2 py-2 flex gap-7">
+        <div class="w-[30%]">
+            <div class=" grid grid-cols-4 gap-2 items-center mt-2">
+                <p class="text-base font-medium col-span-1"> Adverb:&nbsp;&nbsp; </p>
+                <div class="h-[35px] border-[1.5px] border-[#CCCCCC] mx-1  rounded-sm shadow-b-sm w-full col-span-3">
+                    <mat-select class="text-base px-2" [(ngModel)]="adverbValue">
+                        <mat-option *ngFor="let Adverb of Adverbs" value="{{Adverb._id}}">{{Adverb.entityInfo[0].entityText}}</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+
+            <div class=" grid grid-cols-4 gap-2 items-center mt-2">
+                <p class="text-base font-medium col-span-1"> Modifier:&nbsp;&nbsp; </p>
+                <div class="h-[35px] border-[1.5px] border-[#CCCCCC] mx-1  rounded-sm shadow-b-sm w-full col-span-3">
+                    <mat-select class="text-base px-2">
+                    </mat-select>
+                </div>
+            </div>
+
+            <div class=" grid grid-cols-4 gap-2 items-center mt-2">
+                <p class="text-base font-medium col-span-1"> Prep:&nbsp;&nbsp; </p>
+                <div class="h-[35px] border-[1.5px] border-[#CCCCCC] mx-1  rounded-sm shadow-b-sm w-full col-span-3">
+                    <mat-select class="text-base px-2" [(ngModel)]="prepValue">
+                        <mat-option *ngFor="let prep of prepList" value="{{prep.stemId}}">{{prep.stem}}</mat-option>
+                    </mat-select>
+                </div>
+            </div>
+
+        </div>
+        <div class="w-[60%] mt-1">
+            <div>
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group  grid grid-flow-col" (change)="formChang()" [(ngModel)]="entityTypeValue">
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'all'">All</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'action'">Frames</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'class'">Classes</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'prop'">Restricted Classes</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'individual'">Individuals</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class=" mt-1">
+                <mat-form-field appearance="fill" class="h-11 w-full text-[9.5px]">
+                    <mat-label>Serach...</mat-label>
+                    <input cdkFocusInitial matInput [(ngModel)]="search" (keyup)="formChang()">
+                </mat-form-field>
+
+                <div dir="rtl" class="overflow-auto h-[125px]">
+                    <div [ngClass]="{'bg-slate-200': currentClassAndPrpsIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(classAndpropEntity, i)" *ngFor="let classAndpropEntity of classesAndProps; let i =index">
+
+                        <div class="flex w-full px-3 justify-between">
+                            <p class="w-full font-semibold">{{classAndpropEntity.entityType}}</p>
+                            <p class="w-full font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
+                            <div class="flex gap-2 items-center">
+                                <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{i+1}}</P>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<mat-divider class="border-2"></mat-divider>
+<div class="bg-[#F7F7F7] px-4">
+    <div class="flex justify-center pt-2">
+        <button *ngIf="verbs.length > 0" class="px-3 py-1 text-white font-medium bg-[#F0AD4E] rounded-sm border border-[#EEA236] hover:bg-[#ED9C28]" (click)="saveFrame()">Save Frame</button>
+        <button class="px-3 py-1 text-white font-medium bg-[#1F2F3C] rounded-sm hover:bg-[#FF9336] mx-3" (click)="close()">Close</button>
+    </div>
+</div>

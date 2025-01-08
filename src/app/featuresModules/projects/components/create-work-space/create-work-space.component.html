@@ -1,0 +1,55 @@
+<div class="mx-6">
+    <!-- <h1 class="text-2xl text-[#E77512] pt-6">CREATE NEW BOT DEVELOPER</h1> -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl ">Create a workspace</h1>
+        <div>
+            <span class="flex-1"></span>
+            <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+<mat-icon svgIcon="mat:close"></mat-icon>
+</button>
+        </div>
+    </div>
+    <h1 class="text-base">Workspaces enable you to maintain separate intents, user examples, entities, and dialogs for each use or application.</h1>
+
+    <form class="flex flex-col gap-3 justify-between py-2" [formGroup]="form">
+        <mat-form-field class="flex-auto">
+            <mat-label>Name</mat-label>
+            <input matInput Enmity="Name" formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+            <mat-label>Description</mat-label>
+            <input matInput Enmity="Description" formControlName="description">
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+            <mat-label>Facebook</mat-label>
+            <input matInput Enmity="facebook" formControlName="facebook">
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+            <mat-label>Twitter</mat-label>
+            <input matInput Enmity="Twitter" formControlName="twitter">
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+            <mat-label>Language</mat-label>
+            <mat-select Enmity="Template" formControlName="language">
+                <mat-option value="ar">Arabic</mat-option>
+                <mat-option value="en">English</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+            <mat-label>Template</mat-label>
+            <mat-select Enmity="Template" formControlName="template">
+                <mat-option value=""></mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div class="flex justify-end gap-3">
+        <div>
+            <button mat-raised-button class=" text-slate-50 bg-slate-800 hover:bg-orange-500" (click)="addWorkSpace()">Create</button>
+        </div>
+    </div>
+</div>

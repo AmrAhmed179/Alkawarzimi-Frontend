@@ -1,0 +1,249 @@
+<div class="border border-2 p-1 flex justify-between items-center mt-4 mr-6">
+    <mat-checkbox [(ngModel)]="SeLectedNode.ignoreTellAbout" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Ignore TellAbout: </mat-checkbox>
+    <mat-checkbox [(ngModel)]="SeLectedNode.tellAboutOnly" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">TellAbout Only: </mat-checkbox>
+    <mat-checkbox [(ngModel)]="SeLectedNode.stopPostResponse" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Stop Post Response: </mat-checkbox>
+    <mat-checkbox [(ngModel)]="SeLectedNode.paraPhraseFact" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">ParaPhrase Fact: </mat-checkbox>
+    <div>
+        <p class="text-sm text-orange-500">{{SeLectedNode.subjectId}}</p>
+    </div>
+</div>
+<div class="mr-6">
+    <div class="mt-2 flex">
+        <button (click)="activeTap = 'response'" class="relative text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'response'}">Response</button>
+        <button (click)="openExample()" class="relative flex text-[#609DD2] text-base px-4 py-2 rounded-sm hover:bg-[#EEEEEE]" [ngClass]="{'tapBorder':activeTap == 'example'}">
+          Examples(<p class="text-red-600">{{SeLectedNode.patternIntentId}} <span *ngIf="SeLectedNode.patternIntentId" ><mat-icon (click)="deleteLinkExample($event)"  class="text-white bg-red-600 rounded-full absolute top-0 right-0 icon12Px " svgIcon="mat:remove"></mat-icon></span> </p>)
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngIf="activeTap == 'response'">
+        <div class="p-2 border mt-1">
+            <mat-radio-group [(ngModel)]="responseOrDiagram">
+                <mat-radio-button class="" color="primary" value="1">Response</mat-radio-button>
+                <mat-radio-button class="ml-20" color="primary" value="2">Diagram-Flow</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+    <div *ngIf="responseOrDiagram == '2'">
+        <div class="diagramHeight">
+            <vex-diagramflow-ifram [workspace_id]="projectId" [propertyId]="propertyId" [intentId]="SeLectedNode.entityId"></vex-diagramflow-ifram>
+        </div>
+    </div>
+    <div *ngIf="responseOrDiagram == '1' && activeTap == 'response'" class="mt-2 overflow-auto maxHeight">
+        <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="isPanelOpen">
+                <mat-expansion-panel-header [collapsedHeight]="'60px'">
+                    <mat-panel-title>
+                        <div class="flex items-center gap-2 mt-2 w-full">
+                            <button *ngIf="!panelOpenState"><mat-icon  class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+                            <button *ngIf="panelOpenState "><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_down"> </mat-icon></button>
+
+                            <div class="mx-4 w-full flex justify-between" (click)="disablePanel($event)">
+                                <div class="flex flex-row">
+                                    <mat-select class="border border-gray-300 px-2 py-1 w-32" [(ngModel)]="SeLectedNode.response.responseType">
+                                        <mat-option [value]="1"> Text </mat-option>
+                                        <mat-option [value]="2"> Option </mat-option>
+                                        <mat-option [value]="6"> List </mat-option>
+                                    </mat-select>
+                                </div>
+                                <div class="flex flex-row">
+                                    <mat-select class="border border-gray-300 px-2 py-1 w-32" [(ngModel)]="SeLectedNode.response.actionType">
+                                        <mat-option [value]="0"> No Action </mat-option>
+                                        <mat-option [value]="1"> Functions </mat-option>
+                                        <mat-option [value]="2"> Services </mat-option>
+                                        <mat-option [value]="3"> Bot Behavior </mat-option>
+                                    </mat-select>
+                                </div>
+                                <div class="flex flex-row">
+                                    <mat-select *ngIf="SeLectedNode.response.actionType == 1" class="border border-gray-300 px-2 py-1 w-32" [(ngModel)]="SeLectedNode.response.actionSubType">
+                                        <mat-option [value]="0"> Courency </mat-option>
+                                        <mat-option [value]="1"> Weight </mat-option>
+                                        <mat-option [value]="2"> Length </mat-option>
+                                        <mat-option [value]="3"> Volume </mat-option>
+                                    </mat-select>
+                                </div>
+
+                                <div class="flex flex-row">
+                                    <mat-select *ngIf="SeLectedNode.response.actionType == 3" class="border border-gray-300 px-2 py-1 w-32" [(ngModel)]="SeLectedNode.response.actionSubType">
+                                        <mat-option [value]="0"> None </mat-option>
+                                        <mat-option [value]="1"> Convert To Agent </mat-option>
+                                        <mat-option [value]="2"> Logout Interrupt </mat-option>
+                                    </mat-select>
+                                </div>
+
+
+                                <div>
+                                    <button class="text-gray-400"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngIf="SeLectedNode.response.responseType == 1">
+                    <quill-editor [(ngModel)]="SeLectedNode?.response?.value[0].value" [styles]="{ flex: '1 1 auto' ,minHeight:'300px'}" [required]="true"></quill-editor>
+                </div>
+                <div>
+                    <mat-form-field *ngIf="SeLectedNode.response.responseType == 6 || SeLectedNode.response.responseType == 2" appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
+                        <mat-label>text...</mat-label>
+                        <input cdkFocusInitial matInput [(ngModel)]="SeLectedNode.response.value[0].value">
+                    </mat-form-field>
+                </div>
+                <div class="my-2 border border-[#CCCCCC] p-2 " *ngIf="SeLectedNode.response.responseType == 1 || SeLectedNode.response.responseType == 2">
+                    <div class="flex justify-between">
+                        <p class="text-lg text-[#FF963D]">Entities :</p>
+                        <div class="flex gap-3">
+                            <button class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Update Values</button>
+                            <button (click)="addEntity('individual')" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Add Individual</button>
+                            <button (click)="addEntity('class')" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Add Class</button>
+                            <button (click)="addEntity('action')" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Add Frame</button>
+                            <button class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Add Value</button>
+                            <mat-select class="border border-gray-300 px-2 py-1 w-32">
+                                <mat-option [value]="'number'"> Number </mat-option>
+                                <mat-option [value]="'date'"> Date </mat-option>
+                                <mat-option [value]="'date'"> Duration </mat-option>
+                            </mat-select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-auto h-[125px]">
+                        <div [ngClass]="{'bg-slate-200': currentIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
+
+                            <div class="flex w-full px-3 justify-between">
+                                <p class="font-semibold">{{entity.value[0].value}}</p>
+                                <div class="flex items-center gap-1">
+                                    <mat-checkbox *ngIf="entity.entityType == 'frame'" labelPosition="before" [(ngModel)]="SeLectedNode.response.objectEntitiesValues[i].negative" class="text-orange-500 mb-2 text-base custom-checkbox" color="primary">Neg : </mat-checkbox>
+
+                                    <button class=" font-semibold"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
+                                    <button (click)="deteteFact(entity)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- list -->
+                <div class="my-2 border border-[#CCCCCC] p-2 " *ngIf="SeLectedNode.response.responseType == 6">
+                    <div class="flex justify-between items-center">
+                        <p class="text-lg text-[#FF963D]">Items :</p>
+                        <mat-form-field appearance="fill" class="mt-1 h-11 w-[60%] text-[9.5px]">
+                            <mat-label>text...</mat-label>
+                            <input cdkFocusInitial matInput [(ngModel)]="listInput">
+                        </mat-form-field>
+
+                        <button (click)="updateListItem()" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1">Update List Item </button>
+                        <button (click)="addListItem()" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1 ">Add List Item</button>
+
+                        <div>
+                            <button class="text-gray-400"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-auto h-[125px]">
+                        <div [ngClass]="{'bg-slate-200': currentItemIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
+
+                            <div class="flex w-full px-3 justify-between">
+                                <p class="font-semibold">{{entity.value[0].value}}</p>
+                                <div class="flex items-center gap-1">
+                                    <mat-checkbox *ngIf="entity.entityType == 'frame'" labelPosition="before" [(ngModel)]="SeLectedNode.response.objectEntitiesValues[i].negative" class="text-orange-500 mb-2 text-base custom-checkbox" color="primary">Neg : </mat-checkbox>
+
+                                    <button class=" font-semibold"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
+                                    <button (click)="deteteFact(entity)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <!-- this is add mediaresponse -->
+            <mat-expansion-panel *ngIf="SeLectedNode.response.mediaResponse != null" class="mt-2" (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="isPanelOpen">
+                <mat-expansion-panel-header [collapsedHeight]="'60px'">
+                    <mat-panel-title>
+                        <div class="flex items-center gap-2 mt-2 w-full">
+                            <button *ngIf="!panelOpenState"><mat-icon  class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_right"> </mat-icon></button>
+                            <button *ngIf="panelOpenState "><mat-icon class="text-orange-400 icon-lg" svgIcon="mat:keyboard_arrow_down"> </mat-icon></button>
+
+                            <div class="mx-4 w-full flex justify-between" (click)="disablePanel($event)">
+                                <mat-select class="border border-gray-300 px-2 py-1 w-32" [(ngModel)]="SeLectedNode.response.mediaResponse.type">
+                                    <mat-option [value]="'3'"> Image </mat-option>
+                                    <mat-option [value]="'7'"> Video </mat-option>
+                                    <mat-option [value]="'8'"> PDF </mat-option>
+                                </mat-select>
+                                <div>
+                                    <button (click)="deleteMediaResponse()" class="text-gray-400"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="flex flex-col gap-2 w-[90%]">
+                    <mat-form-field appearance="fill" class="mt-1 h-11 text-[11px]">
+                        <mat-label>Title...</mat-label>
+                        <input [(ngModel)]="SeLectedNode.response.mediaResponse.title[0].value" cdkFocusInitial matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="mt-1 h-11  text-[11px]">
+                        <mat-label>Src...</mat-label>
+                        <input [(ngModel)]="SeLectedNode.response.mediaResponse.src" cdkFocusInitial matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="mt-1 h-11 text-[11px]">
+                        <mat-label>Hyperlink...</mat-label>
+                        <input [(ngModel)]="SeLectedNode.response.mediaResponse.link" cdkFocusInitial matInput>
+                    </mat-form-field>
+                </div>
+
+
+            </mat-expansion-panel>
+        </mat-accordion>
+        <button (click)="addMediaRespone()" *ngIf="SeLectedNode.response.mediaResponse == null" class="flex items-center text-[#E77512] bg-[#F0F0F0] px-1 mt-4">  <mat-icon class=" " svgIcon="mat:add"> </mat-icon>Add Media Response
+        </button>
+    </div>
+
+    <div *ngIf="activeTap == 'example'">
+        <div class="my-2 border border-[#CCCCCC] p-2 exampleHeight ">
+            <div class="flex justify-between items-center">
+                <p class="text-lg text-[#FF963D]">Examples : </p>
+                <mat-form-field appearance="fill" class="mt-1 h-11 w-[78%]  text-[9.5px]">
+                    <input cdkFocusInitial matInput [(ngModel)]="exampleInput">
+                </mat-form-field>
+
+                <button (click)="addExample()" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1 ">Add Examples</button>
+            </div>
+
+            <div class="overflow-auto rounded-sm mt-2 h-[80%] bg-white">
+                <div [ngClass]="{'bg-slate-200': currentexampleIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="currentexampleIndex = i" *ngFor="let example of examples; let i =index">
+
+                    <div class="flex w-full px-3 justify-between">
+                        <p class="font-semibold text-base">{{example.text}}</p>
+                        <div class="flex items-center gap-1">
+                            <button (click)="deteteExample(example)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-2 border border-[#CCCCCC] p-2 exampleHeight ">
+            <div class="flex justify-between items-center">
+                <mat-form-field appearance="fill" class="mt-1 h-11 w-[82%]  text-[9.5px]">
+                    <input cdkFocusInitial matInput [(ngModel)]="detetctedExampleInput">
+                </mat-form-field>
+
+                <button (click)="detectedExampleIntent()" class="text-white bg-[#1F2F3C] hover:bg-[#FF9336] rounded-sm px-2 py-1 ">Detect Pattern Intents</button>
+            </div>
+
+            <div class="overflow-auto rounded-sm mt-2 h-[80%] bg-white">
+                <div [ngClass]="{'bg-slate-200': currentDetectExampleIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center " (click)="currentDetectExampleIndex = i" *ngFor="let example of detectedIntents; let i =index">
+
+                    <div class="grid grid-cols-5 w-full px-3  ">
+                        <div class="flex items-center gap-1">
+                            <button (click)="linkIntent(example)" matTooltip="Link Intent" class=" font-semibold text-red"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
+                        </div>
+                        <p class="font-semibold text-sm text-red">{{example.confidence}}</p>
+                        <p class="font-semibold text-base ">{{example.intentId}}</p>
+                        <p class="font-semibold text-base justify-self-end	text-[#ebaf7b]">{{example.example}}</p>
+                        <p class="font-semibold text-base justify-self-end	text-sm text-red">{{i+1}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

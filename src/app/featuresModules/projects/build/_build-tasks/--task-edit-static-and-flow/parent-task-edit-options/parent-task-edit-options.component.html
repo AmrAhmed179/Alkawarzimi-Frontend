@@ -1,0 +1,116 @@
+<div class="pt-2  bg-gray-200 flex h-14 w-full">
+    <div id="taskTree" [ngClass]="{'hidden':showTaskTree ==true}" class=" bg-white  w-[30%] border border-gray-300 shadow-md h-10 mx-2">
+        <div class="flex justify-between items-center px-2 py-1 ">
+            <button (click)="showAndHideTaskTree()"><mat-icon svgIcon="mat:view_headline" class="icon-sm"></mat-icon></button>
+            <p class="text-lg">Task Context</p>
+            <div>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center mx-2" *ngIf="showCreateTask == false">
+        <button class="px-2 mt-2 text-orange-500" [ngClass]="{'hidden':showTaskTree ==false}" (click)="showAndHideTaskTree()"><mat-icon svgIcon="mat:view_headline" class="icon-base"></mat-icon></button>
+        <button class=" text-[#428bca]  rounded-sm px-2 py-2 text-sm hover:bg-slate-100" (click)="clickOnTapButton('Intents')" [ngClass]="{'bg-slate-100':tapeName =='Intents'}" *ngIf="eventTask ==0">Intents</button>
+        <button class=" text-[#428bca]  rounded-sm px-2 py-2 text-sm hover:bg-slate-100" (click)="clickOnTapButton('Static Responses')" [ngClass]="{'bg-slate-100':tapeName =='Static Responses'}" *ngIf="responseMode ==1">Static Responses</button>
+        <button class=" text-[#428bca]  rounded-sm px-2 py-2 text-sm hover:bg-slate-100" (click)="clickOnTapButton('Diagram Flow')" [ngClass]="{'bg-slate-100':tapeName =='Diagram Flow'}" *ngIf="responseMode ==2">Diagram Flow</button>
+        <button class=" text-[#428bca] rounded-sm px-2 py-2 text-sm hover:bg-slate-100" (click)="clickOnTapButton('Setting')" [ngClass]="{'bg-slate-100':tapeName =='Setting'}">Setting</button>
+        <p class="font-normal text-gray-500 text-lg mx-44">Task :#{{taskName}}</p>
+    </div>
+</div>
+<div class="flex w-full">
+    <div [ngClass]="{'hidden':showTaskTree ==true}" class=" bg-white  w-[30%]  border border-gray-300 shadow-md h-[46rem] py-4 mx-2 px-4 mt-1 flex-shrink-0">
+        <!-- <button mat-raised-button (click)="collapseAllNodes()"> Collapse Tree</button>
+        <button mat-raised-button (click)="expandAllNodes()"> Expand Tree</button> -->
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+            <!-- This is the tree node template for leaf nodes -->
+            <!-- There is inline padding applied to this node using styles.
+      This padding value depends on the mat-icon-button width. -->
+
+            <mat-tree-node [ngClass]="{'bg-[#DEEDF7]':node.intentId === intentId }" class="mat-tree-node flex justify-between bg-[#F6F6F6] rounded-md px-2 mt-2 h-[60px] border border-slate-300 hover:border-black" *matTreeNodeDef="let node" matTreeNodeToggle>
+                <p class="text-lg">{{node.intent}}</p>
+                <div class="flex gap-2 px-2">
+                    <button *ngIf="node.intentId !== intentId" (click)="editTask(node)" class="text-white py-1 bg-black px-3  rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                    <button (click)="addTask(node)" class="text-white  bg-black px-3 py-1 rounded-sm hover:bg-orange-500" matTooltip="Add Task"><mat-icon class="icon-sm" svgIcon="mat:add_box"></mat-icon></button>
+                    <button (click)="deleteTask(node)" class="text-white  bg-black px-3 py-1 rounded-sm hover:bg-orange-500" matTooltip="Delete Task"><mat-icon class="icon-sm" svgIcon="mat:close"></mat-icon></button>
+                </div>
+
+            </mat-tree-node>
+            <!-- This is the tree node template for expandable nodes -->
+            <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                <div [ngClass]="{'bg-[#DEEDF7]':node.intentId === intentId }" class="mat-tree-node px-2 flex justify-between bg-[#F6F6F6] rounded-md mt-2 h-[60px] border border-slate-300 hover:border-black">
+                    <div class="flex flex-row items-center ">
+                        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.intent">
+                      <mat-icon class="mat-icon-rtl-mirror" svgIcon="mat:{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}">
+                      </mat-icon>
+                    </button>
+                        <p class="text-lg border-r-black">{{node.intent}}</p>
+                    </div>
+                    <div>
+                        <div class="flex gap-2 px-2">
+                            <button *ngIf="node.intentId !== intentId" (click)="editTask(node)" class="text-white bg-black px-3 py-1 rounded-sm hover:bg-orange-500"><mat-icon class="icon-sm" svgIcon="mat:edit"></mat-icon></button>
+                            <button (click)="addTask(node)" class="text-white bg-black px-3 py-1 rounded-sm hover:bg-orange-500" matTooltip="Add Task"><mat-icon class="icon-sm" svgIcon="mat:add_box"></mat-icon></button>
+                            <button (click)="deleteTask(node)" class="text-white bg-black px-3 py-1 rounded-sm hover:bg-orange-500" matTooltip="Delete Task"><mat-icon class="icon-sm" svgIcon="mat:close"></mat-icon></button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- There is inline padding applied to this div using styles.
+            This padding value depends on the mat-icon-button width.  -->
+                <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                    <ng-container matTreeNodeOutlet></ng-container>
+                </div>
+            </mat-nested-tree-node>
+        </mat-tree>
+    </div>
+    <div class="w-full">
+        <div class="bg-white  w-[98.5%] border border-gray-300 shadow-md h-[46rem]  mx-2 mt-1 flex-shrink-0 overflow-auto">
+            <div class="" *ngIf="tapeName =='Intents' && showCreateTask ==false">
+                <!-- <div class="m-6 ">
+                    <p class="font-medium text-base">Add user examples</p>
+                    <form *ngIf="intent" [formGroup]="addExampleForm" class="mt-4">
+                        <mat-form-field appearance="standard" class="w-[90%]">
+                            <mat-label>Add user examples to this intent</mat-label>
+                            <input formControlName="text" matInput>
+                            <mat-error *ngIf="addExampleForm.get('text').hasError('duplicateValue')">* Example name already found, Please enter another name !</mat-error>
+                        </mat-form-field>
+                    </form>
+                    <button (click)="createExample()" [disabled]="!addExampleForm.valid" mat-raised-button class="bg-[#1F2F3C] text-white px-4  rounded-lg hover:bg-[#EB8731]">Add example</button>
+                </div>
+
+                <div *ngIf="examples" class="mx-6 my-2  ">
+                    <div class="bg-[#F5F5F8] flex py-2 px-40 w-[90%]">
+                        <p class="text-base font-medium">User example ({{examples.length}} / {{allExamplescount}})</p>
+                    </div>
+                    <div class="w-[90%] overflow-auto max-h-[28rem]">
+                        <div *ngFor="let example of examples; let index = index" [ngClass]="{'bg-[#F5F5F8]': 0 !== index % 2}" class="flex gap-10 px-10 w-full ">
+                            <button (click)="deleteExample(example)" class="py-2"><span class=""><mat-icon svgIcon="mat:delete" class="text-gray-500"></mat-icon></span></button>
+                            <button *ngIf="seletedEditIndex != index" (click)="showEditExample(example)" class="text-[#428bca]" py-2>{{example.text}}</button>
+                            <form *ngIf="showEditForm == true && seletedEditIndex == index" [formGroup]="editExampleForm" class="w-full">
+                                <mat-form-field appearance="standard" class="w-full h-14 text-[11px]">
+                                    <mat-label>Add user examples to this intent</mat-label>
+                                    <input (change)="editExample(example)" formControlName="text" matInput>
+                                    <mat-error *ngIf="editExampleForm.get('text').hasError('duplicateValue')">* Example name already found, Please enter another name !</mat-error>
+                                </mat-form-field>
+                            </form>
+                        </div>
+                    </div>
+                </div> -->
+                <vex-intents [workspace_id]="workspace_id" [intentId]="intentId"></vex-intents>
+            </div>
+            <div *ngIf="tapeName =='Setting' && showCreateTask ==false">
+                <vex-task-settings [workspace_id]="workspace_id" [intentId]="intentId"></vex-task-settings>
+            </div>
+
+            <div *ngIf="tapeName =='Diagram Flow'  && showCreateTask ==false" class="h-full">
+                <vex-diagramflow-ifram [workspace_id]="workspace_id" [intentId]="intentId"></vex-diagramflow-ifram>
+            </div>
+
+            <div *ngIf="tapeName =='Static Responses'  && showCreateTask ==false">
+                <vex-task-static-response [workspace_id]="workspace_id" [intentId]="intentId"></vex-task-static-response>
+            </div>
+            <div *ngIf="showCreateTask == true">
+                <vex-create-task (resetCreateTaskFlag)="resetCreateFlag($event)" [workspace_id]="workspace_id" [intentId]="intentId" [createParentId]="createParentId" [mainTaskId]="mainTaskId"></vex-create-task>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,60 @@
+.cont{
+  min-height: 24px;
+  max-height: 44rem;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px; 
+}
+
+
+th.mat-header-cell{
+  line-height: 26px;
+  border-bottom: 1px solid #d8d8d8;
+  background-color: #fff;
+  padding: 8px 64px;
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,0.2);
+  position: relative;
+  color: black;
+  text-align: center;
+}
+
+
+.mat-column-Variable,.mat-column-value {
+  color: #047cc0;
+}
+
+.mat-column-Variable {
+  text-align: left;
+}
+
+
+.mat-row{
+  text-align: center;
+}
+
+.mat-row:nth-child(odd){
+  background-color: #f6f6f6;
+}
+      
+.sys{
+  color: white;
+  background: #cb3434;
+}
+.entity{
+  color: white;
+  background: #3f51b5;
+}
+.class{
+  color: white;
+  background: #26ab26;
+}
+.menu{
+  color: white;
+  background: #8255db;
+}
+
+.disabled {
+  color: gray;
+  cursor: not-allowed;
+}

@@ -1,0 +1,33 @@
+.mat-row:nth-child(even) {
+    background-color: #F8FAFC;
+}
+
+.mat-row:nth-child(odd) {
+    background-color: #FFFFFF;
+}
+
+.maXHeight {
+    height: 42rem;
+}
+
+.mat-row {
+    height: 56px;
+}
+
+th {
+    color: black;
+}
+
+.taskActive {
+    background-color: #F29544;
+}
+
+.taskActive:hover {
+    background-color: #F29544;
+}
+
+.bgRounded {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}

@@ -1,0 +1,29 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Replace Sense </h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="w-[600px] h-[400px]">
+            <div dir="rtl" class="py-1 px-2 text-base font-medium" [ngClass]="{'bg-slate-200': currentIndex == i}" *ngFor="let sense of senses; let i= index" (click)="clickOnList(i)">
+                {{sense.description}}
+            </div>
+            <div class="mt-4">
+                <p class="text-base font-semibold">Senses Count&nbsp;:&nbsp; {{senses.length}}</p>
+            </div>
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="replaceSense()"> Replace</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

@@ -1,0 +1,198 @@
+@import "~simplebar/dist/simplebar.css";
+@import "~highlight.js/styles/androidstudio.css";
+// Vex Core
+@import "./@vex/styles/core";
+@import "~@ng-select/ng-select/themes/material.theme.css";
+@import '~@circlon/angular-tree-component/css/angular-tree-component.css';
+@import '~quill/dist/quill.snow.css';
+
+/*
+  You can override any CSS Variable or style here
+  Example:
+
+  :root {
+   --sidenav-background: #333333;
+  }
+
+  All possible variables can be found in @vex/styles/core or by simply inspecting the element you want to change
+  in Chrome/Firefox DevTools
+*/
+
+
+/**
+  Uncomment the below code and adjust the values to fit your colors, the application will automatically adjust
+ */
+
+:root {
+    --color-primary: 243, 135, 41;
+    --color-primary-contrast: 0, 0, 0;
+    // --color-primary-contrast: white;
+    // --color-accent: yellow;
+    // --color-accent-contrast: black;
+    // --color-warn: yellow;
+    // --color-warn-contrast: black;
+}
+
+//.mat-button-toggle {background-color: (var(--color-primary),1)  !important}
+//.mat-button-toggle-label-content {background-color: (var(--color-primary),1) !important}
+.content-container {
+    overflow: auto;
+    margin: 32px 40px 0px 40px;
+    border-radius: var(--border-radius);
+    --tw-bg-opacity: 1;
+    background-color: rgba(var(--background-foreground-rgb), var(--tw-bg-opacity));
+    --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+    box-shadow: 0 0 #0000, 0 0 #0000, var(--tw-shadow);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.content-header {
+    padding-left: var(--padding-gutter);
+    padding-right: var(--padding-gutter);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom-width: 1px;
+}
+
+.content-app-header {
+    display: flex;
+    height: 4rem;
+    align-items: center;
+    border-bottom-width: 1px;
+    background-color: var(--background-app-bar);
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.content-header-title {
+    padding-left: 1rem;
+    border-left-width: 1px;
+    margin-left: 1rem;
+    display: block;
+    flex: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font: 500 18px / 26px var(--font);
+    letter-spacing: -0.014em;
+}
+
+.vex-breadcrumb {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.vex-sidenav-item__label {
+    font-size: 16px;
+    font-weight: 300;
+    color: #F1F1EB;
+}
+
+.vex-sidenav-subheading {
+    margin-top: 0px !important;
+    font-size: 14px !important;
+    color: #f38729 !important;
+}
+
+.mat-form-field-label {
+    font-size: 16px !important;
+}
+
+.mat-input-element {
+    font-size: 20px !important;
+    font-weight: 400 !important;
+}
+
+.mat-tab-label,
+.mat-tab-link {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.mat-cell,
+.mat-footer-cell {
+    font-size: 18px;
+}
+
+.mat-header-cell {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.mat-button,
+.mat-raised-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button,
+.mat-fab,
+.mat-mini-fab {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.mat-button-toggle.mat-button-toggle-checked {
+    background-color: rgba(var(--color-primary), 1) !important;
+    color: #fff
+}
+
+.li-active {
+    border-bottom: 3px solid rgba(var(--color-primary), 1) !important;
+    color: black !important;
+}
+
+.active-btn {
+    border: 3px solid rgba(var(--color-primary), 1) !important;
+    color: black !important;
+}
+
+@import '~@circlon/angular-tree-component/css/angular-tree-component.css';
+.mat-simple-snack-bar-content {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.green-snackbar {
+    background: rgb(76, 175, 80);
+    color: white;
+}
+
+.green-snackbar button {
+    background-color: rgb(65, 252, 134);
+    color: white;
+    border: none;
+}
+
+.red-snackbar {
+    background: #F44336;
+    color: white;
+}
+
+.red-snackbar button {
+    background-color: #F44336;
+    color: white !important;
+    border: none;
+}
+
+.mat-paginator {
+    display: flex !important;
+    justify-content: center;
+}
+
+table.mat-table {
+    min-height: 200px;
+}
+
+.mat-dialog-container {
+    min-width: 400px;
+}
+
+[dir=rtl] .mat-paginator-page-size {
+    flex-direction: row-reverse;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.mt-18 {
+    margin-top: 70px;
+}

@@ -1,0 +1,11 @@
+<div class="bg-slate-50 -mt-8  pt-4">
+    <div class=" ">
+        <form [formGroup]="responseFooterForm" *ngIf="projectOptions" class="">
+            <div class="flex flex-row justify-start gap-24 h-20 items-center px-16" style="background-color: #EEF0F2;">
+                <p class=" text-lg">Has Footer(Social media channels)</p>
+                <mat-slide-toggle (change)="getFormValue()" color="primary" formControlName="hasFooter"></mat-slide-toggle>
+            </div>
+        </form>
+
+    </div>
+</div>

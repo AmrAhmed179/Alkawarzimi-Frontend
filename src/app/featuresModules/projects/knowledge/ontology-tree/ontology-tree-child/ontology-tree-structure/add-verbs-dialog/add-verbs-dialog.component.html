@@ -1,0 +1,47 @@
+<mat-dialog-content class="">
+    <div class="flex justify-between items-center pb-3 border-b">
+        <p class="text-2xl font-bold text-black capitalize">Add Verb</p>
+        <div class="modal-close cursor-pointer z-50"></div>
+    </div>
+
+    <div class="w-full border-b pb-4">
+        <div>
+            <mat-form-field appearance="standard" class="w-full">
+                <mat-label>Search Verbs</mat-label>
+                <input matInput type="text" [(ngModel)]="searchQuery" (input)="filterVerbs()">
+            </mat-form-field>
+        </div>
+        <div class="mb-5 mr-5 ml-5 flex justify-start" style="max-height: 200px; overflow-y: auto;min-height: 200px">
+
+            <!-- <mat-list role="list" class="w-full">
+                <mat-list-item *ngFor="let verbObj of filteredVerbs" role="listitem"
+                    class="hover:bg-orange-100 hover:cursor-pointer w-full focus:bg-red-500"
+                    (click)="logSenseId(verbObj)">
+                    {{ verbObj.verb }}
+                </mat-list-item>
+            </mat-list> -->
+
+            <mat-list role="list" class="w-full">
+                <mat-list-item *ngFor="let verbObj of filteredVerbs; let i = index" role="listitem" class="w-full"
+                    (click)="logSenseId(verbObj); setActiveItem(i)" [class.active]="activeIndex === i" >
+                    {{ verbObj.verb }}
+                </mat-list-item>
+            </mat-list>
+
+
+        </div>
+
+        <div class="parent">
+            <h1 class="m-3 p-3 bg-green-50 text-green-900 text-center capitalize text-base tracking-sm">
+                Entities Count : <b>{{verbs?.length}}</b>
+            </h1>
+
+        </div>
+
+    </div>
+
+    <div class="flex justify-end pt-4 gap-4 ">
+        <button mat-flat-button color="primary" (click)="createVerbNode()">Add</button>
+        <button mat-flat-button color="warn" (click)="closeDialog()">Cancel</button>
+    </div>
+</mat-dialog-content>

@@ -1,0 +1,265 @@
+<div class="-mt-5 " style="max-height: 20px;">
+    <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="General">
+            <div class="mt-6 mx-6 px-10 grid grid-cols-2 gap-10 ">
+                <div style="height: 600px; overflow: auto;" class="w-auto">
+                    <div *ngFor="let Response of generalStaticResponse; let i = index;" (click)="openResponse(Response,i,true,'General')" [ngClass]="{'bg-orange-200': i == changeBackGround}" class="flex items-center px-6  border-2 rounded-sm  w-auto h-12 hover:bg-orange-200">
+                        <p class="text-base">{{Response.name}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'en' && tabType ==='General'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'ar' && tabType ==='General'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+
+                </div>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Variable">
+            <div class="mt-6 mx-6 px-10 grid grid-cols-2 gap-10 ">
+                <div style="height: 600px; overflow: auto;" class="w-auto">
+                    <div *ngFor="let Response of variableStaticResponse; let i = index;" (click)="openResponse(Response,i,true,'Variable')" [ngClass]="{'bg-orange-200': i == changeBackGround}" class="flex items-center px-6  border-2 rounded-sm  w-auto h-12 hover:bg-orange-200">
+                        <p class="text-base">{{Response.name}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'en' && tabType ==='Variable'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'ar' && tabType ==='Variable'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Object">
+            <div class="mt-6 mx-6 px-10 grid grid-cols-2 gap-10 ">
+                <div style="height: 600px; overflow: auto;" class="w-auto">
+                    <div *ngFor="let Response of objectStaticResponse; let i = index;" (click)="openResponse(Response,i,true,'Object')" [ngClass]="{'bg-orange-200': i == changeBackGround}" class="flex items-center px-6  border-2 rounded-sm  w-auto h-12 hover:bg-orange-200">
+                        <p class="text-base">{{Response.name}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'en' && tabType ==='Object'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'ar' && tabType ==='Object'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Service">
+            <div class="mt-6 mx-6 px-10 grid grid-cols-2 gap-10 ">
+                <div style="height: 600px; overflow: auto;" class="w-auto">
+                    <div *ngFor="let Response of serviceStaticResponse; let i = index;" (click)="openResponse(Response,i,true,'Service')" [ngClass]="{'bg-orange-200': i == changeBackGround}" class="flex items-center px-6  border-2 rounded-sm  w-auto h-12 hover:bg-orange-200">
+                        <p class="text-base">{{Response.name}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'en' && tabType ==='Service'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'ar' && tabType ==='Service'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Flow">
+            <div class="mt-6 mx-6 px-10 grid grid-cols-2 gap-10 ">
+                <div style="height: 600px; overflow: auto;" class="w-auto">
+                    <div *ngFor="let Response of flowStaticResponse; let i = index;" (click)="openResponse(Response,i,true, 'Flow')" [ngClass]="{'bg-orange-200': i == changeBackGround}" class="flex items-center px-6  border-2 rounded-sm  w-auto h-12 hover:bg-orange-200">
+                        <p class="text-base">{{Response.name}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'en' && tabType ==='Flow'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+                </div>
+
+                <div *ngIf="showResponse &&selectedLang === 'ar' && tabType ==='Flow'">
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8 mb-4" (click)="saveAllResponse()">Save All Responses</button>
+
+                    <div style="max-height: 550px; overflow: auto;">
+                        <form [formGroup]="responseForm" *ngIf="Responses">
+                            <div formArrayName="resonseArray" *ngFor="let Response of Responses.controls; let i = index">
+                                <div [formGroupName]="i" class="flex flex-row">
+                                    <mat-form-field style="width: 700px;">
+                                        <mat-label>Response</mat-label>
+                                        <input matInput Enmity="Response" formControlName="text">
+                                    </mat-form-field>
+                                    <button (click)="removeResponse(i)" class="text-orange-500 mx-4"><mat-icon svgIcon="mat:delete"></mat-icon></button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <button mat-raised-button class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-3 text-base h-8" (click)="addNewResponse()">Add New Response</button>
+
+
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

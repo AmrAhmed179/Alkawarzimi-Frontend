@@ -1,0 +1,24 @@
+<div mat-dialog-title class="flex items-center">
+    <h1 class="text-2xl">Create New Class</h1>
+    <span class="flex-1"></span>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon svgIcon="mat:close"></mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content class="dialogContent">
+    <form [formGroup]="form" class="w-full mt-2">
+        <div class="flex flex-col gap-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Class Name</mat-label>
+                <input formControlName="class" matInput>
+                <!-- <mat-error *ngIf="form.get('entity').hasError('isUnMatching')">Entity already exists</mat-error> -->
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="mt-4">
+    <button mat-raised-button color="primary" class="w-32" mat-dialog-close (click)="CreateModel()">Save</button>
+    <button mat-raised-button class="w-32 " mat-dialog-close class="bg-red-500 text-white" type="button">Cancel</button>
+</mat-dialog-actions>

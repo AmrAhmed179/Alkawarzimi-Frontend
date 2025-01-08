@@ -1,0 +1,57 @@
+<div>
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 *ngIf="data.type =='s'" class="text-2xl text-gray-50">Add Sibbling </h1>
+            <h1 *ngIf="data.type =='c'" class="text-2xl text-gray-50">Add child </h1>
+            <h1 *ngIf="data.type =='individual'" class="text-2xl text-gray-50">Add Individual </h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content class="w-[700px] ">
+            <div class="">
+                <mat-radio-group *ngIf="data.type !== 'v' && data.type !== 'individual'" aria-labelledby="example-radio-group-label" class="example-radio-group  grid grid-flow-col" (change)="formChang()" [(ngModel)]="entityTypeValue">
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'all'">All</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'class'">Classes</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'prop'">Restricted Classes</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'individual'">Individuals</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'Adjective'">Adjective</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" color="primary" [value]="'adverb'">Adverbs</mat-radio-button>
+                </mat-radio-group>
+                <mat-form-field appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
+                    <mat-label>Serach...</mat-label>
+                    <input cdkFocusInitial matInput [(ngModel)]="search" (keyup)="formChang()">
+                </mat-form-field>
+            </div>
+            <div class=" mt-1 ">
+                <div dir="rtl" class="overflow-auto h-[200px]">
+                    <div [ngClass]="{'bg-slate-200': currentClassAndPrpsIndex == i}" class="flex  border-b-2 m-1 py-1 items-center" (click)="clickOnList(classAndpropEntity, i)" *ngFor="let classAndpropEntity of classesAndProps; let i =index">
+
+                        <div class="flex w-full px-3 justify-between">
+                            <p class="w-full font-semibold">{{classAndpropEntity.entityType}}</p>
+                            <p class="w-full font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
+                            <div class="flex gap-2 items-center">
+                                <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{i+1}}</P>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Cancel</button>
+                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="addClass()"> Add</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

@@ -1,0 +1,34 @@
+<nav mat-tab-nav-bar class="flex items-center">
+    <div class="flex items-center">
+        <div>
+            <a mat-tab-link routerLink="ontologyTreeView" routerLinkActive="active">Ontology Tree</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="AllFrames" routerLinkActive="active" (click)="goToPropertiesTree()">Properties
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="AllEntities" (click)="goToEntities()" routerLinkActive="active">Entities
+</a>
+        </div>
+        <div>
+            <a mat-tab-link routerLink="AllEntities" routerLinkActive="active">Objects
+</a>
+        </div>
+    </div>
+    <div class="flex justify-between items-center w-full mx-4">
+        <div>
+
+        </div>
+        <div class="flex  items-center gap-2">
+            <button (click)="viewOntolgyIntents()" class="bg-[#F0AD4E] rounded-sm font-medium px-2 py-1 border-[1.5px] text-white hover:bg-[#ED9C28]">View Ontology Intents</button>
+            <button (click)="generateOntologyIntent()" class="bg-[#F0AD4E] rounded-sm font-medium px-2 py-1 border-[1.5px] text-white hover:bg-[#ED9C28]">Generate Ontology Intents</button>
+            <button (click)="generateGraphDb()" class="bg-[#F0AD4E] rounded-sm font-medium px-2 py-1 border-[1.5px] text-white hover:bg-[#ED9C28]">Generate Knowledge graph</button>
+        </div>
+
+    </div>
+</nav>
+
+<div class="my-2 mx-4">
+    <router-outlet></router-outlet>
+</div>

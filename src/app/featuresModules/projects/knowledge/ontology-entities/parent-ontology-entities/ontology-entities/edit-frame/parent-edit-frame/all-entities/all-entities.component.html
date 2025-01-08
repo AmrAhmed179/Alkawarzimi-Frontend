@@ -1,0 +1,35 @@
+<div>
+    <div class="border-[1.5px] h-[95px] flex flex-col  w-[45%] py-2 overflow-auto">
+        <div class="mx-4 px-2 py-2" *ngFor="let verb of verbs; let i = index" (click)="SelectCurrentSenceIndex(i)" [ngClass]="{'bg-blue-600':currentSenceIndex == i,'text-white':currentSenceIndex == i}">
+            <p class="text-base">{{verb.description}}</p>
+        </div>
+    </div>
+    <div class="bg-[#F7F7F7] border-b-2 border-[#DDDDDD] w-full grid grid-cols-3 mt-2 py-2 px-6">
+        <p class="text-lg col-span-1">Verb</p>
+        <p class="text-lg col-span-2">Entity</p>
+    </div>
+    <div class="tableHight">
+        <div *ngFor="let sen of sense?.frames">
+            <div class=" w-full grid grid-cols-3 py-2  ">
+                <div class="col-span-1 flex items-center justify-center border border-[#E2E2E2] py-3 px-10  bg-[#F7F7F7] rounded-2xl w-[30%]">
+                    <p class="text-base font-semibold">{{sen.verb}}</p>
+                </div>
+                <div (click)="goToSelectedEntity(sen)" class="col-span-2 flex items-center justify-start border border-[#E2E2E2] py-3 px-10  bg-[#F7F7F7] rounded-2xl w-[90%]">
+                    <p class="text-base font-semibold flex items-center">{{sen.entityId}} {{getEntityInfo(sen.entityId)}} &nbsp;
+                        <mat-icon (click)="deleteFrame(sen)" svgIcon="mat:delete"></mat-icon>
+                    </p>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+
+        </div>
+
+    </div>
+
+</div>
+<mat-divider class="border"></mat-divider>
+<div *ngIf="sense" class="bg-[#F7F7F7] px-4">
+    <div class="flex justify-center pt-2">
+        <button class="px-3 py-1 text-white font-medium bg-[#1F2F3C] rounded-sm hover:bg-[#FF9336] mx-3" (click)="close()">Close</button>
+    </div>
+</div>

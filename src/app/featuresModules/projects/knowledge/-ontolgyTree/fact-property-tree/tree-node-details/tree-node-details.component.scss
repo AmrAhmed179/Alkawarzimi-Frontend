@@ -1,0 +1,32 @@
+.custom-tabs .mat-tab-label {
+    font-size: 16px;
+    /* Change this to your desired font size */
+}
+
+.tapBorder {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-radius: 4px;
+    color: #6F6F6F;
+}
+
+.diagramHeight {
+    height: calc(100vh - 280px);
+}
+
+.maxHeight {
+    height: calc(100vh - 280px);
+}
+
+.icon12Px {
+    font-size: 12px;
+    height: 12px;
+    width: 12px;
+    line-height: 12px;
+}
+
+.exampleHeight {
+    height: calc(100vh - 600px);
+    min-height: 200px;
+}

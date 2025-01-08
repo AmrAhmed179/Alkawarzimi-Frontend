@@ -1,0 +1,20 @@
+<div class="bg-slate-50 -mt-4 pb-5 pt-4">
+    <div class="my-6 mx-14 ">
+        <form [formGroup]="liveChatEscalForm" *ngIf="projectOptions" class="">
+            <p class="text-lg font-semibold my-4">Max Error Count</p>
+            <p class="text-xs my-4">Convert To customer Service after n Errors.</p>
+            <mat-form-field class=" w-1/4" (change)="getFormValue()">
+                <input matInput Enmity="ErrorCount" formControlName="errorCount">
+            </mat-form-field>
+            <div class="flex flex-row justify-between w-1/4 my-5 h-16 items-center px-3" style="background-color: #EEF0F2;">
+                <p class="text-lg">Un Supported Langauge</p>
+                <mat-slide-toggle (change)="getFormValue()" color="primary" formControlName="unSupportedLang"></mat-slide-toggle>
+            </div>
+            <div class="flex flex-row justify-between w-1/4 my-5  h-16 items-center px-3" style="background-color: #EEF0F2;">
+                <p class=" text-lg">Media</p>
+                <mat-slide-toggle (change)="getFormValue()" color="primary" formControlName="utteranceMedia"></mat-slide-toggle>
+            </div>
+        </form>
+
+    </div>
+</div>
