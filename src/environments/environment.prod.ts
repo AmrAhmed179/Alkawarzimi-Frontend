@@ -269,7 +269,8 @@ export const environment = {
     delete_document: `https://verba.alkhwarizmi.online/api/delete_document`,
     Createindex: `https://verba.alkhwarizmi.online/kh/api/create_index`,
     get_index_status: `https://verba.alkhwarizmi.online/kh/api/get_index_status`,
-
+    get_configs: `https://verba.alkhwarizmi.online/kh/api/get_configs`,
+    save_configs: `https://verba.alkhwarizmi.online/kh/api/save_configs`,
     //#endregion
 
     ////////////Knowledge Graph////////////////

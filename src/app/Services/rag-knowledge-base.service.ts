@@ -26,5 +26,11 @@ export class RagKnowledgeBaseService {
   get_index_status(body){
      return this.http.post(environment.URLS.get_index_status,body)
   }
+  getConfigs(body){
+     return this.http.post(environment.URLS.get_configs,body)
+  }
+  save_configs(body){
+     return this.http.post(environment.URLS.save_configs,body)
+  }
 
 }

@@ -2,6 +2,7 @@
     <div class="flex justify-end gap-2 mb-3">
         <button routerLinkActive="active" routerLink="importData">Import Data</button>
         <button routerLinkActive="active" routerLink="documents">Documents</button>
+        <button routerLinkActive="active" routerLink="settings">Settings</button>
         <button routerLink="indexDetails" class="text-white hover:text-black" [ngClass]="{'bg-[#4caf50]':indexStatus == 'up-to-date','bg-[#f70505]':indexStatus == 'outdated'}">Index</button>
         <button routerLinkActive="active" routerLink="chat">Chat</button>
     </div>

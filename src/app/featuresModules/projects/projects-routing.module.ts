@@ -83,6 +83,7 @@ import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/i
 import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 import { ChatComponent } from './Ai-build-veba-Knowledge-Base/components/Chat/chat.component';
+import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },
@@ -213,6 +214,7 @@ const routes: Routes = [
              { path: "documents", component: DocumentsComponent, data: { breadcrumbs: [ 'Knowledge Base', 'Documents'] } },
              { path: "chat", component: ChatComponent, data: { breadcrumbs: [ 'Knowledge Base', 'chat'] } },
              { path: "indexDetails", component: IndexDetailsComponent, data: { breadcrumbs: [ 'Knowledge Base','Index'] } },
+             { path: "settings", component: SettingsComponent, data: { breadcrumbs: [ 'Knowledge Base','Settings'] } },
            ]},
           {
             path: "widget-set-up",

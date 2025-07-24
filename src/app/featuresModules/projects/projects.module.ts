@@ -176,6 +176,7 @@ import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/i
 import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/chat.component";
+import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -339,7 +340,8 @@ import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/ch
     ImportDataComponent,
     DocumentsComponent,
     ChatComponent,
-    IndexDetailsComponent
+    IndexDetailsComponent,
+    SettingsComponent
   ],
   imports: [
     TreeModule,
