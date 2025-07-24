@@ -81,8 +81,8 @@ import { KnolwlgeBaseTableComponent } from './ai-conversation/build-knowlege-bas
 import { ParentKnowledgeBaseComponent } from './Ai-build-veba-Knowledge-Base/parent-knowledge-base/parent-knowledge-base.component';
 import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/import-data/import-data.component';
 import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
-import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
+import { ChatComponent } from './Ai-build-veba-Knowledge-Base/components/Chat/chat.component';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },
@@ -211,7 +211,7 @@ const routes: Routes = [
             { path: "", redirectTo: "documents" },
              { path: "importData", component: ImportDataComponent, data: { breadcrumbs: [ 'Knowledge Base', 'Import Data'] } },
              { path: "documents", component: DocumentsComponent, data: { breadcrumbs: [ 'Knowledge Base', 'Documents'] } },
-             { path: "chat", component: SettingsComponent, data: { breadcrumbs: [ 'Knowledge Base', 'chat'] } },
+             { path: "chat", component: ChatComponent, data: { breadcrumbs: [ 'Knowledge Base', 'chat'] } },
              { path: "indexDetails", component: IndexDetailsComponent, data: { breadcrumbs: [ 'Knowledge Base','Index'] } },
            ]},
           {

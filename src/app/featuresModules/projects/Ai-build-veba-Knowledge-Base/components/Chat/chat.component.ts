@@ -3,22 +3,22 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'vex-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  selector: 'vex-chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class ChatComponent implements OnInit {
 
   question: string = '';
   messages: { text: string; type: 'user' | 'bot' }[] = [];
-  projectId:string
+  chatbotId:string
   @ViewChild('chatBox') chatBox!: ElementRef;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
   ngOnInit(): void {
         this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.projectId = params.get('projectid');
-    console.log('Project ID:', this.projectId);  // Should now show "150"
+    this.chatbotId = params.get('projectid');
+    console.log('Project ID:', this.chatbotId);  // Should now show "150"
     });
   }
 
@@ -33,7 +33,8 @@ export class SettingsComponent implements OnInit {
       mode: 'test',
       modelName: 'gpt',
       embeddingType: 'no_embeddingType',
-      chatbotId: this.projectId,
+      chatbotId: this.chatbotId,
+      projectId:"",
       query: q
     };
 

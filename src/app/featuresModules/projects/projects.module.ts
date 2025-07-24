@@ -174,8 +174,8 @@ import { AiConversationFilterDialogComponent } from './ai-conversation/ai-conver
 import { ParentKnowledgeBaseComponent } from './Ai-build-veba-Knowledge-Base/parent-knowledge-base/parent-knowledge-base.component';
 import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/import-data/import-data.component';
 import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
-import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
+import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/chat.component";
 
 @NgModule({
   declarations: [
@@ -338,7 +338,7 @@ import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components
     ParentKnowledgeBaseComponent,
     ImportDataComponent,
     DocumentsComponent,
-    SettingsComponent,
+    ChatComponent,
     IndexDetailsComponent
   ],
   imports: [

@@ -11,7 +11,7 @@ import { WebSocketService } from 'src/app/Services/web-socket-service.service';
   styleUrls: ['./index-details.component.scss']
 })
 export class IndexDetailsComponent implements OnInit {
- projectId:string
+ chatbotId:string
  indexStatus:string
   constructor(private wsService: WebSocketService,
       private dialog:MatDialog,
@@ -21,8 +21,8 @@ export class IndexDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.projectId = params.get('projectid');
-    console.log('Project ID:', this.projectId);  // Should now show "150"
+    this.chatbotId = params.get('projectid');
+    console.log('Project ID:', this.chatbotId);  // Should now show "150"
     this.get_index_status()
     });
   }
@@ -31,7 +31,7 @@ export class IndexDetailsComponent implements OnInit {
     "deployment": "Local",
     "key": "",
     "url": "http://weaviate:8080",
-    "chatbotId": this.projectId,
+    "chatbotId": this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
@@ -51,7 +51,8 @@ export class IndexDetailsComponent implements OnInit {
     "deployment": "Local",
     "key": "",
     "url": "http://weaviate:8080",
-    "chatbotId": this.projectId,
+    "chatbotId": this.chatbotId,
+    "projectId":"",
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({

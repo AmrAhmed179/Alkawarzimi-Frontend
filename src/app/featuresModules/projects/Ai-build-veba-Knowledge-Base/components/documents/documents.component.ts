@@ -26,7 +26,7 @@ export interface DocumentItem {
 export class DocumentsComponent implements OnInit {
 
    documents:any[] = []
-    projectId:string
+    chatbotId:string
     search = '';
     clickedItemIndex:number
     flag:boolean = false
@@ -49,7 +49,7 @@ export class DocumentsComponent implements OnInit {
     ngOnInit(): void {
     this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
       if (project) {
-        this.projectId = project._id;
+        this.chatbotId = project._id;
         this.getAllDocuments()
         }
     }
@@ -82,7 +82,8 @@ export class DocumentsComponent implements OnInit {
           "deployment": "Local",
           "key": "",
           "url": "http://weaviate:8080",
-          "chatbotId": this.projectId,
+          "chatbotId": this.chatbotId,
+          "projectId":"",
           "mode": "test"
       }
   }
@@ -100,7 +101,7 @@ export class DocumentsComponent implements OnInit {
         "deployment": "Local",
         "key": "",
         "url": "http://weaviate:8080",
-        "chatbotId": this.projectId,
+        "chatbotId": this.chatbotId,
         "mode": "test"
       }
     }
@@ -121,7 +122,7 @@ export class DocumentsComponent implements OnInit {
         "deployment": "Local",
         "key": "",
         "url": "http://weaviate:8080",
-        "chatbotId": this.projectId,
+        "chatbotId": this.chatbotId,
         "mode": "test"
       }
     }
@@ -176,7 +177,7 @@ export class DocumentsComponent implements OnInit {
         "deployment": "Local",
         "key": "",
         "url": "http://weaviate:8080",
-        "chatbotId": this.projectId,
+        "chatbotId": this.chatbotId,
         "mode": "test"
       }
     }

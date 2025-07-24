@@ -25,7 +25,7 @@ export class ImportDataComponent implements OnInit {
   isImporting = false;
   importProgress: {[key: string]: number} = {};
   importStatus: {[key: string]: string} = {};
-  projectId
+  chatbotId
   constructor(private wsService: WebSocketService,
     private dialog:MatDialog,
     private route: ActivatedRoute,
@@ -35,8 +35,8 @@ export class ImportDataComponent implements OnInit {
   ngOnInit(): void {
 
     this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.projectId = params.get('projectid');
-    console.log('Project ID:', this.projectId);  // Should now show "150"
+    this.chatbotId = params.get('projectid');
+    console.log('Project ID:', this.chatbotId);  // Should now show "150"
     //this.get_index_status()
     });
     this.wsService.connect('wss://verba.alkhwarizmi.online/ws/import_files');
@@ -61,7 +61,7 @@ export class ImportDataComponent implements OnInit {
         deployment: 'Local',
         key: '',
         url: 'http://weaviate:8080',
-        chatbotId: this.projectId,
+        chatbotId: this.chatbotId,
         mode: 'test'
       };
 
@@ -92,7 +92,8 @@ export class ImportDataComponent implements OnInit {
           "deployment":"Local",
           "key":"",
           "url":"http://weaviate:8080",
-          "chatbotId":this.projectId,
+          "chatbotId":this.chatbotId,
+          "projectId":"",
           "mode":"test"},
         "isLastDocument":true
       }
@@ -142,31 +143,31 @@ export class ImportDataComponent implements OnInit {
     });
   }
   openPlainTextDialog() {
-  const dialogRef = this.dialog.open(PlainTextDialogComponent, {
-    width: '700px',
-    disableClose: true
-  });
+  // const dialogRef = this.dialog.open(PlainTextDialogComponent, {
+  //   width: '700px',
+  //   disableClose: true
+  // });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      console.log('Plain text submitted:', result);
-      // Handle the plain text content here
-    }
-  });
+  // dialogRef.afterClosed().subscribe(result => {
+  //   if (result) {
+  //     console.log('Plain text submitted:', result);
+  //     // Handle the plain text content here
+  //   }
+  // });
   }
   openUrlsDialog() {
-  const dialogRef = this.dialog.open(UrlsDialogComponent, {
-    width: '700px',
-    disableClose: true
-  });
+  // const dialogRef = this.dialog.open(UrlsDialogComponent, {
+  //   width: '700px',
+  //   disableClose: true
+  // });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      debugger
-      console.log('Plain text submitted:', result);
-      // Handle the plain text content here
-    }
-  });
+  // dialogRef.afterClosed().subscribe(result => {
+  //   if (result) {
+  //     debugger
+  //     console.log('Plain text submitted:', result);
+  //     // Handle the plain text content here
+  //   }
+  // });
   }
 
   overViewOrconfig(type){
@@ -183,7 +184,7 @@ export class ImportDataComponent implements OnInit {
     "deployment": "Local",
     "key": "",
     "url": "http://weaviate:8080",
-    "chatbotId": this.projectId,
+    "chatbotId": this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
@@ -202,7 +203,7 @@ export class ImportDataComponent implements OnInit {
     "deployment": "Local",
     "key": "",
     "url": "http://weaviate:8080",
-    "chatbotId": this.projectId,
+    "chatbotId": this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({

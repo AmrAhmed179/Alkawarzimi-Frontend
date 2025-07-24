@@ -15,7 +15,7 @@ import { NotifyService } from 'src/app/core/services/notify.service';
   styleUrls: ['./parent-knowledge-base.component.scss']
 })
 export class ParentKnowledgeBaseComponent implements OnInit {
-  projectId:string
+  chatbotId:string
   indexStatus:string
 
   constructor(private wsService: WebSocketService,
@@ -25,9 +25,9 @@ export class ParentKnowledgeBaseComponent implements OnInit {
          private _ragKnowledgeBaseService:RagKnowledgeBaseService) { }
 
   ngOnInit(): void {
-        this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.projectId = params.get('projectid');
-    console.log('Project ID:', this.projectId);  // Should now show "150"
+    this.route.parent?.parent?.paramMap.subscribe(params => {
+    this.chatbotId = params.get('projectid');
+    console.log('Project ID:', this.chatbotId);  // Should now show "150"
     this.get_index_status()
     });
 
@@ -51,7 +51,8 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     "deployment": "Local",
     "key": "",
     "url": "http://weaviate:8080",
-    "chatbotId": this.projectId,
+    "chatbotId": this.chatbotId,
+    "projectId":"",
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
