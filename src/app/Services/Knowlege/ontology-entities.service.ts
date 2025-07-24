@@ -111,11 +111,11 @@ export class OntologyEntitiesService {
     }
     return this.http.post(environment.URLS.setTriggerEntity, body)
   }
-  setTalkAboutMenu (projectId:string, entityId:any , trigger:boolean){
+  setTalkAboutMenu (projectId:string, entityId:any , talkAboutMenu:boolean){
     let body = {
       projectId: projectId,
       entityId: entityId,
-      trigger: trigger
+      talkAboutMenu: talkAboutMenu
     }
     return this.http.post(environment.URLS.setTalkAboutMenu, body)
   }
@@ -152,6 +152,15 @@ export class OntologyEntitiesService {
     }
     return this.http.post(environment.URLS.SenseEXFrame, body)
   }
+  createRelatedFrame(projectId:string, entityId:any, sameEventFrame){
+    let body = {
+      projectId: projectId,
+      entityId: entityId,
+      sameEventFrame:sameEventFrame
+    }
+    return this.http.post(environment.URLS.CreateRelatedFrame, body)
+  }
+
 
   SenseEXFrameGetAny(senseId:any){
     let parm = {
@@ -221,7 +230,7 @@ export class OntologyEntitiesService {
     }
     return this.http.get(environment.URLS.getPOSList, {params: parm })
   }
-  creatOntoloyEntity(projectId:any,stemmedEntity:string,entityText:string, language:string, type:string, parentId:number,entityTextKnowTask:string){
+  creatOntoloyEntity(projectId:any,stemmedEntity:string,entityText:string, language:string, type:string, parentId:number,entityTextKnowTask:string, _id){
     let body
     if(entityTextKnowTask){
        body = {
@@ -250,7 +259,7 @@ export class OntologyEntitiesService {
             language: language
           }
         ],
-        _id: 0,
+        _id: _id,
         parentId: parentId,
         entityType: type,
         languageIndex: 0
@@ -259,7 +268,25 @@ export class OntologyEntitiesService {
 
     return this.http.post(environment.URLS.CreatOntoloyEntity, body)
   }
+  EditOntoloyEntity(projectId:any,stemmedEntity:string,entityText:string, language:string, type:string, parentId:number,entityTextKnowTask:string, _id){
+    let body
+      body = {
+        projectId:projectId,
+        entityInfo: [
+          {
+            stemmedEntity:stemmedEntity,
+            entityText: entityText,
+            language: language
+          }
+        ],
+        _id: _id,
+        parentId: parentId,
+        entityType: type,
+        languageIndex: 0
+    }
 
+    return this.http.post(environment.URLS.EditOntoloyEntity, body)
+  }
   getClassandProp(projectId:string){
     let parm = {
       projectId: projectId

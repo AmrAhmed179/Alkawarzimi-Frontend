@@ -109,6 +109,7 @@ export const environment = {
     SetCategory: `${BaseUrl}Entities/setCategory`,
     TestEnitiesStemes: `${BaseUrl}Entities/testEnitiesStemes`,
     SenseEXFrame: `${BaseUrl}SenseEXFrame/Index`,
+    CreateRelatedFrame: `${BaseUrl}Entities/CreateRelatedFrame`,
     SenseEXFrameGetAny: `${BaseUrl}SenseEXFrame/getAny`,
     getSenseFrame: `${BaseUrl}Sense/getSenseFrame`,
     SetArgumentMapping: `${BaseUrl}Entities/setArgumentMapping`,
@@ -118,6 +119,7 @@ export const environment = {
     GetSense: `${BaseUrl}Sense/getSense`,
     getPOSList: `${BaseUrl}Lexicon/getPOSList`,
     CreatOntoloyEntity: `${BaseUrl}Entities/Create`,
+    EditOntoloyEntity: `${BaseUrl}Entities/Edit`,
     GetOntologyClassandProp: `${BaseUrl}Entities/getClassandProp`,
     GetPrepList: `${BaseUrl}Lexicon/GetPrepList`,
     PropertiesIndex: `${BaseUrl}Properties/index`,
@@ -175,6 +177,7 @@ export const environment = {
     SaveLinkedArg: `${BaseUrl}Entities/saveLinkedArg`,
     DeleteFrameFactProperty: `${BaseUrl}Entities/DeleteFrameFactProperty`,
     SetFactProperty: `${BaseUrl}Entities/SetFactProperty`,
+    SetCompoundFact: `${BaseUrl}Entities/SetCompoundFact`,
     updateFactProperty: `${BaseUrl}Entities/updateFactProperty`,
     updateFactTree: `${BaseUrl}Entities/updateFactTree`,
     DeAttachPropertyToFrame: `${BaseUrl}Entities/DeAttachPropertyToFrame`,
@@ -241,11 +244,32 @@ export const environment = {
     GetSurviesCounters: `${BaseUrl}Conversation/GetSurviesCounters/`,
     GetSurviesStatistics: `${BaseUrl}Conversation/GetSurviesStatistics/`,
     CreateStatisticReport: `${BaseUrl}Conversation/CreateStatisticReport/`,
-    CreateConversationsReport: `${BaseUrl}Conversation/CreateStatisticReport/`,
+    CreateConversationsReport: `${BaseUrl}Conversation/CreateConversationsReport/`,
+    CreateConversationsReport2: `${BaseUrl}Conversation/CreateConversationsReport2/`,
     LeadGenerationReport: `${BaseUrl}Reports/index`,
     GetSassProjects: `${BaseUrl}SassProjects/GetProjects`,
     ////////////analytical end/////////////////////
 
+    //#region AiConversation
+    GetAllAiSessions: `${BaseUrl}AiAgent/GetAIConversationsLogs`,
+    GetOnlineAiSessions: `${BaseUrl}Conversation/GetAiSessions`,
+    GetAiSessionHistory: `${BaseUrl}AiAgent/GetAIConversationById`,
+    GetOnlineAiSessionHistory: `${BaseUrl}Conversation/GetAiSessionHistory`,
+    GetTools: `${BaseUrl}AiAgent/GetTools`,
+    EditTool: `${BaseUrl}AiAgent/EditTool`,
+    GetAgents: `${BaseUrl}AiAgent/GetAgents`,
+    saveAgents: `${BaseUrl}AiAgent/saveAgent`,
+    SetMainAgent: `${BaseUrl}AiAgent/SetMainAgent`,
+    DeleteAgent: `${BaseUrl}AiAgent/DeleteAgent`,
+    GetAgentsTasks: `${BaseUrl}Intents/GetTasks`,
+    GetAllDocuments: `https://verba.alkhwarizmi.online/api/get_all_documents`,
+    get_content: `https://verba.alkhwarizmi.online/api/get_content`,
+    get_chunks: `https://verba.alkhwarizmi.online/api/get_chunks`,
+    delete_document: `https://verba.alkhwarizmi.online/api/delete_document`,
+    Createindex: `https://verba.alkhwarizmi.online/kh/api/create_index`,
+    get_index_status: `https://verba.alkhwarizmi.online/kh/api/get_index_status`,
+
+    //#endregion
 
     ////////////Knowledge Graph////////////////
 
@@ -313,6 +337,11 @@ export const environment = {
     GetLoggedUserInfo: `${serverUrl}/Account/TestCurrentUser/`,
 
     //Analytics URLs
+
+    /////apiUrls////////
+
+    AIEntityBaseUrl:"https://alkhwarizmi.online/",
+    ////////////////////
 
     //////////// template Url //////////////
     UPDATE_PROJECT_USER_CONFIG: `${serverUrl}User/UpdateProjectUserConfig`,

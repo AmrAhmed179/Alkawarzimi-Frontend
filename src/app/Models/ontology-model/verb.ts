@@ -127,7 +127,7 @@ export class CmpModyfier {
   modifiers: any
 }
 export class ObjModyfier {
-  preps: string[]
+  preps: string[] = []
   modifiers: any
 }
 

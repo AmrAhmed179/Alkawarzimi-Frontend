@@ -55,12 +55,20 @@
             <button *ngIf="showButtons == true" mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" [matMenuTriggerFor]="menu">Report <mat-icon svgIcon="mat:chevron_right"></mat-icon></button>
             <mat-menu #menu="matMenu">
                 <div>
-                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(statisticalReport,'statisticalReport ')" *ngIf="showButtons == true">Statistical Report</button>
+                    <!-- <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(statisticalReport,'statisticalReport')" *ngIf="showButtons == true">Statistical Report</button> -->
+                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="createStatisticReport()" *ngIf="showButtons == true">Statistical Report</button>
                 </div>
                 <div class="mt-2">
-                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(conversationsReport,'coversationReport')" *ngIf="showButtons == true">Conversation Report</button>
+                    <!-- <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(conversationsReport,'coversationReport')" *ngIf="showButtons == true">Conversation Report</button> -->
+                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="createConversationsReport()" *ngIf="showButtons == true">Conversation Report</button>
+                </div>
+                <div class="mt-2">
+                    <!-- <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="openStatisticalReportDialog(conversationsReport,'coversationReport')" *ngIf="showButtons == true">Conversation Report</button> -->
+                    <button mat-raised-button class="bg-zinc-900 text-gray-100 rounded-sm hover:bg-orange-500" (click)="createConversationsReport2()" *ngIf="showButtons == true">Download up to 50K Conversation</button>
                 </div>
             </mat-menu>
+            <!-- <mat-checkbox (change)="detectMode()" color="primary" [(ngModel)]="agentMode">AgentMode</mat-checkbox> -->
+
 
         </div>
     </div>

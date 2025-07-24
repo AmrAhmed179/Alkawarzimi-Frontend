@@ -348,7 +348,11 @@ export class ChatbotConversationComponent implements OnInit {
     })
    }
 
-
+    changeDateFormate(dateString:string){
+      const timestamp = parseInt(dateString.replace(/\/Date\((\d+)\)\//, '$1'), 10);
+      const date = new Date(timestamp);
+      return date.toString();
+    }
    getPredictionName(predictionId){
     let predictionIdName:string = ''
 

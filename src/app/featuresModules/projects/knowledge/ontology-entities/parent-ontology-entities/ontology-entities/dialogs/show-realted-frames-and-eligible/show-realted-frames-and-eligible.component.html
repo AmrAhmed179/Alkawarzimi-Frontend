@@ -14,7 +14,7 @@
                             <p>{{item.sbj}}</p>
                             <p>{{item.obj}}</p>
                             <p>{{item.cmp}}</p>
-
+                            <button (click)="createRelatedFrame(item)" class="bg-[#1f2f3c] hover:bg-[#F9A154]  rounded-sm  text-white py-1 px-2" *ngIf="!frameIsCreated(item.senseId)">Create Frame</button>
                         </div>
                         <mat-divider class="bg-[#A1EAE9]"></mat-divider>
                     </div>

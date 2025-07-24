@@ -52,6 +52,7 @@ export class SharedEntityTableComponent implements OnInit {
     ) { }
   ngOnInit(): void {
     this._ontologyEntitiesService.ReloadEntitesInCreation$.pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
+     debugger
       if(res){
         this.reloadEntiesFlage = true
         if(this.type == 'gneratedFrames'){
@@ -89,7 +90,7 @@ export class SharedEntityTableComponent implements OnInit {
     this._ontologyEntitiesService.getEntities(this.projectId, this.type, 1).subscribe((res:any)=>{
       debugger
       this.entities = res.entities
-      this.sortEntites()
+      this.sortEntites(this.entities)
     })
   }
 
@@ -97,11 +98,11 @@ export class SharedEntityTableComponent implements OnInit {
     this._ontologyEntitiesService.getGeneratedFrames(this.projectId).subscribe((res:any)=>{
       debugger
       this.entities = res.entitiParent.concat(res.generatedFramesList)
-      this.sortEntites()
+      this.sortEntites(this.entities)
     })
   }
-  sortEntites(){
-    var allParents = this.entities.filter(x=>x.parentId == 0)
+  sortEntites(entities){
+    var allParents = entities.filter(x=>x.parentId == 0)
     debugger
      this.ontologyEntities = allParents.sort((n1,n2) => {
       if (n1._id > n2._id) {
@@ -138,9 +139,9 @@ export class SharedEntityTableComponent implements OnInit {
     var Filter= this.form?.controls['Filter'].value
     var search= this.form?.controls['search'].value
     var filteredData:EntityModel[]
-    filteredData = this.ontologyEntitiesFilter
+    filteredData = this.entities
     if(search){
-      filteredData = this.ontologyEntitiesFilter.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()))
+      filteredData = this.entities.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()))
     }
     if(Category){
       filteredData = filteredData.filter(x=>x.categoryId == Category)
@@ -158,9 +159,18 @@ export class SharedEntityTableComponent implements OnInit {
          if(Filter == 'filter_error_stem' )
          filteredData = filteredData.filter(x=>x.errorInStem == true)
     }
-
-
-    this.ontologyEntities = filteredData
+    let childrenEntities:EntityModel[] = []
+    filteredData.forEach(element => {
+      if(element.parentId != 0){
+        let entities = this.entities.filter(x=>x.parentId == element.parentId)
+        let parent = this.entities.find(x=>x._id == element.parentId)
+        childrenEntities.push(parent)
+        childrenEntities.concat(entities)
+      }
+    });
+      this.sortEntites( [...new Set(filteredData.concat(childrenEntities))])
+      this.currentIndex = undefined
+    //this.ontologyEntities = filteredData
   }
   getFactCategories(){
     this._ontologyEntitiesService.getFactCategories(this.projectId).subscribe((res:any)=>{
@@ -318,10 +328,16 @@ export class SharedEntityTableComponent implements OnInit {
 
   openRelatedFramesAndEligible(entity:EntityModel){
     debugger
+    var allSenses:number[] = []
+     this.ontologyEntities.forEach(element => {
+      allSenses.push(element.senseId)
+    })
     const dialogRef = this.dialog.open(ShowRealtedFramesAndEligibleComponent, {
-      data: { senseId:entity.senseId},},
+      data: { senseId:entity.senseId,entityId:entity._id ,projectId:this.projectId, childrenEntites:this.childrenEntites},},
     );
     dialogRef.afterClosed().subscribe((res:any) => {
+      if(res)
+        this._ontologyEntitiesService.ReloadEntitesInCreation$.next('reload')
     })
   }
   openRelatedFrames(entity:EntityModel){
@@ -334,8 +350,9 @@ export class SharedEntityTableComponent implements OnInit {
   }
 
   setArgumentMapping(entity:any){
+    debugger
     const dialogRef = this.dialog.open(ArgumentMappingComponent, {
-      data: { entityId:entity._id,cmp:entity.cmp,sbj:entity.sbj,obj:entity.obj,features:entity.features, projectId:this.projectId,},},
+      data: {entity:entity, entityId:entity._id,cmp:entity.cmp,sbj:entity.sbj,obj:entity.obj,features:entity.features, projectId:this.projectId,},},
     );
     dialogRef.afterClosed().subscribe((res:any) => {
       if(res)
@@ -369,7 +386,7 @@ export class SharedEntityTableComponent implements OnInit {
   openCreateEntity(){
    let entityId = this.ontologyEntities[this.currentIndex]._id
     const dialogRef = this.dialog.open(CreateOntologyEntityComponent, {
-      data: {entityId:entityId, projectId:this.projectId,mode:'Synonym' , Type:this.type},},
+      data: {entityId:entityId, projectId:this.projectId,mode:'Synonym' , Type:this.type, _id:0},},
     );
     dialogRef.afterClosed().subscribe((res:any) => {
       if(res)
@@ -383,6 +400,44 @@ export class SharedEntityTableComponent implements OnInit {
         }
     })
   }
+  openModifyEntity(){
+    debugger
+    let entityId = this.ontologyEntities[this.currentIndex]._id
+     const dialogRef = this.dialog.open(CreateOntologyEntityComponent, {
+       data: {entityId:0, projectId:this.projectId,mode:'edit' , Type:this.type,entity:this.ontologyEntities[this.currentIndex],_id:entityId},},
+     );
+     dialogRef.afterClosed().subscribe((res:any) => {
+       if(res)
+         {this.reloadEntiesFlage = true
+           if(this.type == 'gneratedFrames'){
+             this.getGeneratedEntities()
+           }
+           else{
+             this.getEntities()
+           }
+         }
+     })
+   }
+
+  openModifySynEntity(entity:EntityModel){
+    debugger
+    let entityId = entity._id
+    let type = entity.entityType
+     const dialogRef = this.dialog.open(CreateOntologyEntityComponent, {
+       data: {entityId:0, projectId:this.projectId,mode:'edit' , Type:type,entity:entity,_id:entityId},},
+     );
+     dialogRef.afterClosed().subscribe((res:any) => {
+       if(res)
+         {this.reloadEntiesFlage = true
+           if(this.type == 'gneratedFrames'){
+             this.getGeneratedEntities()
+           }
+           else{
+             this.getEntities()
+           }
+         }
+     })
+   }
 
   editFrame(entity:EntityModel){
     debugger

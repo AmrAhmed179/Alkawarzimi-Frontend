@@ -50,14 +50,14 @@
 }
 
 .indivdualHeight {
-    height: calc(100vh - 700px);
-    min-height: 150px;
+    //height: calc(100vh - 700px);
+    height: 180px;
     overflow: auto;
 }
 
 .objectHeight {
-    height: calc(100vh - 800px);
-    min-height: 100px;
+    //height: calc(100vh - 800px);
+    height: 150px;
     overflow: auto;
 }
 
@@ -69,4 +69,22 @@
 
 .factFormWidth {
     width: calc(100% - 170px);
+}
+
+:host ::ng-deep .toggle-children {
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 9px solid #FF7F27;
+    margin-top: 20px;
+    /* THIS is the visible arrow */
+}
+
+.iconColor {
+    color: #585858;
+}
+
+.fontFamily {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }

@@ -1,0 +1,20 @@
+<mat-dialog-content>
+    <form [formGroup]="plainTextForm">
+        <p class="text-center font-bold mb-4 text-lg">Import from URLs</p>
+        <div class="form-field">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Enter URLs</mat-label>
+                <textarea matInput formControlName="content" rows="8" required></textarea>
+                <mat-error *ngIf="plainTextForm.get('content')?.hasError('required')">
+                    Content is required
+                </mat-error>
+            </mat-form-field>
+            <small class="text-muted">URLs must be less than 300</small>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!plainTextForm.valid" (click)="submit()">Import</button>
+</mat-dialog-actions>

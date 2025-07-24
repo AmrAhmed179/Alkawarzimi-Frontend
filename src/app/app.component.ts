@@ -24,6 +24,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { combineLatest, forkJoin, map, skip } from "rxjs";
 import { DateAdapter } from "@angular/material/core";
 import { DataService } from "./core/services/data.service";
+import { NotifyService } from "./core/services/notify.service";
 
 @Component({
   selector: "vex-root",
@@ -31,6 +32,8 @@ import { DataService } from "./core/services/data.service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
+  message = '';
+  type: 'success' | 'error' = 'success';
   projectId = "ewewqewqe";
   currentLang = "";
   direction$ = this.configService.config$.pipe(
@@ -51,8 +54,13 @@ export class AppComponent {
     private readonly domSanitizer: DomSanitizer,
     private _dataSerivce: DataService,
     private translationService: TranslateService,
-    private dateAdapter: DateAdapter<Date>
+    private dateAdapter: DateAdapter<Date>,
+    private notificationService: NotifyService,
   ) {
+    this.notificationService.notification$.subscribe(data => {
+      this.message = data.message;
+      this.type = data.type;
+    });
     this.currentLang = localStorage.getItem("lang");
 
     if (!this.currentLang) this.currentLang = "en";

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
@@ -19,7 +19,7 @@ export class TaskSettingsComponent implements OnInit {
   intentSettings:IntentSettings
   lang:string
   onDestroy$: Subject<void> = new Subject();
-
+  @Output() intentSettingsEvent = new EventEmitter<IntentSettings>();
   constructor(private _tasksService: TasksService,
     private fb:FormBuilder,
     private notify:NotifyService,
@@ -62,6 +62,7 @@ export class TaskSettingsComponent implements OnInit {
        sideTalk:[this.intentSettings.sideTalk],
        statelessFlow:[this.intentSettings.statelessFlow],
       stopDigression:[this.intentSettings.stopDigression],
+      allawReturnToPreviousFlow:[this.intentSettings.allawReturnToPreviousFlow],
       changeLanguageTo:[this.intentSettings.changeLanguageTo]
     })
   }
@@ -79,10 +80,12 @@ export class TaskSettingsComponent implements OnInit {
     this.intentSettings.sideTalk = this.settingForm.controls['sideTalk'].value
     this.intentSettings.statelessFlow = this.settingForm.controls['statelessFlow'].value
     this.intentSettings.stopDigression = this.settingForm.controls['stopDigression'].value
+    this.intentSettings.allawReturnToPreviousFlow = this.settingForm.controls['allawReturnToPreviousFlow'].value
 
     this._tasksService.updateIntentInfo(this.intentSettings, this.workspace_id).subscribe((res:any)=>{
       if(res.status == 1){
         this.notify.openSuccessSnackBar("Task Info Updated")
+        this.intentSettingsEvent.emit(this.intentSettings)
       }
       else{
         this.notify.openFailureSnackBar("Task Info updated Faild")

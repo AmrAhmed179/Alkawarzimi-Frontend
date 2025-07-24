@@ -1,0 +1,146 @@
+<div class="bg-slate-50 -mt-4 pb-5 pt-4">
+    <div class=" mx-14 ">
+        <form [formGroup]="brainForm" *ngIf="projectOptions" class="relative w-full">
+            <!-- <div [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }" class="">
+                <div class="flex gap-4 items-center   w-full">
+                    <p class="text-sm">Select the NLU Mode (NLU or LLM)..</p>
+                    <mat-radio-group aria-labelledby="example-radio-group-label" (change)="getFormValue()" formControlName="nluMode" class=" example-radio-group ">
+                        <mat-radio-button class="example-radio-button text-sm " color="primary" value="0">Ontology only</mat-radio-button>
+                        <mat-radio-button class="example-radio-button text-sm mx-4" color="primary" value="1">Hybrid</mat-radio-button>
+                        <mat-radio-button class="example-radio-button text-sm mx-4" color="primary" value="2">LLM only</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div> -->
+
+
+            <div formGroupName="aiAgent">
+                <div [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }" class="">
+
+                    <div class="w-full ">
+                        <mat-form-field appearance="fill" class=" w-80">
+                            <mat-label>Model</mat-label>
+                            <mat-select formControlName="model" (selectionChange)="getFormValue()">
+                                <mat-option [value]="null">None</mat-option>
+                                <mat-option value="gpt-4o-mini">gpt-4o-mini</mat-option>
+                                <mat-option value="gpt-4o">gpt-4o</mat-option>
+                                <mat-option value="gpt-4.1-nano">gpt-4.1-nano</mat-option>
+                                <mat-option value="gpt-4.1-mini">gpt-4.1-mini</mat-option>
+                                <mat-option value="gpt-4.1">gpt-4.1</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div *ngIf="this.projectOptions.nluMode == '1'" class="">
+                    <div>
+
+                        <div class="flex gap-4 ">
+                            <div class="w-full flex flex-col border px-2 pt-4 rounded-sm fiXedHightTextAreas">
+
+                                <!-- <mat-form-field appearance="fill" class="w-full mb-4" (mouseleave)="getFormValue()">
+                                    <mat-label>Prompt</mat-label>
+                                    <textarea [ngClass]="{'textAreaInExpand': isEntityExpand == true}" matInput class="h-[550px]" formControlName="prompt"></textarea>
+                                </mat-form-field>
+                                <button *ngIf="isEntityExpand == false" class="" (click)="isEntityExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen"></mat-icon>
+              </button  >
+           <button *ngIf="isEntityExpand == true" class="" (click)="isEntityExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit"></mat-icon>
+              </button> -->
+                                <div class="mr-[27px]" [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full " (mouseleave)="getFormValue()">
+                                        <mat-label>Task</mat-label>
+                                        <textarea [ngClass]="{'textAreaInExpand': isEntityExpand == true}" matInput rows="2" formControlName="task"></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div class="mr-[27px]" [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full " (mouseleave)="getFormValue()">
+                                        <mat-label>Intent Heading</mat-label>
+                                        <textarea [ngClass]="{'textAreaInExpand': isEntityExpand == true}" matInput rows="2" formControlName="intentHeading"></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div class="mr-[27px]" [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full" (mouseleave)="getFormValue()">
+                                        <mat-label>IntentRouting</mat-label>
+                                        <textarea class="disabled-look" [readonly]="true" [ngClass]="{'textAreaInExpand': isEntityExpand == true}" matInput rows="3" formControlName="intentRoutying"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+
+
+                                <div class="flex items-start" [ngClass]="{'hideItems': isInstractionsExpand == true ||isExampleExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full mb-4" (mouseleave)="getFormValue()">
+                                        <mat-label>Entity</mat-label>
+                                        <textarea [ngClass]="{'textAreaInExpand': isEntityExpand == true}" matInput rows="4" formControlName="entity"></textarea>
+                                    </mat-form-field>
+
+                                    <button *ngIf="isEntityExpand == false" class="" (click)="isEntityExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen"></mat-icon>
+                                      </button  >
+                                  <button *ngIf="isEntityExpand == true" class="" (click)="isEntityExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit"></mat-icon>
+                                      </button>
+                                </div>
+                                <div class="flex items-start" [ngClass]="{'hideItems': isEntityExpand == true || isExampleExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full mb-4" (mouseleave)="getFormValue()">
+                                        <mat-label>Instractions</mat-label>
+                                        <textarea [ngClass]="{'textAreaInExpand': isInstractionsExpand == true}" rows="4" matInput formControlName="instructions"></textarea>
+                                    </mat-form-field>
+                                    <button *ngIf="isInstractionsExpand == false" class="" (click)="isInstractionsExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen"></mat-icon>
+                                      </button  >
+                                  <button *ngIf="isInstractionsExpand == true" class="" (click)="isInstractionsExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit"></mat-icon>
+                                      </button>
+                                </div>
+
+                                <div class="flex items-start" [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true }">
+                                    <mat-form-field appearance="fill" class="w-full mb-4" (mouseleave)="getFormValue()">
+                                        <mat-label>Example</mat-label>
+                                        <textarea [ngClass]="{'textAreaInExpand': isExampleExpand == true}" rows="4" matInput formControlName="example"></textarea>
+                                    </mat-form-field>
+                                    <button *ngIf="isExampleExpand == false" class="" (click)="isExampleExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen"></mat-icon>
+                                      </button  >
+                                  <button *ngIf="isExampleExpand == true" class="" (click)="isExampleExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit"></mat-icon>
+                                      </button>
+                                </div>
+
+                            </div>
+
+
+                            <div [ngClass]="{'hideItems': isEntityExpand == true || isInstractionsExpand == true ||isExampleExpand == true }" formArrayName="routing" class="relative w-full border px-2 py-4 rounded-sm ">
+                                <span class="absolute -top-3 left-3  px-2 text-base ">Routing</span>
+                                <div class="fiXedHight">
+                                    <div *ngFor="let routeCtrl of routingControls.controls; let i = index" [formGroupName]="i" class=" rounded-md flex gap-4 items-center">
+
+                                        <mat-form-field appearance="fill" class="w-full mb-2">
+                                            <mat-label>Intent</mat-label>
+                                            <input (blur)="getFormValue()" matInput formControlName="intent" />
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="fill" class="w-full mb-2">
+                                            <mat-label>Task</mat-label>
+                                            <mat-select formControlName="taskId" (selectionChange)="getFormValue()">
+                                                <mat-option *ngFor="let task of tasks" [value]="task.intentId">{{task.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+
+                                        <button class="mb-3" mat-icon-button color="primary" (click)="removeRouting(i)">
+      <mat-icon matTooltip="Delete Routing" svgIcon="mat:delete"></mat-icon>
+    </button>
+                                    </div>
+                                    <div>
+                                        <button mat-button class=" bg-gray-500 text-white" color="primary" type="button" (click)="addRouting()"><mat-icon matTooltip="Add Routing" svgIcon="mat:add"></mat-icon> Add Routing </button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+        </form>
+
+    </div>
+</div>

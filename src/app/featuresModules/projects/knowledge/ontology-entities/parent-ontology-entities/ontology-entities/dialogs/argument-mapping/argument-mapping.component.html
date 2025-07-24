@@ -9,7 +9,16 @@
     <ng-container>
         <mat-dialog-content class="">
             <form [formGroup]="form" class="flex flex-col">
-                <mat-form-field *ngIf="data.obj" style="font-size: 14px;" class="w-[650px]">
+
+                <mat-form-field *ngIf="data.entity.verb" style="font-size: 14px;" class="w-[650px]">
+                    <mat-label> Sbj</mat-label>
+                    <mat-select formControlName="sbj">
+                        <mat-option value></mat-option>
+                        <mat-option value="Subject">Subject</mat-option>
+                        <mat-option value="Object">Object</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf=" data.entity.type != 'x' && data.entity.verb" style="font-size: 14px;" class="w-[650px]">
                     <mat-label> Obj</mat-label>
                     <mat-select formControlName="obj">
                         <mat-option value>None</mat-option>
@@ -18,14 +27,17 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field *ngIf="data.sbj" style="font-size: 14px;" class="w-[650px]">
-                    <mat-label> Sbj</mat-label>
-                    <mat-select formControlName="sbj">
+                <mat-form-field *ngIf="data.entity.type != 'x' && data.entity.type != 'xx' &&  data.entity.verb" style="font-size: 14px;" class="w-[650px]">
+                    <mat-label> Cmp</mat-label>
+                    <mat-select formControlName="cmp">
                         <mat-option value></mat-option>
                         <mat-option value="Subject">Subject</mat-option>
                         <mat-option value="Object">Object</mat-option>
+                        <mat-option value="Complement">Complement</mat-option>
                     </mat-select>
                 </mat-form-field>
+
+
 
                 <mat-form-field style="font-size: 14px;" class="w-[650px]">
                     <mat-label> Features</mat-label>
@@ -46,7 +58,7 @@
         <mat-dialog-actions align="end">
             <div class="flex flex-row items-center gap-2 mb-3">
                 <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
-                <button mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" type="button" (click)="saveArgu()">Save</button>
+                <button [disabled]="!form.valid" mat-raised-button class="w-2 bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" type="button" (click)="saveArgu()">Save</button>
             </div>
         </mat-dialog-actions>
     </ng-container>

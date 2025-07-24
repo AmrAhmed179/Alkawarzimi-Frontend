@@ -28,6 +28,7 @@ export class FactPropertyTreeComponent implements OnInit {
   projectId:string
   lang:string
   entityId:string
+  entityType:string
   TREE_DATA:FactProperties[]
   SeLectedNode:FactProperties
   onDestroy$: Subject<void> = new Subject();
@@ -58,7 +59,7 @@ export class FactPropertyTreeComponent implements OnInit {
   LinkedArgSubj:LinkedArg
   LinkedArgCmp:LinkedArg
   selectedNodeId:string
-  saveNodeValueId:string
+  saveNodeValueId:number = 0
   filteredProperties:any[] = []
   DataProperties:NodeModel[] = []
   selectedTapProperties:PropertiesIndex[] = []
@@ -95,9 +96,12 @@ export class FactPropertyTreeComponent implements OnInit {
     });
   }
 
+  getEntityTye(){
+  }
   getFactProperty(type:string, entityId:number){
     this._factPropertyTreeService.getFactProperty(this.projectId,entityId).subscribe((res:any)=>{
       this.factsProperty = JSON.parse(res.factProperty)
+      console.log("factPrperty",this.factsProperty)
       if(type == 'frame')
         this.detectObjSubjCmp(JSON.parse(res.linkedArgs))
       this.showTree()
@@ -133,7 +137,7 @@ export class FactPropertyTreeComponent implements OnInit {
         x.treeText = x.propertyIndex.entityText
       }
       else if (x.type == 'modifiedFrame'){
-        x.treeText = `${x.propertyIndex.entityText}=>${x.entity.entityInfo[0].entityText}`
+        x.treeText = `${x.propertyIndex.entityText} => ${x.entity.entityInfo[0].entityText}`
       }
 
       else if (x.type == 'attachment'){
@@ -144,7 +148,13 @@ export class FactPropertyTreeComponent implements OnInit {
         }
         else{
           var entity = this.classesAndProps.find(y=>y._id == x.predicateId )
-          x.treeText = `${entity.entityInfo[0].entityText}`
+          if(entity)
+            x.treeText = `${entity.entityInfo[0].entityText}`
+          else{
+            this.getProperites()
+            var selectedProp = this.selectedTapProperties.find(y=>y.entityId == x.predicateId )
+             x.treeText = `${selectedProp.entityText}`
+          }
         }
         x.subClassEntityArray = []
         x.propSubClasses?.forEach(element => {
@@ -152,6 +162,22 @@ export class FactPropertyTreeComponent implements OnInit {
           x.subClassEntityArray.push(entity)
         });
       }
+      else if (x.type == 'compoundFrame'){
+      let Prop = this.dataProp.find(y=>y.entityId == x.predicateId )
+      if(Prop){
+      x.propertyIndex = Prop
+      x.treeText = `${x.propertyIndex.entityText}`
+      }
+      else{
+        var entity = this.classesAndProps.find(y=>y._id == x.predicateId )
+        var PropBySourcePredicateId = this.DataProperties.find(y=>y.entityId == x.sourcePredicateId )
+        if(PropBySourcePredicateId)
+         x.treeText = `${PropBySourcePredicateId.entityText} >>> ${entity.entityInfo[0].entityText}`
+        else
+         x.treeText = `${entity.entityInfo[0].entityText}`
+
+      }
+    }
     })
     this.TREE_DATA = this.buildTree(this.factsProperty)
     setTimeout(() => {
@@ -172,6 +198,9 @@ export class FactPropertyTreeComponent implements OnInit {
     this._ontologyEntitiesService.getClassandProp(this.projectId).subscribe((res:any)=>{
       this.classesAndProps = res.entities
       this.getFactProperty('frame',+this.entityId)
+     this.entityType = this.classesAndProps.find(x=>x._id == +this.entityId).entityType
+     console.log('entityType', this.entityType)
+
     })
   }
 
@@ -192,6 +221,7 @@ export class FactPropertyTreeComponent implements OnInit {
   }
 
  buildTree(TreeNodes): FactProperties[] {
+  debugger
   const tree: FactProperties[] = [];
   // Create a map to store intents by their intentId
   const map: { [key: string]: FactProperties } = {};
@@ -226,10 +256,21 @@ export class FactPropertyTreeComponent implements OnInit {
       }
         else{
           var nextNode = n.nodes.find(x=>x.previous_sibling == childern[childern.length-1].node_id)
-          childern.push(nextNode)
+          if(nextNode)
+            childern.push(nextNode)
         }
       }
-      n.nodes = childern
+      if(n.nodes.length == childern.length)
+        n.nodes = childern
+      else{
+          const missingItems =  n.nodes.filter(primaryItem =>
+        !childern.some(secondaryItem =>
+        primaryItem.node_id === secondaryItem.node_id // or any other comparison logic
+        )
+        );
+      n.nodes = [...childern, ...missingItems]
+
+      }
     }
   })
   console.log(tree)
@@ -406,21 +447,29 @@ export class FactPropertyTreeComponent implements OnInit {
 
   seLectedNode(node:FactProperties){
     debugger
-    if(!node.response.value){
+    if(!node.response){
+      node.response = {value:[{lang:'ar',value:''}]}
+    }
+    if(!node.response?.value){
       node.response.value = [{lang:'ar',value:''}]
     }
+    if(node.response?.value.length == 0){
+      node.response.value = [{lang:'ar',value:''}]
+    }
+
     this.selectedNodeId = node.node_id
     this.SeLectedNode = node
-    this.saveNodeValueId = null
+    this.saveNodeValueId = 0
   }
   //////when click in save value in tree
   saveNodedetailsValuse(node:FactProperties,event){
     debugger
     event.stopPropagation()
     if(this.selectedNodeId == node.node_id){
-      this.saveNodeValueId = node.node_id
+      this.saveNodeValueId = this.saveNodeValueId + 1
     }
   }
+
   deleteFrameFactProperty(node:FactProperties){
     debugger
     let QuestionTitle = "Are you sure you want to delete this ?"
@@ -479,6 +528,10 @@ export class FactPropertyTreeComponent implements OnInit {
   }
 
   addFrameAttachProperty(node:FactProperties){
+    debugger
+    if(node.entity.entityType != 'action')
+       this.getProperites()
+
     const dialogRef = this.dialog.open(AddFrameAttchPropertyComponent, {
       data: { dataProps:this.selectedTapProperties},},
     );
@@ -648,15 +701,20 @@ export class FactPropertyTreeComponent implements OnInit {
     );
     dialogRef.afterClosed().subscribe((result:any) => {
       if(result){
-        node.propSubClasses.push(result)
+        const nodeCopy = JSON.parse(JSON.stringify(node));
+            // Add to the copy (not the original)
+        nodeCopy.propSubClasses = nodeCopy.propSubClasses ? [...nodeCopy.propSubClasses, result] : [result];
         let body = {
           projectId:this.projectId,
-          factProperty:node
+          factProperty:nodeCopy
         }
-        this._factPropertyTreeService.setFactProperty(body).subscribe((res:any)=>{
+        this._factPropertyTreeService.updateFactProperty(body).subscribe((res:any)=>{
           if(res.status == 1){
-            var index = this.factsProperty.findIndex(x=>x.node_id == node.node_id)
-            this.factsProperty[index].propSubClasses.push(result)
+          const index = this.factsProperty.findIndex(x => x.node_id == node.node_id);
+          if (index !== -1) {
+              this.factsProperty[index] = nodeCopy;
+              this.seLectedNode(nodeCopy)
+          }
             this.showTree()
           }
         })
@@ -776,7 +834,7 @@ export class FactPropertyTreeComponent implements OnInit {
   }
 
 
-  getProperites(){
+   getProperites(){
     debugger
     this.filteredProperties = []
     let entityId = this.returenEntityId()
@@ -798,6 +856,7 @@ export class FactPropertyTreeComponent implements OnInit {
   getDataProperty(){
     this._ontologyTreeService.getDataPropertyIndex(this.projectId).subscribe((res:any)=>{
       this.DataProperties = res.nodes
+
     })
   }
 
@@ -811,15 +870,15 @@ export class FactPropertyTreeComponent implements OnInit {
         var index = this.factsProperty.findIndex(x=>x.node_id == node.node_id)
         var body = {
             factProperty:node,
-            FrameEntityId: result,
-            arg: 1,
+            FrameEntityId: result.FrameEntityId,
+            arg: result.arg,
             projectId: this.projectId
         }
         this._factPropertyTreeService.attachPropertyToFrame(body).subscribe((res:any)=>{
           if(res.status == '1'){
-            this.notify.openSuccessSnackBar("Data Saved")
-            this.factsProperty[index].linkedFrames.push(result)
-            var entity = this.classesAndProps.find(x=>x._id == result)
+            this.notify.openSuccessSnackBar("Data Saved");
+            (this.factsProperty[index].linkedFrames ??= []).push(result.FrameEntityId);
+            var entity = this.classesAndProps.find(x=>x._id == result.FrameEntityId)
             this.factsProperty[index].linkedFramesEntity.push(entity)
           }
           else{
@@ -859,6 +918,33 @@ export class FactPropertyTreeComponent implements OnInit {
         this.notify.openFailureSnackBar(res.message)
       }
     })  }
+
+    addCompoundProperty(entity){
+
+       let previous_sibling =  this.TREE_DATA[0].nodes[this.TREE_DATA[0].nodes.length - 1]
+       let body={
+        factProperty:
+           {
+            "entityId": this.entityId,
+            "docId": "",
+            "subjectId": `${this.entityId},${entity.entityId}`,
+            "predicateId": entity.entityId,
+            "type": "compoundFrame",
+            "objectValue": "",
+            "parent": "-1",
+            "previous_sibling": previous_sibling.node_id,
+            "sourcePredicateId": this.SeLectedNode.predicateId
+          },
+        projectId:this.projectId
+      }
+      this._factPropertyTreeService.SetCompoundFact(body).subscribe((res:any)=>{
+        if(res.status == 1){
+          this.notify.openSuccessSnackBar("Successfully Added")
+          this.factsProperty.push(res.factProperty)
+          this.showTree()
+        }
+      })
+    }
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

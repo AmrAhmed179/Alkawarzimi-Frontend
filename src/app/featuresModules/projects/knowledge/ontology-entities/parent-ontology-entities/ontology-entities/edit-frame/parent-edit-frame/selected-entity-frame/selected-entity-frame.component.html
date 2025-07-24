@@ -62,7 +62,9 @@
                         <button *ngFor="let ad of sense.frames[this.frameIndex].adv ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#2E85AE] hover:bg-[#333333]">
                           <div class="flex items-center">
                             <mat-icon (click)="deleteAderb(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
-                            {{ad.s}}
+                            <!-- {{ad.s}} -->
+                            <p *ngIf="ad.s != null" >{{ad.s}}</p>
+                            <p *ngIf="ad.s == null">{{getText(ad.i)}}</p> 
                           </div>
                           </button>
                     </div>
@@ -85,7 +87,9 @@
                             <button *ngFor="let cm of sense.frames[this.frameIndex].cmp ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
                             <div class="flex items-center">
                               <mat-icon (click)="deleteComplement(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
-                              {{cm.s}}
+                              <!-- {{cm.s}} -->
+                              <p *ngIf="cm.s != null" >{{cm.s}}</p>
+                              <p *ngIf="cm.s == null">{{getText(cm.i)}}</p> 
                             </div>
                             </button>
                         </div>
@@ -122,7 +126,8 @@
                             <button *ngFor="let ob of sense.frames[this.frameIndex].obj ; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
                             <div class="flex items-center">
                               <mat-icon (click)="deleteObject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
-                              {{ob.s}}
+                              <p *ngIf="ob.s != null" >{{ob.s}}</p>
+                              <p *ngIf="ob.s == null">{{getText(ob.i)}}</p> 
                             </div>
                             </button>
                         </div>
@@ -158,7 +163,9 @@
                             <button *ngFor="let sb of sense.frames[this.frameIndex].sbj; let i =index" class=" rounded-sm text-white m-1 px-2 pb-1 bg-[#D9534F] hover:bg-[#D2322D]">
                             <div class="flex items-center">
                               <mat-icon (click)="deleteSubject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
-                              {{sb.s}}
+                              <!-- {{getText(sb.i)}} -->
+                              <p *ngIf="sb.s != null" >{{sb.s}}</p>
+                              <p *ngIf="sb.s == null">{{getText(sb.i)}}</p> 
                               <p class="text-white font-medium bg-[#FF9336] rounded-md ml-2 px-2 mt-[3px]">Cat</p>
                             </div>
                             </button>
@@ -185,7 +192,7 @@
                     <div class="h-[185px] bg-[#eeeded] mt-1 rounded-xl border flex flex-col overflow-auto p-2">
                         <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.request" color="primary" class="example-margin ">طلب</mat-checkbox>
                         <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.requestGain" color="primary" class="example-margin ">طلب : الحصول</mat-checkbox>
-                        <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.framePropLinkedToObj" color="primary" class="example-margin ">Prop Linked:Object</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.framePropLinkedToObj" color="primary" class="example-margin ">Prop Linked:Object</mat-checkbox>
                         <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.genObjSbj" color="primary" class="example-margin ">Object Gen to Subject</mat-checkbox>
                         <mat-checkbox *ngIf="sense.frames[this.frameIndex].type =='xx'" [(ngModel)]="sense.frames[this.frameIndex].frameFeat.genSbjObj" color="primary" class="example-margin ">Subject Gen to Object</mat-checkbox>
                         <mat-checkbox [(ngModel)]="sense.frames[this.frameIndex].frameFeat.domaninEllipsis" color="primary" class="example-margin ">Domain:Ellipsis</mat-checkbox>

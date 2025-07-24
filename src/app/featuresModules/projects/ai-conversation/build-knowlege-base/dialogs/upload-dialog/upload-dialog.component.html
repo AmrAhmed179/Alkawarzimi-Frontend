@@ -1,0 +1,39 @@
+<mat-dialog-content>
+    <p class="text-center text-lg font-bold mb-4">Import files</p>
+    <div *ngIf="!selectedFiles" class="" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+        <div class="upload-box" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+            <div class="upload-area">
+                <p>Drag your files here or</p>
+                <button mat-stroked-button color="primary" (click)="fileInput.click()">Browse</button>
+                <input multiple #fileInput type="file" hidden (change)="onFileSelected($event)" accept=".pdf,.docx" />
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="selectedFiles" class="uploaded-box">
+        <div class="file-list">
+            <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                <div class="file-info">
+                    <mat-icon [svgIcon]="getFileIcon(file)" class="file-icon">picture_as_pdf</mat-icon>
+                    <div class="file-details">
+                        <div class="file-name">{{ file.name }}</div>
+                        <div class="file-size">{{ (file.size / 1024 / 1024) | number:'1.2-2' }} Mb</div>
+                    </div>
+                </div>
+                <button mat-icon-button (click)="removeFile(i)">
+                    <mat-icon svgIcon="mat:close"></mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="total-size">
+            Total: {{ (getTotalSize() / 1024 / 1024) | number:'1.2-2' }} Mb
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="cancel-btn">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!selectedFiles || selectedFiles.length === 0" (click)="upload()">
+        Import {{ selectedFiles?.length > 0 ? '(' + selectedFiles.length + ')' : '' }}
+    </button>
+</mat-dialog-actions>

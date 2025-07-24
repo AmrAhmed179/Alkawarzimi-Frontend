@@ -331,7 +331,7 @@ export class ViewOntologyIntentsComponent implements OnInit {
       const url = window.URL.createObjectURL(response);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'Fact_Developers-Flow.html'; // Specify the file name
+      a.download = `Fact_${this.projectName}`; // Specify the file name
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -339,11 +339,13 @@ export class ViewOntologyIntentsComponent implements OnInit {
     })
   }
   errorHTML(){
+    debugger
     this._factPropertyTreeService.errorHTML(this.projectId, this.projectName).subscribe((response: Blob)=>{
+      debugger
       const url = window.URL.createObjectURL(response);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'error_Developers-Flow'; // Specify the file name
+      a.download = `error_${this.projectName}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -356,7 +358,7 @@ export class ViewOntologyIntentsComponent implements OnInit {
       const url = window.URL.createObjectURL(response);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'factsAsTable_Fact_Developers-Flow'; // Specify the file name
+      a.download = `Fact_${this.projectName}`; // Specify the file name
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

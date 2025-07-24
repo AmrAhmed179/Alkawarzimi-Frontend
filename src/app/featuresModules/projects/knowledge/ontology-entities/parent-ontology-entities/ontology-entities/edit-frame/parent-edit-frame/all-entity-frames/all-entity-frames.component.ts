@@ -354,7 +354,7 @@ export class AllEntityFramesComponent implements OnInit {
   }
   close(){
     if(this.returnPage == '1'){
-     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/Frames`])
+     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/action`])
     }
     else{
       this.router.navigate([`/projects/${this.projectId}/ontologyTree/ontologyTreeView`])
@@ -484,8 +484,11 @@ export class AllEntityFramesComponent implements OnInit {
         })
       }
     })
+  }
+  getText(i){
 
-
+    var text = this.classesAndPropsFilter.find(x=>x._id == i)?.entityInfo[0].entityText
+    return text;
   }
   ngOnDestroy(): void {
     this.onDestroy$.next();

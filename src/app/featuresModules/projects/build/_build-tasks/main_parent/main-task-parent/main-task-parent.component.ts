@@ -24,11 +24,13 @@ export class MainTaskParentComponent implements OnInit {
   chatBotId: number
   types: string[]
   form: FormGroup
+  selectedSearchOption:string = '0'
   taskSearchResult:any[] = []
   indexLimitFilter: IndexLimitFilter = new IndexLimitFilter()
   sourcBoat: string
   taskTypeName: string
   showfilter: boolean = false
+  search:string = ''
 
   filterCategory: any
   pageNumber = 1
@@ -68,9 +70,21 @@ export class MainTaskParentComponent implements OnInit {
 
   ngAfterViewInit() {
     this.paginator.page.asObservable().subscribe((pageEvent) => {
+      debugger
       this.indexLimitFilter.start = pageEvent.pageIndex * 10,
         this.pageSize = pageEvent.pageSize,
         this.getIndexLimitData()
+        this.changeRoute()
+    });
+  }
+
+  changeRoute(){
+    this.getIndexLimitData()
+    this.router.navigate([`/projects/${this.chatBotId}/home`, this.indexLimitFilter.start, this.taskTypeName], {
+    replaceUrl: true,       // Replace current URL in history (optional)
+    skipLocationChange: false, // Default (false) means URL updates
+    }).then(() => {
+      // Optional: Fetch new data based on updated route
     });
   }
   getProjectLangAndName() {
@@ -78,11 +92,18 @@ export class MainTaskParentComponent implements OnInit {
       // debugger
       this.projectName = res.name;
       this.sourcBoat = this.projectName
-      this.taskTypeName = 'dialogflow'
+
+      this.route.paramMap.subscribe(params => {
+      this.indexLimitFilter.start = +params.get('start') || 0;  // Fallback if null
+      this.paginator.pageIndex = Math.floor(this.indexLimitFilter.start / 10);
+      this.paginator.page
+      this.taskTypeName = params.get('type') || 'defaultType';  // Fallback if null
+    });
+      //this.taskTypeName = 'dialogflow'
 
       this.indexLimitFilter.sourceBot = null
       this.indexLimitFilter.type = this.taskTypeName
-      this.indexLimitFilter.start = 0
+      //this.indexLimitFilter.start = 0
       this.getIndexLimitData()
     })
   }
@@ -100,8 +121,7 @@ export class MainTaskParentComponent implements OnInit {
   }
   getWorkspaceTypes() {
     this._tasksService.getWorkSpaceTypes(this.chatBotId).subscribe((res: string[]) => {
-      res.splice(0, 1)
-      this.types = res
+      this.types = res.filter(type => type !== null);
     })
   }
   workspaceType(type) {
@@ -119,7 +139,7 @@ export class MainTaskParentComponent implements OnInit {
     this.indexLimitFilter.start = 0
     this.paginator.firstPage()
     this.getIndexLimitData()
-
+    this.changeRoute()
   }
 
   taskType(type) {
@@ -129,6 +149,7 @@ export class MainTaskParentComponent implements OnInit {
     this.indexLimitFilter.start = 0
     this.paginator.firstPage()
     this.getIndexLimitData()
+    this.changeRoute()
   }
 
   exportTask(intentId) {
@@ -234,6 +255,14 @@ export class MainTaskParentComponent implements OnInit {
         this.taskSearchResult = res.intents.intents
         this.showTaskSearch = true
     })
+  }
+
+  searchForTasks(){
+    this.indexLimitFilter.search = this.search
+   this.indexLimitFilter.start = 0
+    this.paginator.firstPage()
+    this.getIndexLimitData()
+    this.changeRoute()
   }
   onClickedOutside(e:Event){
     this.showTaskSearch = false

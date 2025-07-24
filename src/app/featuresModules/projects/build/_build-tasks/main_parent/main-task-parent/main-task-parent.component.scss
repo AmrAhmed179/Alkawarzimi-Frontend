@@ -1,5 +1,5 @@
 .mat-row:nth-child(even) {
-    background-color: #F8FAFC;
+    background-color: #f6f6f6;
 }
 
 .mat-row:nth-child(odd) {
@@ -18,8 +18,15 @@ th {
     color: black;
 }
 
+.clicKonTap {
+    background-color: #f6f6f6;
+    color: #555555;
+}
+
 .taskActive {
-    background-color: #F29544;
+    font-weight: 700;
+    background: transparent !important;
+    background-image: linear-gradient(to left bottom, #f59a4b, #da6908) !important;
 }
 
 .taskActive:hover {
@@ -30,4 +37,35 @@ th {
     width: 15px;
     height: 15px;
     border-radius: 50%;
+}
+
+.buttonStyle {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent !important;
+    background-image: linear-gradient(to left bottom, #f59a4b, #da6908) !important;
+}
+
+.bold-icon {
+    -webkit-text-stroke: 2px black;
+}
+
+.table-header-cell {
+    background-color: #f6f6f6;
+}
+
+.disabledButton {
+    color: #fbb578;
+}
+
+.backGroudLinearGradiant {
+    background-image: linear-gradient(to left bottom, #358ede, #0f518b) !important;
+}
+
+ ::ng-deep input.mat-input-element::placeholder {
+    font-size: 13px;
+    /* Or any size you prefer */
+    color: #999;
+    /* Optional: adjust color too */
 }

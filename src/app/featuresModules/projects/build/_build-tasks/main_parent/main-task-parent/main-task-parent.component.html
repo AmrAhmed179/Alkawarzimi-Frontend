@@ -1,13 +1,13 @@
 <div>
-    <div class=" mx-6 pt-18 py-2  flex items-center justify-between">
-        <div class="flex justify-start gap-2 ">
-            <button (click)="workspaceType(projectName)" [ngClass]="{'taskActive':sourcBoat === projectName,'text-white':sourcBoat === projectName,'hover:taskActive':sourcBoat == projectName}" class="bg-white border text-orange-500 border-gray-300 rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">{{projectName}}</button>
-            <button (click)="workspaceType(type)" [ngClass]="{'taskActive':sourcBoat == type,'text-white':sourcBoat == type,'hover:taskActive':sourcBoat == type}" class="bg-white border text-orange-500 border-gray-300 rounded-sm px-2 py-2 text-base hover:bg-slate-100 "
+    <div class=" mx-6 pt-18 py-2  flex items-center justify-between bg-[#f6f6f6]">
+        <div class="flex justify-start gap-2">
+            <button (click)="workspaceType(projectName)" [ngClass]="{'taskActive':sourcBoat === projectName,'text-white':sourcBoat === projectName,'hover:taskActive':sourcBoat == projectName}" class="bg-white border text-orange-500 border-gray-300 rounded-sm px-4 py-2 text-sm hover:bg-slate-100 ">{{projectName}}</button>
+            <button (click)="workspaceType(type)" [ngClass]="{'taskActive':sourcBoat == type,'text-white':sourcBoat == type,'hover:taskActive':sourcBoat == type}" class="bg-white border relative  text-orange-500 border-gray-300 rounded-sm px-4 py-2  text-sm hover:bg-slate-100 "
                 *ngFor="let type of types">{{type}} <button (click)="deleteBot($event,type)"
-                    class="text-red-600 "><mat-icon class="h-5" svgIcon="mat:delete"></mat-icon> </button></button>
+                    class="text-[#FF0000] absolute top-0 right-0"><mat-icon class="" svgIcon="mat:remove_circle" class="icon-xs" matTooltip="Delete"></mat-icon> </button></button>
         </div>
         <div>
-            <button class="bg-gradient-to-r from-[#E57E25] to-[#F29544] border rounded-sm px-2 py-2 text-white" (click)="createTask()">CREATE
+            <button class="border rounded-sm px-2 py-2 buttonStyle" (click)="createTask()">CREATE
                 TASK</button>
         </div>
 
@@ -28,14 +28,16 @@
 <div class="bg-white h-16">
     <div class="mx-8  flex items-center justify-between">
         <div class="flex justify-start mt-3">
-            <button (click)="taskType('events')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='events'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 h-14 ">Events</button>
-            <button (click)="taskType('dialogflow')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='dialogflow'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Flow Tasks</button>
-            <button (click)="taskType('knowledge')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='knowledge'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Knowledge Tasks</button>
-            <button (click)="taskType('ads')" [ngClass]="{'bg-[#f3f8fc]':taskTypeName =='ads'}" class=" text-orange-500  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Ad Tasks</button>
+            <button (click)="taskType('events')" [ngClass]="{'clicKonTap':taskTypeName =='events'}" class=" text-[#ff9336] rounded-sm px-2 py-2 text-base hover:bg-slate-100 h-14 ">Events</button>
+            <button (click)="taskType('dialogflow')" [ngClass]="{'clicKonTap':taskTypeName =='dialogflow'}" class=" text-[#ff9336]  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Flow Tasks</button>
+            <button (click)="taskType('knowledge')" [ngClass]="{'clicKonTap':taskTypeName =='knowledge'}" class=" text-[#ff9336]  rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Knowledge Tasks</button>
+            <button (click)="taskType('ads')" [ngClass]="{'clicKonTap':taskTypeName =='ads'}" class=" text-[#ff9336] rounded-sm px-2 py-2 text-base hover:bg-slate-100 ">Ad Tasks</button>
         </div>
         <div class="flex items-center gap-10 ">
-            <button *ngIf="taskTypeName == 'dialogflow'" class="bg-gradient-to-r from-[#E57E25] to-[#F29544] border rounded-sm px-2 py-2 text-white mr-8" (click)=" importTask()">IMPORTTASK</button>
-            <button (click)="filterclick()" *ngIf="(taskTypeName == 'knowledge' || taskTypeName == 'events') && showfilter == false" class="bg-gradient-to-r from-[#216FB3] to-[#3187D5] text-white p-2 rounded-sm w-20">FILTER</button>
+
+
+            <button *ngIf="taskTypeName == 'dialogflow'" class="border rounded-sm px-2 py-2  mr-8 buttonStyle" (click)=" importTask()">IMPORTTASK</button>
+            <button (click)="filterclick()" *ngIf="(taskTypeName == 'knowledge' || taskTypeName == 'events') && showfilter == false" class="backGroudLinearGradiant font-medium text-base text-white p-2 rounded-sm w-20">FILTER</button>
 
             <mat-form-field style="font-size: 11px;" class="mt-3 w-28" *ngIf="taskTypeName == 'events' && showfilter == true">
                 <mat-label>filter</mat-label>
@@ -60,8 +62,20 @@
                     </div>
                 </mat-select>
             </mat-form-field>
+            <mat-radio-group class="flex flex-col gap-1" color="primary" [(ngModel)]="selectedSearchOption">
+                <mat-radio-button [value]="'0'">Search by Task Name</mat-radio-button>
+                <mat-radio-button class="" [value]="'1'">Search by Example </mat-radio-button>
+            </mat-radio-group>
 
-            <div class="flex relative ">
+            <div *ngIf="selectedSearchOption == '0'" class="flex relative ">
+                <mat-form-field style="font-size: 8px;" class="mt-2 w-72">
+                    <input class="placeholder" placeholder="Search For Tasks by name || intentId..." for [(ngModel)]="search" cdkFocusInitial matInput (keyup.enter)="searchForTasks()">
+                </mat-form-field>
+                <button class="bg-[#E57E25] hover:bg-[#F29544] border rounded-sm px-2 py-1 text-white h-11 mt-2 w-24" (click)="searchForTasks()"><mat-icon
+                        svgIcon="mat:search"></mat-icon></button>
+            </div>
+
+            <div *ngIf="selectedSearchOption == '1'" class="flex relative ">
                 <form [formGroup]="form" class="">
                     <mat-form-field style="font-size: 8px;" class="mt-2 w-72">
                         <input placeholder="Search For Task..." for formControlName="Text" cdkFocusInitial matInput (keyup.enter)="searchTaskResult()">
@@ -89,14 +103,13 @@
 
 
         <ng-container matColumnDef="Delete">
-            <th mat-header-cell *matHeaderCellDef m class="bg-slate-50 text-black"> </th>
+            <th mat-header-cell *matHeaderCellDef m class="table-header-cell text-black"> </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
-            </td>
+                <button class="text-[#f38729]" [ngClass]="{'disabledButton':row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'}" [disabled]="row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'" (click)="deleteIntent(row)"><mat-icon  svgIcon="mat:delete"></mat-icon></button>                </td>
         </ng-container>
 
         <ng-container matColumnDef="Task">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50 text-black"> Task </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell text-black"> Task </th>
             <td mat-cell *matCellDef="let row">
                 <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
               </button>
@@ -105,27 +118,28 @@
 
         <!-- Progress Column -->
         <ng-container matColumnDef="ResponseType">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Response Type </th>
             <td mat-cell *matCellDef="let row">
                 <div *ngIf="row.responseMode == 2">
-                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                    <!-- <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" class="icon-lg" svgIcon="mat:share"></mat-icon></button> -->
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><img ng-if="intent.responseMode==2" src="/SVGs/diagram.svg" style="width:30px" class="ng-scope"></button>
                 </div>
 
                 <div *ngIf="row.responseMode == 1">
-                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:assignment"></mat-icon></button>
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon class="icon-lg "  color="primary" svgIcon="mat:assignment"></mat-icon></button>
                 </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="ExamplesCount">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Examples Count </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Examples Count </th>
             <td mat-cell *matCellDef="let row">
                 {{row.examples}}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="StopDigression">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Stop Digression </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Stop Digression </th>
             <td mat-cell *matCellDef="let row">
                 <mat-slide-toggle color="primary" (change)="returnAfterDigression(row,$event)" [(ngModel)]="row.stopDigression"></mat-slide-toggle>
 
@@ -133,16 +147,16 @@
         </ng-container>
 
         <ng-container matColumnDef="Description">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Description </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Description </th>
             <td mat-cell *matCellDef="let row">
                 {{row.description}}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="ImportTask">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="exportTask(row.intentId)" class="bg-gradient-to-r from-[#216FB3] to-[#3187D5] text-white p-1 rounded-sm ">EXPORTTASK</button>
+                <button (click)="exportTask(row.intentId)" class="backGroudLinearGradiant font-medium text-white text-[15px] py-2 px-3 rounded-sm ">EXPORTTASK</button>
             </td>
         </ng-container>
 
@@ -158,14 +172,14 @@
     <table mat-table [dataSource]="dataSource" class="w-full " *ngIf="taskTypeName == 'events'">
 
         <ng-container matColumnDef="Delete">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+                <button class="text-[#f38729]" [ngClass]="{'disabledButton':row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'}" [disabled]="row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'" (click)="deleteIntent(row)"><mat-icon  svgIcon="mat:delete"></mat-icon></button>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="Task">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Task </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Task </th>
             <td mat-cell *matCellDef="let row">
                 <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
             </button>
@@ -174,10 +188,10 @@
 
         <!-- Progress Column -->
         <ng-container matColumnDef="ResponseType">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Response Type </th>
             <td mat-cell *matCellDef="let row">
                 <div *ngIf="row.responseMode == 2">
-                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><img ng-if="intent.responseMode==2" src="/SVGs/diagram.svg" style="width:30px" class="ng-scope"></button>
                 </div>
 
                 <div *ngIf="row.responseMode == 1">
@@ -187,7 +201,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Type">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Response Type </th>
             <td mat-cell *matCellDef="let row">
                 <div>
                     <p class="text-base">{{row.category | uppercase}}</p>
@@ -212,26 +226,26 @@
 </ng-container> -->
 
         <ng-container matColumnDef="Delete">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
+                <button class="text-[#f38729]" [ngClass]="{'disabledButton':row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'}" [disabled]="row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'" (click)="deleteIntent(row)"><mat-icon  svgIcon="mat:delete"></mat-icon></button>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="Task">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50 text-black"> Task </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell text-black"> Task </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
+                <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name? row.name:row.intentId}}
             </button>
             </td>
         </ng-container>
 
         <!-- Progress Column -->
         <ng-container matColumnDef="ResponseType">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Response Type </th>
             <td mat-cell *matCellDef="let row">
                 <div *ngIf="row.responseMode == 2">
-                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon color="primary" svgIcon="mat:share"></mat-icon></button>
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><img ng-if="intent.responseMode==2" src="/SVGs/diagram.svg" style="width:30px" class="ng-scope"></button>
                 </div>
 
                 <div *ngIf="row.responseMode == 1">
@@ -241,14 +255,14 @@
         </ng-container>
 
         <ng-container matColumnDef="ExamplesCount">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Examples Count </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Examples Count </th>
             <td mat-cell *matCellDef="let row">
                 {{row.examples}}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="StopDigression">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Stop Digression </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Stop Digression </th>
             <td mat-cell *matCellDef="let row">
                 <mat-slide-toggle color="primary" (change)="returnAfterDigression(row,$event)" [(ngModel)]="row.stopDigression" [(ngModel)]="row.stopDigression"></mat-slide-toggle>
 
@@ -256,7 +270,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Description">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Description </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Description </th>
             <td mat-cell *matCellDef="let row">
                 {{row.description}}
             </td>
@@ -274,14 +288,13 @@
     <table mat-table [dataSource]="dataSource" class="w-full " *ngIf="taskTypeName == 'ads'">
 
         <ng-container matColumnDef="Delete">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> </th>
             <td mat-cell *matCellDef="let row">
-                <button (click)="deleteIntent(row)"><mat-icon color="primary" svgIcon="mat:delete"></mat-icon></button>
-            </td>
+                <button class="text-[#f38729]" [ngClass]="{'disabledButton':row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'}" [disabled]="row.intentId=='Welcome'||row.intentId=='Irrelevant'||row.intentId=='SCWelcome'" (click)="deleteIntent(row)"><mat-icon  svgIcon="mat:delete"></mat-icon></button>                </td>
         </ng-container>
 
         <ng-container matColumnDef="Task">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Task </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Task </th>
             <td mat-cell *matCellDef="let row">
                 <button (click)="goToTaskEdit(row.eventTask,row.intentId,1)" class="text-[#047cc0] hover:text-[#1c496d] text-base">#{{row.name}}
             </button>
@@ -290,10 +303,10 @@
 
         <!-- Progress Column -->
         <ng-container matColumnDef="ResponseType">
-            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> Response Type </th>
+            <th mat-header-cell *matHeaderCellDef class="table-header-cell"> Response Type </th>
             <td mat-cell *matCellDef="let row">
                 <div *ngIf="row.responseMode == 2">
-                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><mat-icon svgIcon="mat:share"></mat-icon></button>
+                    <button (click)="goToTaskEdit(row.eventTask,row.intentId,2)"><img ng-if="intent.responseMode==2" src="/SVGs/diagram.svg" style="width:30px" class="ng-scope"></button>
                 </div>
 
                 <div *ngIf="row.responseMode == 1">

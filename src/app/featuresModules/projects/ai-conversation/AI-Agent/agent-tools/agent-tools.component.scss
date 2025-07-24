@@ -1,0 +1,44 @@
+.containerHight {
+    height: calc(100vh - 130px);
+}
+
+.selectedConversatioBg {
+    background-color: #f3a649;
+    color: white;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.mat-input-element {
+    font-size: 13px;
+}
+
+.inExpand {
+    //position: absolute;
+    z-index: 20;
+    width: 100%;
+}
+
+.hideItems {
+    display: none;
+}
+
+.textAreaInExpand {
+    height: calc(100vh - 250px);
+    width: 100%;
+}
+
+.toolHeight {
+    height: calc(100vh - 260px);
+    overflow-y: auto;
+    overflow-x: hidden
+}
+
+@import "~jsoneditor/dist/jsoneditor.min.css";

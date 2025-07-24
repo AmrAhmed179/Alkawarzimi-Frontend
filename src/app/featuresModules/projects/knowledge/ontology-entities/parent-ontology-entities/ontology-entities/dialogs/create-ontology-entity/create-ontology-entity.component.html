@@ -3,6 +3,7 @@
         <div>
             <h1 *ngIf="data.mode =='Entity'" class="text-2xl text-gray-50">ِAdd Entity</h1>
             <h1 *ngIf="data.mode =='Synonym'" class="text-2xl text-gray-50">ِAdd Synonym</h1>
+            <h1 *ngIf="data.mode =='edit'" class="text-2xl text-gray-50">Modify Parent Entity</h1>
         </div>
 
     </div>
@@ -15,7 +16,7 @@
                         <mat-label>Original Entity</mat-label>
                         <input cdkFocusInitial matInput formControlName="entityText">
                     </mat-form-field>
-                    <button (click)="getStem()" class="rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-slate-50 p-2 mt-2" type="button">get stem</button>
+                    <button (click)="getStem()" class="rounded-sm bg-slate-200 text-slate-950 hover:text-slate-900 hover:bg-slate-50 p-2 mt-2" type="button">get stem</button>
                     <mat-form-field appearance="fill" class="h-10 w-full text-[10px] mt-6">
                         <mat-label>Stemmed Entity</mat-label>
                         <input cdkFocusInitial matInput formControlName="stemmedEntity">
@@ -39,15 +40,15 @@
                 <div class="border-[2px]  py-2 px-5 mb-3 h-[330px] overflow-auto mt-2" *ngIf="getStems">
                     <div class="flex gap-6">
                         <div class="">
-                            <div class="" *ngFor="let token of tokens">
-                                <button (click)="getAnalysis(token)" class="w-[150px] text-center text-lg font-semibold rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-orange-200 p-2 mt-2" type="button">
+                            <div class="" *ngFor="let token of tokens; let i = index">
+                                <button (click)="getAnalysis(token, i)" class="w-[150px] text-center text-lg font-semibold rounded-sm bg-slate-100 text-slate-950 hover:text-slate-900 hover:bg-orange-200 p-2 mt-2" type="button">
                                   {{token.token}}
                                   </button>
                             </div>
                         </div>
 
                         <div class="h-[170px] overflow-auto" *ngIf="showAnalysis == true && showSenses == false">
-                            <div (click)="currentStemId = anlys.stemPos " [ngClass]="{'bg-[#f7d6b9]': currentIndex == i}" (click)="getSense(anlys, i)" dir="rtl" *ngFor="let anlys of token.analysis; let i = index" class="flex flex-row justify-around bg-[#F6F6F6] hover:bg-[#F5D6BB] text-center items-center border-2  w-[600px] h-10">
+                            <div [ngClass]="{'bg-[#f7d6b9]': token.anlysIndex == i}" (click)="getSense(anlys, i)" dir="rtl" *ngFor="let anlys of token.analysis; let i = index" class="flex flex-row justify-around bg-[#F6F6F6] hover:bg-[#F5D6BB] text-center items-center border-2  w-[600px] h-10">
                                 <p class="text-lg font-medium ">{{anlys.stem}}</p>
                                 <p class="text-lg font-medium text-[#FD8938]">{{getArPost(anlys.stemPos)}} </p>
                                 <p class="text-lg font-medium">{{anlys.stemId}}</p>
@@ -88,7 +89,8 @@
         <mat-dialog-actions align="end">
             <div class="flex flex-row items-center gap-2 mb-3">
                 <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" mat-dialog-close type="button">Close</button>
-                <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" [disabled]="!form.valid" (click)="creatOntoloyEntity()" type="button">Create</button>
+                <button *ngIf="data.mode !=='edit'" mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" [disabled]="!form.valid" (click)="creatOntoloyEntity()" type="button">Create</button>
+                <button *ngIf="data.mode =='edit'" mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" [disabled]="!form.valid" (click)="EditOntoloyEntity()" type="button">Update</button>
             </div>
         </mat-dialog-actions>
     </ng-container>

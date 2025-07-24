@@ -1,0 +1,48 @@
+<div class="m-5 pt-6">
+
+    <div *ngIf="filteredContents.length == 0">
+        <vex-knowledge-base></vex-knowledge-base>
+    </div>
+
+    <div class="card">
+        <div class="header flex flex-wrap items-center gap-4 justify-between">
+            <div>Total contents: <strong>{{ filteredContents.length }}</strong></div>
+
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search..." class="search-input border px-2 py-1 rounded" />
+
+            <button (click)="openAddContentDialog()" class="add-button bg-blue-500 text-white px-4 py-1 rounded">
+        + Add
+      </button>
+
+            <button (click)="flag = !flag" class="add-button bg-gray-500 text-white px-4 py-1 rounded">
+        Try 0 content
+      </button>
+        </div>
+
+        <!-- Fixed header -->
+        <table class="custom-table w-full table-fixed border-collapse ">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="text-left p-2 w-1/4">Type</th>
+                    <th class="text-left p-2 w-2/4">Name</th>
+                    <th class="text-left p-2 w-1/4"></th>
+                </tr>
+            </thead>
+        </table>
+
+        <!-- Scrollable body -->
+        <div class="maxHeight overflow-auto">
+            <table class="custom-table w-full table-fixed border-collapse">
+                <tbody>
+                    <tr *ngFor="let item of filteredContents; let i = index" [ngClass]="{ 'bg-[#f0f0f0]': clickedItemIndex == i }" class="hover:bg-[#f5f5f5] cursor-pointer" (click)="openDialog(item, i)">
+                        <td class="p-2 w-1/4">
+                            <span class="tag {{ item.extension.toLowerCase() }}">{{ item.extension }}</span>
+                        </td>
+                        <td class="p-2 text-base font-normal w-2/4">{{ item.title }}</td>
+                        <td class="p-2  text-base font-normal w-1/4"><button class="text-right"><mat-icon matTooltip="Delete" svgIcon="mat:delete"></mat-icon></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

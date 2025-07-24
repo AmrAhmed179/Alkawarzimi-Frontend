@@ -146,15 +146,15 @@ export class AuthGuard
 
                 case "Admin":
                   debugger
-                  this.router.navigate(["/admin"]);
+                  this.router.navigate(["/projects"]);
                   break;
                 case "System Admin":
                   debugger
-                  this.router.navigate(["/admin"]);
+                  this.router.navigate(["/projects"]);
                   //this.router.navigate(["/systemAdmin"]);
                   break;
                 case "System User":
-                  this.router.navigate(["/admin"]);
+                  this.router.navigate(["/projects"]);
                   //this.router.navigate(["/systemUser"]);
                   break;
                 case "Analyst":

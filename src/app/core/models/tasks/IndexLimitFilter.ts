@@ -7,4 +7,5 @@ export class IndexLimitFilter {
   start: number
   type: string
   workspace_id: number
+  search:string = ''
 }

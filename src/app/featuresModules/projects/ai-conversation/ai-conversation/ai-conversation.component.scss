@@ -1,0 +1,71 @@
+.containerHight {
+    height: calc(100vh - 120px);
+}
+
+.selectedConversatioBg {
+    background-color: rgb(243, 166, 73);
+}
+
+.message-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+.message-card.user {
+    background-color: #e0f7fa;
+}
+
+.message-card.assistant {
+    background-color: #f1f8e9;
+}
+
+.message-card.tool {
+    background-color: #fff8e1;
+}
+
+.role {
+    font-weight: bold;
+}
+
+.tool-calls pre {
+    background-color: #eee;
+    padding: 5px;
+    overflow-x: auto;
+}
+
+.redColor {
+    color: #FF0000;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.buttonTap {
+    padding: 8px 8px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+}
+
+
+/* Hover style */
+
+.buttonTap:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+
+/* Active route style */
+
+.buttonTap.active {
+    background-color: #F0903E;
+    color: white;
+}

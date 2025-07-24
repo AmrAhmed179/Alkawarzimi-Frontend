@@ -6,6 +6,16 @@
                 <mat-slide-toggle (change)="getFormValue()" color="primary" formControlName="hasFooter"></mat-slide-toggle>
             </div>
         </form>
+        <div class="m-4" *ngIf="projectOptions.hasFooter == true" (mouseleave)="getFormValue()">
+            <div *ngIf="lang == 'en'">
+                <quill-editor [(ngModel)]="responseFooterObjEn.footer" [styles]="{ minHeight: '300px', maxHeight: '400px', overflowY: 'auto' }" [required]="true"></quill-editor>
+            </div>
+            <div *ngIf="lang == 'ar'">
+                <quill-editor [(ngModel)]="responseFooterObjAr.footer" [styles]="{ minHeight: '300px', maxHeight: '400px', overflowY: 'auto' }" [required]="true"></quill-editor>
+            </div>
+        </div>
+
+
 
     </div>
 </div>

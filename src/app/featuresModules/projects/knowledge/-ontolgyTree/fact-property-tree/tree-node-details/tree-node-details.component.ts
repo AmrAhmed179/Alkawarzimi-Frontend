@@ -30,16 +30,17 @@ export class TreeNodeDetailsComponent implements OnInit {
     examples:Example[]
     detectedIntents:any[]
   @Input() SeLectedNode:FactProperties
-  @Input() saveNodeValueId:string
+  @Input() saveNodeValueId:number
   @Input() projectId:string
   @Input() propertyId:string
   @Input() entities:EntityModel[]
   @Input() selectActiveTap:string
   @Output() saveNodeValue = new EventEmitter<FactProperties>();
+  @Output() addCompoundProperty = new EventEmitter<any>();
   activeTap:string = 'response'
   responseOrDiagram = '1'
-  panelOpenState = false
-  isPanelOpen:Boolean = false
+  panelOpenState = true
+  isPanelOpen:Boolean = true
   @ViewChild('editor') editor;
   currentIndex:number
   currentItemIndex:number
@@ -61,9 +62,11 @@ export class TreeNodeDetailsComponent implements OnInit {
 
   ngOnChanges(){
     debugger
-    if(this.SeLectedNode.node_id == this.saveNodeValueId){
-      this.saveNodeValue.emit(this.SeLectedNode)
-    }
+    // if(this.SeLectedNode.node_id == this.saveNodeValueId){
+    //   this.saveNodeValue.emit(this.SeLectedNode)
+    // }
+    if(this.saveNodeValueId != 0)
+     this.saveNodeValue.emit(this.SeLectedNode)
     this.activeTap = this.selectActiveTap
     this.exampleInput = ''
     this.detetctedExampleInput = ''
@@ -74,7 +77,12 @@ export class TreeNodeDetailsComponent implements OnInit {
     event.stopPropagation();
   }
   clickOnList( index){
+    debugger
     this.currentIndex = index
+  }
+  clickOnList2( index){
+    debugger
+    this.currentItemIndex= index
   }
 
   deteteFact(entity:ObjectEntitiesValue){
@@ -83,7 +91,7 @@ export class TreeNodeDetailsComponent implements OnInit {
   }
 
 addListItem(){
-    var objectEntuty = {
+    var objectEntity = {
       entityId: -1,
       entityType: "value",
       value: [
@@ -95,7 +103,8 @@ addListItem(){
       nValue: 0,
       negative: false
   }
-  this.SeLectedNode.response.objectEntitiesValues.push(objectEntuty)
+  this.SeLectedNode.response.objectEntitiesValues? this.SeLectedNode.response.objectEntitiesValues : this.SeLectedNode.response.objectEntitiesValues = []
+  this.SeLectedNode.response.objectEntitiesValues.push(objectEntity)
   }
 
   updateListItem(){
@@ -111,6 +120,7 @@ addListItem(){
       if(res){
         debugger
         let entity:EntityModel = this.entities.find(x=>x._id == res)
+        entity.entityType == 'action' ?entity.entityType = 'frame' : entity.entityType
        var objectEntuty = {
           entityId: entity._id,
           entityType: entity.entityType,
@@ -123,9 +133,20 @@ addListItem(){
           nValue: 0,
           negative: false
       }
-      this.SeLectedNode.response.objectEntitiesValues.push(objectEntuty)
+      if(this.SeLectedNode.response.objectEntitiesValues!= null)
+       this.SeLectedNode.response.objectEntitiesValues.push(objectEntuty)
+      else{
+        this.SeLectedNode.response.objectEntitiesValues = []
+        this.SeLectedNode.response.objectEntitiesValues.push(objectEntuty)
+      }
       }
     })
+  }
+  AddFrame(entity, index){
+    debugger
+      this.currentIndex = index
+           this.addCompoundProperty.emit(entity)
+
   }
   addMediaRespone(){
     var mediaresponse:MediaResponse = new MediaResponse()

@@ -255,21 +255,14 @@ export class SelectedEntityFrameComponent implements OnInit {
     var search = this.search
 
 
-    if(search.trim() != ''){
-        this.classesAndProps = this.classesAndPropsFilter.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()) && x.entityType ==entityTypeValue)
-        this.currentClassAndPrpsIndex = 0
-
-    }
-    else{
       if(entityTypeValue =='all'){
-         this.classesAndProps =  this.classesAndPropsFilter
+         this.classesAndProps =  this.classesAndPropsFilter.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()))
          this.currentClassAndPrpsIndex = 0
       }
       else{
-        this.classesAndProps = this.classesAndPropsFilter.filter(x=> x.entityType ==entityTypeValue)
+        this.classesAndProps = this.classesAndPropsFilter.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()) && x.entityType ==entityTypeValue)
         this.currentClassAndPrpsIndex = 0
       }
-    }
 
   }
   clickOnList(entity:EntityModel, index){
@@ -337,7 +330,8 @@ export class SelectedEntityFrameComponent implements OnInit {
     this.sense.frames[this.frameIndex].sbj.splice(index,1)
   }
   addCmpModyfier(){
-
+    if(!this.prepValue)
+      return
     let deblicated = this.sense.frames[this.frameIndex].cmpModyfier?.preps.includes(this.prepValue)
     if(deblicated)
       return
@@ -345,6 +339,9 @@ export class SelectedEntityFrameComponent implements OnInit {
   }
 
   addObjModyfier(){
+    debugger
+    if(!this.prepValue)
+    return
     let deblicated = this.sense.frames[this.frameIndex].objModyfier?.preps.includes(this.prepValue)
     if(deblicated)
       return
@@ -425,7 +422,7 @@ export class SelectedEntityFrameComponent implements OnInit {
   }
   close(){
     if(this.returnPage == '1'){
-     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/Frames`])
+     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/action`])
     }
     else{
       this.router.navigate([`/projects/${this.projectId}/ontologyTree/ontologyTreeView`])
@@ -445,8 +442,12 @@ export class SelectedEntityFrameComponent implements OnInit {
     this.sense.frames[this.frameIndex].entityId = this.entityId
     this.sense.frames[this.frameIndex].verb = this.Verb
     this.sense.frames[this.frameIndex].parentId = entity._id.toString()
-    this.sense.frames[this.frameIndex].senseId =  this.sense.senseId
     }
+    if(entity.parentId != 0){
+      this.sense.frames[this.frameIndex].parentId = entity.parentId.toString();
+    }
+   this.sense.frames[this.frameIndex].senseId =  this.sense.senseId
+
     this._ontologyEntitiesService.SaveFrame(this.projectId, this.sense.frames[this.frameIndex]).subscribe((res:any)=>{
       if(res.status == '1'){
         this.notify.openSuccessSnackBar('Frame Saved Successfuly')
@@ -454,6 +455,11 @@ export class SelectedEntityFrameComponent implements OnInit {
     })
   }
 
+  getText(i){
+
+    var text = this.classesAndPropsFilter.find(x=>x._id == i)?.entityInfo[0].entityText
+    return text;
+  }
   openAddNewSense(){
     this._ontologyEntitiesService.GetStemSense(this.lang, this.Verb).subscribe((res:any)=>{
       if(res.status == '1'){

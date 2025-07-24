@@ -33,6 +33,10 @@ export class FactPropertyTreeService {
   setFactProperty(body){
     return this.http.post(environment.URLS.SetFactProperty, body)
   }
+
+  SetCompoundFact(body){
+    return this.http.post(environment.URLS.SetCompoundFact, body)
+  }
   updateFactProperty(body){
     return this.http.post(environment.URLS.updateFactProperty, body)
   }
@@ -95,14 +99,14 @@ export class FactPropertyTreeService {
       projectId: projectId,
       name: name
     }
-    return this.http.get(environment.URLS.FactsAsHTML, {params: parm })
+    return this.http.get(environment.URLS.FactsAsHTML, {params: parm , responseType: 'blob' as 'json'})
   }
   errorHTML(projectId:string, name){
     let parm = {
       projectId: projectId,
       name: name
     }
-    return this.http.get(environment.URLS.ErrorHTML, {params: parm })
+    return this.http.get(environment.URLS.ErrorHTML, {params: parm, responseType: 'blob' as 'json' } )
   }
 
   factsAsTable(projectId:string, name){
@@ -110,6 +114,6 @@ export class FactPropertyTreeService {
       projectId: projectId,
       name: name
     }
-    return this.http.get(environment.URLS.FactsAsTable, {params: parm })
+    return this.http.get(environment.URLS.FactsAsTable, {params: parm , responseType: 'blob' as 'json'})
   }
 }

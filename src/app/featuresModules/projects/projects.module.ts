@@ -158,9 +158,28 @@ import { KnowledgeTaskComponent } from "./knowledge/knowledge-tasks/knowledge-ta
 import { UniqueVerbsComponent } from './knowledge/language-tools/unique-verbs/unique-verbs.component';
 import { LinkedToFactComponent } from './knowledge/knowledge-tasks/linked-to-fact/linked-to-fact.component';
 import { KnowledgeTaskstaticResponseComponent } from './knowledge/knowledge-tasks/knowledge-taskstatic-response/knowledge-taskstatic-response.component';
+import { ExtractEntitiesByAiComponent } from './entities-Ai/extract-entities-by-ai/extract-entities-by-ai.component';
+import { AiConversationComponent, ParseDatePipe } from './ai-conversation/ai-conversation/ai-conversation.component';
+import { BrainComponent } from './options/components/brain/brain.component';
+import { AgentToolsComponent } from './ai-conversation/AI-Agent/agent-tools/agent-tools.component';
+import { AgentsComponent } from './ai-conversation/AI-Agent/agents/agents.component';
+import { ConfirmDialoDeleteComponent } from "src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component";
+import { KnowledgeBaseBuildComponent } from './ai-conversation/build-knowlege-base/knowledge-base-Build/knowledge-base.component';
+import { UploadDialogComponent } from './ai-conversation/build-knowlege-base/dialogs/upload-dialog/upload-dialog.component';
+import { PlainTextDialogComponent } from './ai-conversation/build-knowlege-base/dialogs/plain-text-dialog/plain-text-dialog.component';
+import { UrlsDialogComponent } from './ai-conversation/build-knowlege-base/dialogs/urls-dialog/urls-dialog.component';
+import { KnolwlgeBaseTableComponent } from './ai-conversation/build-knowlege-base/knolwlge-base-table/knolwlge-base-table.component';
+import { ShowContentComponent } from "./ai-conversation/build-knowlege-base/dialogs/show-content/show-content.component";
+import { AiConversationFilterDialogComponent } from './ai-conversation/ai-conversation/ai-conversation-filter-dialog/ai-conversation-filter-dialog.component';
+import { ParentKnowledgeBaseComponent } from './Ai-build-veba-Knowledge-Base/parent-knowledge-base/parent-knowledge-base.component';
+import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/import-data/import-data.component';
+import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
+import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
+import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 
 @NgModule({
   declarations: [
+    ParseDatePipe,
     CustomLineBreakerPipe,
     ProjectsComponent,
     ProjectsCardComponent,
@@ -302,7 +321,25 @@ import { KnowledgeTaskstaticResponseComponent } from './knowledge/knowledge-task
     KnowledgeTaskComponent,
     UniqueVerbsComponent,
     LinkedToFactComponent,
-    KnowledgeTaskstaticResponseComponent
+    KnowledgeTaskstaticResponseComponent,
+    ExtractEntitiesByAiComponent,
+    AiConversationComponent,
+    BrainComponent,
+    AgentToolsComponent,
+    AgentsComponent,
+    ConfirmDialoDeleteComponent,
+    KnowledgeBaseBuildComponent,
+    UploadDialogComponent,
+    PlainTextDialogComponent,
+    UrlsDialogComponent,
+    KnolwlgeBaseTableComponent,
+    ShowContentComponent,
+    AiConversationFilterDialogComponent,
+    ParentKnowledgeBaseComponent,
+    ImportDataComponent,
+    DocumentsComponent,
+    SettingsComponent,
+    IndexDetailsComponent
   ],
   imports: [
     TreeModule,

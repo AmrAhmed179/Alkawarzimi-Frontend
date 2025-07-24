@@ -303,11 +303,14 @@ export class ServiceInfoComponent implements OnInit {
 
     this.outputMapping.push(this.fb.group({
       variableId: [varaiable.contextVariableId],
-      jsonField: this.fb.control({ value: this.jsonMapping.value, disabled: true })
+     // jsonField: this.fb.control({ value: this.jsonMapping.value, disabled: true })
+      jsonField:[this.jsonMapping.value]
     }));
 
     this.selectedMapping.reset()
     this.jsonMapping.reset()
+     const modelfd= this.form.value;
+     const model: ServicesModel = this.form.value;
   }
 
   deleteVariable(index: number) {
@@ -353,6 +356,7 @@ export class ServiceInfoComponent implements OnInit {
   }
 
   SaveEdit() {
+    debugger
     const model: ServicesModel = this.form.value;
     this._services.EditServices(model, this.chatBotId).subscribe(respons => {
       if (respons) {

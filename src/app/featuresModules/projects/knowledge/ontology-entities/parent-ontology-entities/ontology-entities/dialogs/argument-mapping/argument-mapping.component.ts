@@ -1,12 +1,14 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { OntologyEntitiesService } from 'src/app/Services/Knowlege/ontology-entities.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { ShowRelatedFramesComponent } from '../show-related-frames/show-related-frames.component';
+import { EntityModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
+import { Validator } from 'vis-util/esnext';
 
 @Component({
   selector: 'vex-argument-mapping',
@@ -36,7 +38,7 @@ export class ArgumentMappingComponent implements OnInit {
     private _dataService: DataService,
     private fb:FormBuilder,
     private notify: NotifyService,
-    @Inject(DIALOG_DATA) public data: { entityId:any,cmp:any,sbj:any,obj:any,features:any,projectId:any},
+    @Inject(DIALOG_DATA) public data: { entity:EntityModel,entityId:any,cmp:any,sbj:any,obj:any,features:any,projectId:any},
    public dialogRef: MatDialogRef<ArgumentMappingComponent>) { }
 
    ngOnInit(): void {
@@ -44,15 +46,18 @@ export class ArgumentMappingComponent implements OnInit {
   }
 
   intiateForm(){
+    debugger
     this.form = this.fb.group({
       'sbj':[this.data?.sbj],
       'obj':[this.data?.obj],
+      'cmp':[this.data?.cmp],
       'features':[this.data.features?.IdStr]
     })
   }
   saveArgu(){
     var sbj = this.form.controls['sbj'].value
     var obj = this.form.controls['obj'].value
+    var cmp = this.form.controls['cmp'].value
     var feature = this.form.controls['features'].value
     var features
     if(feature){

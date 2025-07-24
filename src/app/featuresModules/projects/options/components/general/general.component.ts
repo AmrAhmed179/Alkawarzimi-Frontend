@@ -76,9 +76,15 @@ export class GeneralComponent implements OnInit {
       name: [this.projectOptions.name],
       description: [this.projectOptions.description],
       domainName: [this.projectOptions.domainName],
-      ProccessingMode: [this.projectOptions.proccessingMode],
+      //ProccessingMode: [this.projectOptions.proccessingMode],
       socialWelcomeInterval: [this.projectOptions.socialWelcomeInterval],
       clearSessionInterval: [this.projectOptions.clearSessionInterval],
+      botSystem: [this.projectOptions.botSystem],
+      brainMode: [this.projectOptions.brainMode],
+      stopInterruption: [this.projectOptions.stopInterruption],
+      nluMode: [this.projectOptions.nluMode],
+      hybridMode: [this.projectOptions.hybridMode],
+      includeAiMessage: [this.projectOptions.includeAiMessage],
     })
   }
 
@@ -122,11 +128,17 @@ export class GeneralComponent implements OnInit {
   }
   getFormValue() {
     this.projectOptions.name = this.generalOptions.controls['name'].value
+    this.projectOptions.hybridMode = this.generalOptions.controls['hybridMode'].value
     this.projectOptions.description = this.generalOptions.controls['description'].value
     this.projectOptions.domainName = this.generalOptions.controls['domainName'].value
-    this.projectOptions.proccessingMode = this.generalOptions.controls['ProccessingMode'].value
+    // this.projectOptions.proccessingMode = this.generalOptions.controls['ProccessingMode'].value
+    this.projectOptions.botSystem = this.generalOptions.controls['botSystem'].value
     this.projectOptions.socialWelcomeInterval = this.generalOptions.controls['socialWelcomeInterval'].value
     this.projectOptions.clearSessionInterval = this.generalOptions.controls['clearSessionInterval'].value
+    this.projectOptions.brainMode = this.generalOptions.controls['brainMode'].value
+    this.projectOptions.stopInterruption = this.generalOptions.controls['stopInterruption'].value
+    this.projectOptions.nluMode = this.generalOptions.controls['nluMode'].value
+    this.projectOptions.includeAiMessage = this.generalOptions.controls['includeAiMessage'].value
     this._optionsService.projectOptions$.next(this.projectOptions)
   }
 

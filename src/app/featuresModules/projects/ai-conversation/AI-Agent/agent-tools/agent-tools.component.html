@@ -1,0 +1,92 @@
+<div class="grid grid-cols-4 gap-4 p-4 containerHight overflow-auto">
+    <div class="col-span-1 border p-3">
+        <div class="flex items-center gap-2">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Select Agent</mat-label>
+                <mat-select (selectionChange)="selectAgent()" [(ngModel)]="selectedAgentId">
+                    <mat-option value="all">
+                        All
+                    </mat-option>
+                    <mat-option *ngFor="let agent of agents" [value]="agent._id">
+                        {{ agent.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button class="rounded-sm mb-3" mat-raised-button color="primary" (click)="addTool()">Add Tool </button>
+        </div>
+
+        <div class="toolHeight">
+            <div *ngFor="let tool of aIToolsInfo,let i = index" class="flex items-center justify-between bg-slate-200 p-2 my-1 rounded-sm hover:bg-[#f3a649]" (click)="selectedTool(i)" [ngClass]="{'selectedConversatioBg': tool._id ==SelectedAiTool?._id}">
+                <p class="text-base"> {{tool.functionName}} </p>
+                <mat-slide-toggle matTooltip="Task Complete" (change)="setIsCompleted(tool)" (click)="$event.stopPropagation()" [(ngModel)]="tool.taskCompleted"></mat-slide-toggle>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-3 border h-full p-3 overflow-auto">
+
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container h-full">
+            <div [ngClass]="{'hideItems': isExpand == true}" class="flex justify-between items-center mb-3">
+                <div class="flex gap-6 items-center">
+                    <div class="flex gap-6 items-center">
+                        <mat-checkbox color="primary" formControlName="callGPT">Call GPT</mat-checkbox>
+                        <mat-checkbox color="primary" formControlName="isActive">Is Active</mat-checkbox>
+                    </div>
+                    <fieldset class="px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
+                        <legend class="px-2 font-medium text-xs text-[#ec843f]">*Select Histroy Mode</legend>
+                        <mat-select formControlName="historyMode" class="w-48 ustom-width">
+                            <mat-option value="permanentInConversation">Permanent In Conversation</mat-option>
+                            <mat-option value="oneShotInConversation">One Shot In Conversation</mat-option>
+                            <mat-option value="outOfConversation">Out Of Conversation</mat-option>
+                        </mat-select>
+                    </fieldset>
+                    <fieldset class=" px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
+                        <legend class="px-2 font-medium text-xs text-[#ec843f]">*Select Agent</legend>
+                        <mat-select formControlName="agentId" class="w-48 ustom-width">
+
+                            <mat-option *ngFor="let agent of agents" [value]="agent._id">
+                                {{ agent.name }}
+                            </mat-option>
+                        </mat-select>
+                    </fieldset>
+
+                </div>
+
+                <button [disabled]="!form.valid" mat-raised-button color="primary" type="submit">Save</button>
+
+            </div>
+            <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+                <mat-label>Function Name</mat-label>
+                <input matInput formControlName="functionName">
+            </mat-form-field>
+
+            <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+                <mat-label>Function Description</mat-label>
+                <input matInput formControlName="functionDescription">
+            </mat-form-field>
+
+            <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+                <mat-label>Message</mat-label>
+                <input matInput formControlName="message">
+            </mat-form-field>
+            <!--
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Function Parameters (JSON)</mat-label>
+                <textarea matInput rows="12" formControlName="functionParameters"></textarea>
+            </mat-form-field> -->
+            <div class="flex items-start   justify-between" [ngClass]="{'inExpand': isExpand == true}">
+                <mat-form-field appearance="fill" class="w-full mb-4 h">
+                    <mat-label>Function Parameters (JSON)</mat-label>
+
+                    <textarea [ngClass]="{'textAreaInExpand': isExpand == true}" class="h-[360px]" matInput formControlName="functionParameters"></textarea>
+                </mat-form-field>
+                <button *ngIf="isExpand == false" class="" (click)="isExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="isExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+            </div>
+
+        </form>
+    </div>
+</div>

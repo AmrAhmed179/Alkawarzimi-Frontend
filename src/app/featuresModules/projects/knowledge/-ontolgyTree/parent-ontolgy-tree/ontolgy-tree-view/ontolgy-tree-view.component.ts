@@ -22,6 +22,8 @@ import { AddFrameAttachmentComponent } from '../../../ontology-entities/parent-o
 import { Frame } from 'src/app/Models/ontology-model/verb';
 import { Router } from '@angular/router';
 import { SetImpliedComponent } from './set-implied/set-implied.component';
+import { MagicWordWriteComponent } from 'src/app/shared/components/magic-word-write/magic-word-write.component';
+import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
 
 @Component({
   selector: 'vex-ontolgy-tree-view',
@@ -84,6 +86,8 @@ export class OntolgyTreeViewComponent implements OnInit {
   frameSynonyms:any[] = []
   showFrameSyn:boolean = false
   senseId:any
+
+  treeNodesEntityText:string[] = []
   constructor(
     private _ontologyTreeService: OntologyTreeService,
     private _dataService: DataService,
@@ -129,6 +133,10 @@ export class OntolgyTreeViewComponent implements OnInit {
       if (response && response.nodes) {
         this.nodeLength = response.nodes.length;
         this.TreeNodes = response.nodes
+        this.treeNodesEntityText = []
+      this.TreeNodes.forEach(el=>{
+        this.treeNodesEntityText.push(el.entityText)
+      })
         var treeNodes =  this.TreeNodes
 
         this.constractAndViewTree(treeNodes)
@@ -223,40 +231,65 @@ export class OntolgyTreeViewComponent implements OnInit {
         }
           else{
             var nextNode = n.children.find(x=>x.previous_sibling == childern[childern.length-1].node_id)
-            childern.push(nextNode)
+            if(nextNode)
+             childern.push(nextNode)
           }
         }
+        if(n.children.length == childern.length)
         n.children = childern
+        else{
+            const missingItems =  n.children.filter(primaryItem =>
+          !childern.some(secondaryItem =>
+          primaryItem.node_id === secondaryItem.node_id // or any other comparison logic
+          )
+          );
+        n.children = [...childern, ...missingItems]
+      }
       }
     })
-    console.log(tree)
+    console.log('tree',tree)
     return tree;
   }
 
   deleteNode(node:OntologyTreeNode){
-    var firstSiblingNode
-    let searchForFirstSibling =  this.TreeNodes.find(x=>x.previous_sibling == node.node_id)
-    if(searchForFirstSibling){
-      firstSiblingNode = searchForFirstSibling
-    }
-    else{
-      firstSiblingNode = null
-    }
-    let request ={
-      node:{
-        node_id: node.node_id,
-        previous_sibling: node.previous_sibling
-      },
-      childrenCount:node.children?.length,
-      firstSiblingNode:firstSiblingNode,
-      projectId:this.workspace_id,
-    }
-    this._ontologyTreeService.deleteNode(request).subscribe((res:any)=>{
-      if(res.status == '1'){
-        this.notify.openSuccessSnackBar("Node successfully deleted")
-        this.getTreeNodes()
-      }
-    })
+
+        let QuestionTitle = "Are you sure you want to delete this ?"
+        let pleasWriteMagic = "Please write the **Magic** word to delete"
+        let actionName = "delete"
+        const dialogRef = this.dialog.open(MagicWordWriteComponent,
+          {
+            data: { QuestionTitle: QuestionTitle, pleasWriteMagic: pleasWriteMagic, actionName: actionName }, maxHeight: '760px',
+            width: '600px',
+            position: { top: '100px', left: '400px' }
+          });
+
+          dialogRef.afterClosed().subscribe(res => {
+            if (res) {
+              var firstSiblingNode
+              let searchForFirstSibling =  this.TreeNodes.find(x=>x.previous_sibling == node.node_id)
+              if(searchForFirstSibling){
+                firstSiblingNode = searchForFirstSibling
+              }
+              else{
+                firstSiblingNode = null
+              }
+              let request ={
+                node:{
+                  node_id: node.node_id,
+                  previous_sibling: node.previous_sibling
+                },
+                childrenCount:node.children?.length,
+                firstSiblingNode:firstSiblingNode,
+                projectId:this.workspace_id,
+              }
+              this._ontologyTreeService.deleteNode(request).subscribe((res:any)=>{
+                if(res.status == '1'){
+                  this.notify.openSuccessSnackBar("Node successfully deleted")
+                  this.getTreeNodes()
+                }
+              })
+            }
+          })
   }
   getClassandProp(){
     this._ontologyEntitiesService.getClassandProp(this.workspace_id).subscribe((res:any)=>{
@@ -280,7 +313,7 @@ export class OntolgyTreeViewComponent implements OnInit {
       entities = this.classesAndProps
     }
     const dialogRef = this.dialog.open(AddSibblingAndChildComponent, {
-      data: { entities:entities, type:type},},
+      data: { entities:entities, type:type, treeNodesEntityText:this.treeNodesEntityText},},
     );
     dialogRef.afterClosed().subscribe((res:any) => {
       if(res){
@@ -292,6 +325,8 @@ export class OntolgyTreeViewComponent implements OnInit {
           parent = node.parent
           previous_sibling = node.node_id
           nextSiblingNode = this.TreeNodes.find(x=>x.previous_sibling == node.node_id)
+          if(!nextSiblingNode)
+            nextSiblingNode = null
         }else{
           parent = node.node_id
           if(node.children.length > 0){
@@ -319,8 +354,10 @@ export class OntolgyTreeViewComponent implements OnInit {
         this._ontologyTreeService.CreateChildAndSibbling(payload).subscribe((res:any)=>{
           if(res.status == '1'){
             this.TreeNodes.push(res.node)
-            let nextNodeindex = this.TreeNodes.findIndex(x=>x.previous_sibling == node.node_id)
-            this.TreeNodes[nextNodeindex].previous_sibling = res.node.node_id
+            if(nextSiblingNode){
+              let nextNodeindex = this.TreeNodes.findIndex(x=>x.previous_sibling == node.node_id)
+              this.TreeNodes[nextNodeindex].previous_sibling = res.node.node_id
+            }
             this.constractAndViewTree(this.TreeNodes)
           }
         })
@@ -336,9 +373,15 @@ export class OntolgyTreeViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res:any) => {
       if(res){
         debugger
-        let parent = node.node_id
-        let previous_sibling = null
+        let previous_sibling
 
+        let parent = node.node_id
+        if(node.children.length > 0){
+          previous_sibling = node.children[node.children.length -1].node_id
+        }
+        else{
+          previous_sibling = null
+        }
         let entity:EntityModel = this.verbs.find(x=>x.senseId == res)
         let payload ={
           nextSiblingNode:null,
@@ -481,9 +524,8 @@ export class OntolgyTreeViewComponent implements OnInit {
     }
     else{
       let verb = this.verbs.find(x=>x.verb == node.entityText)
-      this.verbSynonyms = verb.synonyms
-      this.senseDescription = verb.description
-      this.senseId = verb.senseId
+
+      this.senseId = node.entityId
       this.getVerbInfo()
       // this._ontologyTreeService.GetVerbInfo({projectId:this.workspace_id,senseId:verb.senseId}).subscribe((res:any)=>{
 
@@ -505,6 +547,8 @@ export class OntolgyTreeViewComponent implements OnInit {
   getVerbInfo(){
     this._ontologyTreeService.GetVerbInfo({projectId:this.workspace_id,senseId:this.senseId}).subscribe((res:any)=>{
 
+      this.verbSynonyms = res.verbs.synonyms
+      this.senseDescription = res.verbs.description
       this.Synonyms = res.synonyms
       this.frames = res.verbs.frames
       this.frames?.map((e:Frame)=>{
@@ -532,6 +576,8 @@ export class OntolgyTreeViewComponent implements OnInit {
   }
   getIndividuals(){
     this.individuals = []
+    if(!this.classInfo.individuals)
+      return
     this.classInfo.individuals.forEach(element => {
       let entity = this.classesAndProps.find(x=>x._id == element)
       if(entity)
@@ -540,7 +586,10 @@ export class OntolgyTreeViewComponent implements OnInit {
   }
 
   getObjects(){
+    debugger
     this.objects = []
+    if(!this.classInfo.objects)
+      return
     this.classInfo.objects.forEach(element => {
       let entity = this.classesAndProps.find(x=>x._id == element)
       if(entity)
@@ -634,6 +683,13 @@ export class OntolgyTreeViewComponent implements OnInit {
     })
   }
   deleteDomainProperty(prop:any){
+    const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
+          width: '300px',
+          data: { message: 'Do you want to delete this item?' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
     let requestBody = {
       domain:{
         entityText: this.SelectedNode.entityText,
@@ -652,7 +708,12 @@ export class OntolgyTreeViewComponent implements OnInit {
         this.DataProperties.splice(index,1)
         this.getProperites()
       }
+      else{
+        this.notify.openFailureSnackBar(res.message)
+      }
     })
+          }
+        });
   }
 
   deleteSynonym(synonyem:EntityModel){
@@ -663,8 +724,9 @@ export class OntolgyTreeViewComponent implements OnInit {
     })
   }
   openAddIndividual(){
+    debugger
     const dialogRef = this.dialog.open(AddSibblingAndChildComponent, {
-      data: { entities:this.classesAndProps, type:'individual'},},
+      data: { entities:this.classesAndProps, type:'individual', treeNodesEntityText:this.treeNodesEntityText},},
     );
     dialogRef.afterClosed().subscribe((result:any) => {
     if(result){
@@ -754,7 +816,14 @@ export class OntolgyTreeViewComponent implements OnInit {
 
   GoToFactProperties(frame){
     debugger
-    this.router.navigate([`/projects/${this.workspace_id}/FactTree/${frame.entityId}`])
+    if(!this.SelectedNode.node_id)
+    return
+    let entityId
+    if(!frame.entityId)
+      entityId = frame._id
+    else
+    entityId = frame.entityId
+    this.router.navigate([`/projects/${this.workspace_id}/FactTree/${entityId}`])
   }
   ngOnDestroy(): void {
     this.onDestroy$.next();

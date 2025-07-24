@@ -1,0 +1,38 @@
+.containerHight {
+    height: calc(100vh - 120px);
+}
+
+.selectedAgentBg {
+    background-color: #f3a649;
+    color: white;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.mat-input-element {
+    font-size: 13px;
+}
+
+.inExpand {
+    // position: absolute;
+    z-index: 20;
+    width: 100%;
+}
+
+.hideItems {
+    display: none;
+}
+
+.textAreaInExpand {
+    height: calc(100vh - 240px);
+    width: 100%;
+}
+
+@import "~jsoneditor/dist/jsoneditor.min.css";

@@ -1,0 +1,33 @@
+/* Regular button style */
+
+button {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+/* Hover style */
+
+button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+
+/* Active route style */
+
+button.active {
+    background-color: #F0903E;
+    color: white;
+}
+
+
+/* Optional: Hover style when already active */
+
+button.active:hover {
+    background-color: #F0903E;
+}

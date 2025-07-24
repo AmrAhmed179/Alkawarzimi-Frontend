@@ -97,7 +97,7 @@
                 <vex-intents [workspace_id]="workspace_id" [intentId]="intentId"></vex-intents>
             </div>
             <div *ngIf="tapeName =='Setting' && showCreateTask ==false">
-                <vex-task-settings [workspace_id]="workspace_id" [intentId]="intentId"></vex-task-settings>
+                <vex-task-settings (intentSettingsEvent)="savedSettingIntent($event)" [workspace_id]="workspace_id" [intentId]="intentId"></vex-task-settings>
             </div>
 
             <div *ngIf="tapeName =='Diagram Flow'  && showCreateTask ==false" class="h-full">

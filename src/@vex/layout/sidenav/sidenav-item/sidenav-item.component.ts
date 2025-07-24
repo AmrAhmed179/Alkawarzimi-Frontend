@@ -56,7 +56,6 @@ export class SidenavItemComponent implements OnInit, OnChanges {
     }
   }
 
-
   toggleOpen() {
     this.isOpen = !this.isOpen;
     this.navigationService.triggerOpenChange(this.item as NavigationDropdown);

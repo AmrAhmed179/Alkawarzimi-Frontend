@@ -1,0 +1,150 @@
+<div class="grid grid-cols-4 gap-4 p-4 containerHight overflow-auto">
+    <div class="col-span-1 border p-3">
+        <div> <button class="mb-4" mat-raised-button color="primary" (click)="addAgent()"><mat-icon matTooltip="Add Agent" svgIcon="mat:add"></mat-icon> Add New Agent</button>
+        </div>
+        <div *ngFor="let agent of agents,let i = index" class="flex justify-between items-center bg-slate-200 p-2 my-1 rounded-sm min-h-8 hover:bg-[#f3a649]" (click)="selectedAgent(i)" [ngClass]="{'selectedAgentBg': agent._id == SelectedAgent?._id}">
+            <p class="text-base">{{agent.name}} </p>
+            <div class="flex items-center gap-4">
+                <mat-slide-toggle matTooltip="Main Agent" (change)="setMainAgent(agent)" (click)="$event.stopPropagation()" [(ngModel)]="agent.mainAgent"></mat-slide-toggle>
+                <button (click)="deleteAgent(i, agent._id, $event)" matTooltip="Delete Agent"><mat-icon class="icon-lg" svgIcon="mat:delete" ></mat-icon></button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="agentFormScroll" class="col-span-3 border h-full px-3 pb-3 overflow-auto ">
+
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container h-full ">
+            <!-- ////// -->
+            <div [ngClass]="{'hideItems': isExpand == true}" class="sticky top-0 z-10 bg-[#f5f5f8] p-2"> <button class="mb-4" mat-raised-button color="primary" type="submit">Save Agent</button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full ">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" />
+                </mat-form-field>
+
+
+                <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full">
+                    <mat-label>Model</mat-label>
+                    <mat-select formControlName="model">
+                        <mat-option value="gpt-4o-mini">gpt-4o-mini</mat-option>
+                        <mat-option value="gpt-4o">gpt-4o</mat-option>
+                        <mat-option value="gpt-4.1-nano">gpt-4.1-nano</mat-option>
+                        <mat-option value="gpt-4.1-mini">gpt-4.1-mini</mat-option>
+                        <mat-option value="gpt-4.1">gpt-4.1</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full ">
+                    <mat-label>Max Memory Length</mat-label>
+                    <input type="number" matInput formControlName="maxMemoryLength" />
+                </mat-form-field>
+            </div>
+
+            <!-- <div class="flex items-start   justify-between" [ngClass]="{'inExpand': isExpand == true}">
+                <mat-form-field appearance="fill" class="w-full mb-4 h">
+                    <mat-label>Prompt</mat-label>
+
+                    <textarea [ngClass]="{'textAreaInExpand': isExpand == true}" class="h-[170px]" matInput formControlName="prompt"></textarea>
+                </mat-form-field>
+                <button *ngIf="isExpand == false" class="" (click)="isExpand = true">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="isExpand = false">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+            </div> -->
+            <div class="py-2" formGroupName="promptSections">
+                <div class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'identity' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Identity</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'identity'}" matInput rows="5" formControlName="identity" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'identity'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="isExpand = false;expandName = ''">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+                <div id="responseStyle" class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'responseStyle' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Response Style</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'responseStyle'}" matInput rows="5" formControlName="responseStyle" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'responseStyle'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="scrollToElement('responseStyle')">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+                <div id="functionCallRules" class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'functionCallRules' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Function Call Rules</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'functionCallRules'}" matInput rows="7" formControlName="functionCallRules" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'functionCallRules'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="scrollToElement('functionCallRules')">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+                <div id="conversationFlow" class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'conversationFlow' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Conversation Flow</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'conversationFlow'}" matInput rows="7" formControlName="conversationFlow" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'conversationFlow'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="scrollToElement('conversationFlow')">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+                <div id="crtitcalNote" class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'crtitcalNote' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Critical Note</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'crtitcalNote'}" matInput rows="4" formControlName="crtitcalNote" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'crtitcalNote'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="scrollToElement('crtitcalNote')">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+                <div id="fewShotExamples" class="flex items-start" [ngClass]="{'hideItems': isExpand == true && expandName != 'fewShotExamples' }">
+                    <mat-form-field appearance="fill" class="w-full mb-4">
+                        <mat-label>Few-Shot Examples</mat-label>
+                        <textarea [ngClass]="{'textAreaInExpand': isExpand == true&& expandName == 'fewShotExamples'}" matInput rows="7" formControlName="fewShotExamples" class="font-mono"></textarea>
+                    </mat-form-field>
+                    <button *ngIf="isExpand == false" class="" (click)="isExpand = true; expandName = 'fewShotExamples'">  <mat-icon matTooltip="Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen">Prompt</mat-icon>
+              </button  >
+           <button *ngIf="isExpand == true" class="" (click)="scrollToElement('fewShotExamples')">  <mat-icon matTooltip="Exit Expand" class="icon-lg hover:text-orange-500" svgIcon="mat:fullscreen_exit">Prompt</mat-icon>
+              </button>
+                </div>
+            </div>
+
+
+
+
+            <div [ngClass]="{'hideItems': isExpand == true}" formArrayName="routing" class="relative w-full border px-2 py-4 rounded-sm ">
+                <span class="absolute -top-3 left-3  px-2 text-base ">Routing</span>
+                <div *ngFor="let routeCtrl of routingControls.controls; let i = index" [formGroupName]="i" class=" rounded-md flex gap-4 items-center">
+
+                    <mat-form-field appearance="fill" class="w-full mb-2">
+                        <mat-label>Intent</mat-label>
+                        <input matInput formControlName="intent" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="w-full mb-2">
+                        <mat-label>Task</mat-label>
+                        <mat-select formControlName="taskId">
+                            <mat-option *ngFor="let task of tasks" [value]="task.intentId">{{task.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button class="mb-3" mat-icon-button color="primary" (click)="removeRouting(i)">
+      <mat-icon matTooltip="Delete Routing" svgIcon="mat:delete"></mat-icon>
+    </button>
+                </div>
+                <div>
+                    <button mat-button class=" bg-gray-500 text-white" color="primary" type="button" (click)="addRouting()"><mat-icon matTooltip="Add Routing" svgIcon="mat:add"></mat-icon> Add Routing </button>
+
+                </div>
+            </div>
+
+            <!-- ///// -->
+        </form>
+    </div>
+</div>

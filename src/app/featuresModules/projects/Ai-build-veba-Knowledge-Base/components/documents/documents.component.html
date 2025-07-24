@@ -1,0 +1,39 @@
+<div class="grid grid-cols-10 gap-2">
+    <div class="col-span-4 border  p-2">
+        <div class=" w-full mb-3 px-1">
+            <input type="text" [(ngModel)]="search" placeholder="Search..." class="search-input" />
+        </div>
+        <div class="doc-list maxdocumentsHeight px-1">
+            <div *ngFor="let doc of filteredDocuments(); let i = index" class="grid grid-cols-8 items-center gap-4 mb-2 overflow-auto" (click)="selectDocument(doc)">
+                <div [ngClass]="{'selectesDocBg':selectedDocId == doc.uuid}" class="col-span-7 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
+                    <p class="font-normal text-base"> {{ doc.title }}</p>
+                </div>
+                <div class="col-span-1 h-12 text-center rounded-md  bg-white hover:bg-slate-200">
+                    <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedDocId == doc.uuid}" (click)="deleteDocument(doc, i)">
+      <mat-icon svgIcon="mat:delete"></mat-icon>
+    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-6 maxHeight border  p-2 px-3 relative">
+        <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3" *ngIf="selectedDocId">
+            <div class="flex items-center">
+                <p class="font-medium text-base">{{title}}</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button (click)="selectChunkOrContent('content')" [ngClass]="{'active':contentOrChunks =='content'}" class="contentChunkButton">Content</button>
+                <button (click)="selectChunkOrContent('chunk')" [ngClass]="{'active':contentOrChunks =='chunk'}" class="contentChunkButton">Chunks</button>
+            </div>
+
+        </div>
+        <div [innerHTML]="documentContent" dir="rtl" class="contentText mt-12" *ngIf="selectedDocId">
+            {{documentContent?.content}}
+        </div>
+        <mat-paginator [ngClass]="{'displayNone':!selectedDocId}" #paginator class="absolute bottom-1 right-3 left-3" [showFirstLastButtons]="true" [length]="totalPages" [pageSize]="pageSize" aria-label="Select page"></mat-paginator>
+
+    </div>
+</div>

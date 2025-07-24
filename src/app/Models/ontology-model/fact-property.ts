@@ -44,13 +44,13 @@ export class FactProperties {
 }
 
 export class Response {
-  value: Value[] = []
-  objectEntitiesValues: ObjectEntitiesValue[]
-  mediaResponse: MediaResponse
-  goToTaskId: any
-  responseType: number
-  actionType: number
-  actionSubType: number
+  value?: Value[] = []
+  objectEntitiesValues?: ObjectEntitiesValue[]
+  mediaResponse?: MediaResponse
+  goToTaskId?: any
+  responseType?: number
+  actionType?: number
+  actionSubType?: number
 }
 export class ObjectEntitiesValue {
   entityId: number

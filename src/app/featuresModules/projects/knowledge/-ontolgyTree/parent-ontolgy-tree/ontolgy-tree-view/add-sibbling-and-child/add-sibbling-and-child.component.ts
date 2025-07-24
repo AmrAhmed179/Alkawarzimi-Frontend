@@ -30,7 +30,7 @@ export class AddSibblingAndChildComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private _optionsService:OptionsServiceService,
-    @Inject(DIALOG_DATA) public data: {entities:EntityModel[] ,type:string},
+    @Inject(DIALOG_DATA) public data: {entities:EntityModel[] ,type:string, treeNodesEntityText:string[]},
     public dialogRef: MatDialogRef<AddclassAsvalueComponent>
   ) { }
 
@@ -79,7 +79,13 @@ export class AddSibblingAndChildComponent implements OnInit {
   clickOnList(entity:EntityModel, index){
     this.currentClassAndPrpsIndex = index
   }
+   checkIfExsisted(entityText){
+    var existed = this.data.treeNodesEntityText.findIndex(x=> x == entityText)
+    if(existed  == -1)
+      return false
 
+    return true
+   }
   addClass(){
     debugger
     if(this.currentClassAndPrpsIndex || this.currentClassAndPrpsIndex == 0 ){

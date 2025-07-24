@@ -66,7 +66,7 @@ export class ProjectRoutelet {
             label: "Tasks",
             route: "./home",
             icon: "",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Tasks"],
           },
@@ -75,7 +75,7 @@ export class ProjectRoutelet {
             label: "Data Type",
             route: "./dataTypes/entities",
             icon: "",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Data Types", "My Entities"],
           },
@@ -84,7 +84,7 @@ export class ProjectRoutelet {
             label: "Variables",
             route: "./variables",
             // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Variables"],
           },
@@ -93,7 +93,7 @@ export class ProjectRoutelet {
             label: "Services",
             route: "./servicesSet",
             //icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Services", "Set"],
           },
@@ -102,7 +102,7 @@ export class ProjectRoutelet {
             label: "Triggered Tasks",
             route: "./TriggeredTasks",
             // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
@@ -111,7 +111,7 @@ export class ProjectRoutelet {
             label: "Validation",
             route: "./users",
             //icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
@@ -123,39 +123,39 @@ export class ProjectRoutelet {
         icon: "mat:remove_red_eye",
 
         children: [
-          {
-            type: "link",
-            label: "Tempelate",
-            route: "./users",
-            // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+          // {
+          //   type: "link",
+          //   label: "Tempelate",
+          //   route: "./users",
+          //   // icon: "mat:people",
+          //   routerLinkActiveOptions: { exact: true },
 
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
-          },
-          {
-            type: "link",
-            label: "Annotation",
-            route: "./users",
-            // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+          //   breadCrumbs: ["الإعدادت", "المستخدمين"],
+          // },
+          // {
+          //   type: "link",
+          //   label: "Annotation",
+          //   route: "./users",
+          //   // icon: "mat:people",
+          //   routerLinkActiveOptions: { exact: true },
 
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
-          },
+          //   breadCrumbs: ["الإعدادت", "المستخدمين"],
+          // },
           {
             type: "link",
             label: "Ontology Entities",
-            route: "./knowledge",
+            route: "./knowledge/ontologyEntities",
             // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
+            breadCrumbs: [ "ontologyEntities"],
           },
           {
             type: "link",
             label: "Ontology Tree",
-            route: "./ontologyTree",
+            route: "./ontologyTree/ontologyTreeView/",
             //  icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Ontology", "Ontology Tree"],
           },
@@ -164,7 +164,7 @@ export class ProjectRoutelet {
             label: "knowledge Graph",
             route: "./knowledgeGraph",
             // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["knowledge Graph"],
           },
@@ -173,7 +173,7 @@ export class ProjectRoutelet {
             label: "knowledge Tasks",
             route: "./KnowledgeTasks",
             // icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Knowledge Tasks"],
           },
@@ -182,7 +182,7 @@ export class ProjectRoutelet {
             label: "Problem Tasks",
             route: "./users",
             //icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Problem Tasks"],
           },
@@ -191,12 +191,30 @@ export class ProjectRoutelet {
             label: "Language Tools",
             route: "./languageTools",
             //icon: "mat:people",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
 
             breadCrumbs: ["Tools", "Language"],
-          },
+          }
         ],
       },
+
+                {
+            type: "link",
+            label: "Knowledge Base (RAG)",
+            route: "./KnowledgeBase",
+            icon: "mat:view_quilt",
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ['AI Agent', 'Knowledge Base'],
+
+          },
+      // {
+      //   type: "link",
+      //   label: "Ai Entities",
+      //   route: "./AiEntities",
+      //   icon: "mat:web_asset",
+      //   routerLinkActiveOptions: { exact: true },
+      //   breadCrumbs: ["Ai Entities"],
+      // },
       {
         type: "link",
         label: "Test",
@@ -212,7 +230,7 @@ export class ProjectRoutelet {
         route: "integrations",
         icon: "mat:wifi_tethering",
         routerLinkActiveOptions: { exact: true },
-        breadCrumbs: ["المحتوى", "المطعم"],
+        breadCrumbs: ["Integration"],
       },
 
       {
@@ -225,26 +243,60 @@ export class ProjectRoutelet {
             label: "Conversations",
             route: "./Analytic",
             // icon: "mat:bar_chart",
-            routerLinkActiveOptions: { exact: true },
-            breadCrumbs: ["المحتوى", "المطعم"],
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ["Analytic", "Conversations"],
           },
           {
             type: "link",
             label: "Survey",
-            route: "./SharedSurvey",
+            route: "./SharedSurvey/Survey",
             //icon: "mat:star_rate",
-            routerLinkActiveOptions: { exact: true },
-            breadCrumbs: ["home", "Survey"],
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ["Analytic", "Survey"],
+          },
+               {
+            type: "link",
+            label: "AI Conversation",
+            route: "./aiConversation",
+            //icon: "mat:star_rate",
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ["Analytic", "AI Conversation"],
           },
         ]
       },
 
+ {
+        type: "dropdown",
+        label: "AI Agent",
+        icon: "mat:developer_board",
+        children: [
+          {
+            type: "link",
+            label: "Agents",
+            route: "./Agents",
+            // icon: "mat:bar_chart",
+            routerLinkActiveOptions: { exact: true },
+            breadCrumbs: ['AI Agent', 'Agents'],
+
+          },
+          {
+            type: "link",
+            label: "Agent Tools",
+            route: "./AgentTools",
+            // icon: "mat:bar_chart",
+            routerLinkActiveOptions: { exact: true },
+            breadCrumbs: ['AI Agent', 'AgentTools'],
+
+          },
+
+        ]
+      },
       {
         type: "link",
         label: "Widget",
         route: "./widget-set-up",
         icon: "mat:table_chart",
-        breadCrumbs: ["الإعدادت", "المستخدمين"],
+        breadCrumbs: ["widget Setup"],
       }
 
     )

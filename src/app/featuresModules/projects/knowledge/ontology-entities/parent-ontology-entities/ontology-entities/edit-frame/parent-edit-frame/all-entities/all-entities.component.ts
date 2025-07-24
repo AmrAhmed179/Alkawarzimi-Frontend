@@ -123,7 +123,7 @@ export class AllEntitiesComponent implements OnInit {
   }
   close(){
     if(this.returnPage == '1'){
-     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/Frames`])
+     this.router.navigate([`/projects/${this.projectId}/knowledge/ontologyEntities/action`])
     }
     else{
       this.router.navigate([`/projects/${this.projectId}/ontologyTree/ontologyTreeView`])

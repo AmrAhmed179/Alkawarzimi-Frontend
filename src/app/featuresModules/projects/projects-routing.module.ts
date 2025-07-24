@@ -72,6 +72,17 @@ import { ParentPropertyTreeComponent } from './knowledge/properties/parent-prope
 import { PropertyTreeViewComponent } from './knowledge/properties/parent-property-tree/property-tree-view/property-tree-view.component';
 import { KnowledgeTaskComponent } from './knowledge/knowledge-tasks/knowledge-task.component';
 import { UniqueVerbsComponent } from './knowledge/language-tools/unique-verbs/unique-verbs.component';
+import { ExtractEntitiesByAiComponent } from './entities-Ai/extract-entities-by-ai/extract-entities-by-ai.component';
+import { AiConversationComponent } from './ai-conversation/ai-conversation/ai-conversation.component';
+import { BrainComponent } from './options/components/brain/brain.component';
+import { AgentToolsComponent } from './ai-conversation/AI-Agent/agent-tools/agent-tools.component';
+import { AgentsComponent } from './ai-conversation/AI-Agent/agents/agents.component';
+import { KnolwlgeBaseTableComponent } from './ai-conversation/build-knowlege-base/knolwlge-base-table/knolwlge-base-table.component';
+import { ParentKnowledgeBaseComponent } from './Ai-build-veba-Knowledge-Base/parent-knowledge-base/parent-knowledge-base.component';
+import { ImportDataComponent } from './Ai-build-veba-Knowledge-Base/components/import-data/import-data.component';
+import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/documents/documents.component';
+import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
+import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },
@@ -86,7 +97,12 @@ const routes: Routes = [
       {
         path: "", component: CustomLayoutComponent,
         children: [
-          { path: "home", component: MainTaskParentComponent, data: { breadcrumbs: ["Tasks"], } },
+            {
+              path: 'home',  // Base path (no params)
+              redirectTo: 'home/0/dialogflow',  // Redirect with defaults
+              pathMatch: 'full'
+            },
+          { path: "home/:start/:type", component: MainTaskParentComponent, data: { breadcrumbs: ["Tasks"], } },
           { path: "createTask", component: CreateTaskComponent, data: { breadcrumbs: ["Create Task"], } },
           { path: "editTask/:intentId/:eventTask/:clickSource", component: ParentTaskEditOptionsComponent, data: { breadcrumbs: ["Create Task"], } },
           { path: "datails", component: ProjectDetailsPage },
@@ -118,24 +134,24 @@ const routes: Routes = [
               { path: "SurveyDetails", component: SurveyDetailsComponent, data: { breadcrumbs: ['home', 'Survey'] } },
             ]
           },
-
+            {path:"AiEntities", component:ExtractEntitiesByAiComponent},
           {
             path: "knowledge", component: ParentOntologyEntitiesComponent,
             children: [
               { path: "", redirectTo: "ontologyEntities" },
               {
                 path: "ontologyEntities", component: OntologyEntitiesComponent, data: { breadcrumbs: ['Ontology Entities'] }, children: [
-                  { path: "", redirectTo: "Frames" },
-                  { path: "Frames", component: FramesComponent, data: { breadcrumbs: ['Ontology Entities', 'Frames'] } },
-                  { path: "Classes", component: OntologyClassesComponent, data: { breadcrumbs: ['Ontology Entities', 'Classes'] } },
-                  { path: "Conditions", component: OntologyConditionsComponent, data: { breadcrumbs: ['Ontology Entities', 'Conditions'] } },
-                  { path: "Individuals", component: OntologyIndividualsComponent, data: { breadcrumbs: ['Ontology Entities', 'Individuals'] } },
-                  { path: "RestrictedProperties", component: OntologyRestrictedPropertiesComponent, data: { breadcrumbs: ['Ontology Entities', 'RestrictedProperties'] } },
-                  { path: "QuestionTools", component: OntologyQuestionToolsComponent, data: { breadcrumbs: ['Ontology Entities', 'QuestionTools'] } },
-                  { path: "Adverbs", component: OntologyAdverbsComponent, data: { breadcrumbs: ['Ontology Entities', 'Adverbs'] } },
-                  { path: "PropVp", component: OntologyAdverbsComponent, data: { breadcrumbs: ['Ontology Entities', 'PropVp'] } },
-                  { path: "FactPorperty", component: OntologyPropVpComponent, data: { breadcrumbs: ['Ontology Entities', 'FactPorperty'] } },
-                  { path: "Adjectives", component: OntologyFactPorpertyComponent, data: { breadcrumbs: ['Ontology Entities', 'Adjectives'] } },
+                  { path: "", redirectTo: "action" },
+                  { path: "action", component: FramesComponent, data: { breadcrumbs: ['Ontology Entities', 'Frames'] } },
+                  { path: "class", component: OntologyClassesComponent, data: { breadcrumbs: ['Ontology Entities', 'Classes'] } },
+                  { path: "condation", component: OntologyConditionsComponent, data: { breadcrumbs: ['Ontology Entities', 'Conditions'] } },
+                  { path: "individual", component: OntologyIndividualsComponent, data: { breadcrumbs: ['Ontology Entities', 'Individuals'] } },
+                  { path: "prop", component: OntologyRestrictedPropertiesComponent, data: { breadcrumbs: ['Ontology Entities', 'RestrictedProperties'] } },
+                  { path: "ques_tool", component: OntologyQuestionToolsComponent, data: { breadcrumbs: ['Ontology Entities', 'QuestionTools'] } },
+                  { path: "adverb", component: OntologyAdverbsComponent, data: { breadcrumbs: ['Ontology Entities', 'Adverbs'] } },
+                  { path: "propVp", component: OntologyAdverbsComponent, data: { breadcrumbs: ['Ontology Entities', 'PropVp'] } },
+                  { path: "factprop", component: OntologyPropVpComponent, data: { breadcrumbs: ['Ontology Entities', 'FactPorperty'] } },
+                  { path: "Adjective", component: OntologyFactPorpertyComponent, data: { breadcrumbs: ['Ontology Entities', 'Adjectives'] } },
                   { path: "GeneratedFrames", component: OntologyGeneratedFramesComponent, data: { breadcrumbs: ['Ontology Entities', 'GeneratedFrames'] } },
                 ]
               },
@@ -178,15 +194,26 @@ const routes: Routes = [
             path: "Analytic", component: SharedanaylaticsComponent,
             children: [
               { path: "", redirectTo: "Chatbotconversation" },
-              { path: "overview", component: AnaylaticsOverviewComponent, data: { breadcrumbs: ['home', 'Analytic', 'overview'] } },
-              { path: "Chatbotconversation", component: ChatbotConversationComponent, data: { breadcrumbs: ['home', 'Analytic', 'Chatbotconversation'] } },
-              { path: "Agentconversation", component: AgentconversationComponent, data: { breadcrumbs: ['home', 'Analytic', 'Agentconversation'] } },
-              { path: "Gptconversation", component: GptConversationComponent, data: { breadcrumbs: ['home', 'Analytic', 'Gptconversation'] } },
-              { path: "Survey", component: SurveyComponent, data: { breadcrumbs: ['home', 'Analytic', 'Survey'] } },
-              { path: "Leadgeneration", component: LeadgenerationComponent, data: { breadcrumbs: ['home', 'Analytic', 'Leadgeneration'] } }
+              { path: "overview", component: AnaylaticsOverviewComponent, data: { breadcrumbs: [ 'Analytic', 'overview'] } },
+              { path: "Chatbotconversation", component: ChatbotConversationComponent, data: { breadcrumbs: [ 'Analytic', 'Chatbotconversation'] } },
+              { path: "Agentconversation", component: AgentconversationComponent, data: { breadcrumbs: [ 'Analytic', 'Agentconversation'] } },
+              { path: "Gptconversation", component: GptConversationComponent, data: { breadcrumbs: [ 'Analytic', 'Gptconversation'] } },
+              { path: "Survey", component: SurveyComponent, data: { breadcrumbs: [ 'Analytic', 'Survey'] } },
+              { path: "Leadgeneration", component: LeadgenerationComponent, data: { breadcrumbs: [ 'Analytic', 'Leadgeneration'] } }
             ]
           },
 
+           { path: "aiConversation", component: AiConversationComponent, data: { breadcrumbs: ['AI Agent', 'AI Conversation'] } },
+           { path: "AgentTools", component: AgentToolsComponent, data: { breadcrumbs: ['AI Agent', 'AgentTools'] } },
+           { path: "Agents", component: AgentsComponent, data: { breadcrumbs: ['AI Agent', 'Agents'] } },
+           { path: "KnowledgeBase", component: ParentKnowledgeBaseComponent,
+           children:[
+            { path: "", redirectTo: "documents" },
+             { path: "importData", component: ImportDataComponent, data: { breadcrumbs: [ 'Knowledge Base', 'Import Data'] } },
+             { path: "documents", component: DocumentsComponent, data: { breadcrumbs: [ 'Knowledge Base', 'Documents'] } },
+             { path: "chat", component: SettingsComponent, data: { breadcrumbs: [ 'Knowledge Base', 'chat'] } },
+             { path: "indexDetails", component: IndexDetailsComponent, data: { breadcrumbs: [ 'Knowledge Base','Index'] } },
+           ]},
           {
             path: "widget-set-up",
             component: WidgetSetupComponent,
@@ -198,7 +225,8 @@ const routes: Routes = [
             path: "Options", component: SharedOptionsComponent, children: [
               { path: "", redirectTo: "General", pathMatch: 'full' },
               { path: "General", component: GeneralComponent, data: { breadcrumbs: ['Options', 'General'] } },
-              { path: "Language", component: LanguagesComponent, data: { breadcrumbs: ['Options', 'Options'] } },
+              { path: "LLMsettings", component: BrainComponent, data: { breadcrumbs: ['Options', 'LLM Settings'] } },
+              { path: "Language", component: LanguagesComponent, data: { breadcrumbs: ['Options', 'Brain'] } },
               { path: "Services", component: ServicesComponent, data: { breadcrumbs: ['Options', 'Services'] } },
               { path: "Login", component: LoginComponent, data: { breadcrumbs: ['Options', 'Login'] } },
               { path: "liveChatEscalation", component: LiveChatEscalationComponent, data: { breadcrumbs: ['Options', 'Live Chat Escalation'] } },

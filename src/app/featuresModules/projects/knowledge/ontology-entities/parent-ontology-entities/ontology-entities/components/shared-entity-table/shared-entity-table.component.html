@@ -38,7 +38,7 @@
 
 
 
-<div class="flex w-[98.7%] gap-3 mt-3 mx-3 h-[39rem]">
+<div class="flex w-[98.7%] gap-3 mt-3 mx-3 tableHeight">
     <div class="w-[55%] bg-white rounded-sm overflow-auto border  border-gray-300">
         <cdk-virtual-scroll-viewport [itemSize]="50">
             <div [ngClass]="{'bg-slate-900': currentIndex == i}" class="flex bg-[#F5F5F5] border-b-2 m-1 py-1 items-center" (click)="clickOnList(entity, i)" *cdkVirtualFor="let entity of ontologyEntities; let i =index">
@@ -65,7 +65,8 @@
                 </div>
                 <div class="flex w-64">
                     <P class="bg-[#999999] rounded-lg text-white px-1 mx-2 h-5">{{entity._id}}</P>
-                    <p [ngClass]="{'text-white': currentIndex == i}" class="text-red-800 font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                    <p *ngIf="entity.templateId == 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class=" textColor font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                    <p *ngIf="entity.templateId > 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class=" font-semibold text-[#ff0000]">{{entity.entityInfo[0].entityText}}</p>
                 </div>
 
                 <div class="justify-end ml-auto">
@@ -75,7 +76,7 @@
                         <button *ngIf="entity.errorInStem == true" matTooltip="Error in Entity String"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-red-600" svgIcon="mat:error_outline"></mat-icon> </button>
                         <button *ngIf="type=='action'" matTooltip="Show Related Frames" (click)="openRelatedFramesAndEligible(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:screen_share"></mat-icon> </button>
                         <button *ngIf="type=='action'" matTooltip="Show Related Frames" (click)="openRelatedFrames(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:featured_video"></mat-icon> </button>
-                        <button *ngIf="type=='class'" matTooltip="Add Class Restrictions" (click)="openShowDeconstructClass(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:linear_scale"></mat-icon> </button>
+                        <button *ngIf="type=='class'" matTooltip="Add Class Restrictions" (click)="openShowDeconstructClass(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:attachment"></mat-icon> </button>
                         <button (click)="openShowEntityBehavior(entity)" matTooltip="Show Entities Behaviour"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:widgets"></mat-icon> </button>
                         <button *ngIf="type=='action'" matTooltip="Edit Frame" (click)="editFrame(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:edit"></mat-icon> </button>
                         <button *ngIf="type !=='prop'" matTooltip="Delete Entity" (click)="deleteEntity(entity._id)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
@@ -89,15 +90,15 @@
 
 
     </div>
-    <div class="w-[45%] bg-white  rounded-sm px-2 py-2 overflow-auto">
+    <div class="w-[45%] bg-white  rounded-sm px-2 py-2 overflow-auto" *ngIf="currentIndex || currentIndex == 0 ">
         <div *ngIf="currentIndex || currentIndex == 0 ">
             <button (click)="openCreateEntity()" class="bg-slate-950 text-white flex items-center rounded-md hover:bg-orange-500 px-2 py-1"> <mat-icon class="" svgIcon="mat:add"></mat-icon> New</button>
         </div>
         <div class="h-12 w-full border bg-[#F7F7F7] mt-4 hover:bg-orange-500 flex items-center justify-between" *ngFor="let childEntity of childrenEntites">
 
-            <div class="flex w-64">
+            <div class="flex ">
                 <P class="bg-[#999999] rounded-lg text-white px-1 mx-2">{{childEntity._id}}</P>
-                <p class="text-black hover:text-white font-semibold">{{childEntity?.entityInfo[0]?.entityText}}</p>
+                <p (click)="openModifySynEntity(childEntity)" class="text-black hover:text-white font-semibold">{{childEntity?.entityInfo[0]?.entityText}}</p>
             </div>
             <div *ngIf="type=='gneratedFrames'">
                 <p class="bg-[#999999] rounded-lg text-white px-1 mx-2 font-medium">{{childEntity?.frame.GenReson}}</p>

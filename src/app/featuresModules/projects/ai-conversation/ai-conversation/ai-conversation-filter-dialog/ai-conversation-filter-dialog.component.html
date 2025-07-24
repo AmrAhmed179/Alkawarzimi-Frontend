@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Filter Conversations</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill" class="w-full">
+        <mat-label>User ID</mat-label>
+        <input matInput [(ngModel)]="data.userId" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="picker1" [(ngModel)]="data.startDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-full">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="picker2" [(ngModel)]="data.endDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button color="primary" (click)="onClose()">Apply</button>
+</div>

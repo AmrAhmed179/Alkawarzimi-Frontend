@@ -356,6 +356,8 @@ export class PropertyTreeViewComponent implements OnInit {
           parent = node.parent
           previous_sibling = node.node_id
           nextSiblingNode = this.TreeNodes.find(x=>x.previous_sibling == node.node_id)
+          if(!nextSiblingNode)
+            nextSiblingNode = null
         }else{
           parent = node.node_id
           if(node.children.length > 0){

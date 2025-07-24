@@ -1,0 +1,140 @@
+<div class="">
+    <div mat-dialog-title class="flex justify-center items-center h-16 -mx-6 -mt-6 bg-orange-400 ">
+        <div>
+            <h1 class="text-2xl text-gray-50">Extract Entities</h1>
+        </div>
+
+    </div>
+
+    <ng-container>
+        <mat-dialog-content>
+            <div class="mx-4 ">
+                <div class="flex items-center gap-3">
+                    <mat-form-field class="w-[89%]">
+                        <!-- <mat-label  class="">Text</mat-label> -->
+                        <textarea dir="rtl" placeholder="Enter text" class="text-sm  text-right" [(ngModel)]="text" cdkFocusInitial matInput rows="3"></textarea>
+                    </mat-form-field>
+                    <div class="flex flex-col gap-2">
+                        <button (click)="getClassesAndIndividual()" class=" bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Extract Entities</button>
+                        <button (click)="getFrames()" class=" bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Extract Frames</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="mx-4 mt-1 " *ngIf="mode == 'entity'">
+                <div class="col-span-7">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                        <ng-container matColumnDef="addEntities">
+                            <th mat-header-cell *matHeaderCellDef class="text-right">
+                                <button (click)="addEntities()" class=" justify-self-start place-self-start bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Add Entities</button>
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="">
+                            </td>
+                        </ng-container>
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox color="primary" [(ngModel)]="selectAll" (change)="selectAllChange()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox color="primary" (click)="$event.stopPropagation()" [(ngModel)]="row.select">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="entitytype">
+                            <th mat-header-cell *matHeaderCellDef> Entity Type </th>
+                            <td mat-cell *matCellDef="let element"> {{element.entityType}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="EntityText">
+                            <th mat-header-cell *matHeaderCellDef> Entity Text </th>
+                            <td mat-cell *matCellDef="let element"> {{element.entityText}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                </div>
+
+                <!-- <button class=" justify-self-start place-self-start bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Add Entities</button> -->
+
+            </div>
+            <div class="mx-4 mt-1 " *ngIf="mode == 'frame'">
+                <div class="col-span-7">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                        <ng-container matColumnDef="addEntities">
+                            <th mat-header-cell *matHeaderCellDef class="text-right">
+                                <button (click)="addEntities()" class=" justify-self-start place-self-start bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Add Frames</button>
+                            </th>
+                            <td mat-cell *matCellDef="let row" class="">
+                            </td>
+                        </ng-container>
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox color="primary" [(ngModel)]="selectAll" (change)="selectAllChange()">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-checkbox color="primary" (click)="$event.stopPropagation()" [(ngModel)]="row.select">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
+
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="entitytype">
+                            <th mat-header-cell *matHeaderCellDef> Entity Type </th>
+                            <td mat-cell *matCellDef="let element"> {{element.entityType}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="EntityText">
+                            <th mat-header-cell *matHeaderCellDef> Entity Text </th>
+                            <td mat-cell *matCellDef="let element">
+                                <p class="text-base" *ngIf="element.frameType == 'x'">{{element.frame.verbal_noun}} {{element.frame.subject}}</p>
+                                <p class="text-base" *ngIf="element.frameType == 'xx'">{{element.frame.verbal_noun}} {{element.frame.subject}} {{element.frame.object}}</p>
+                                <p class="text-base" *ngIf="element.frameType == 'xxd'">{{element.frame.verbal_noun}} {{element.frame.subject}} {{element.frame.object}} {{element.frame.adverb}}</p>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="frameType">
+                            <th mat-header-cell *matHeaderCellDef> Frame Type </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="h-[50px] ">
+                                    <div class="h-[35px] border-[1.5px] border-[#CCCCCC]  mx-1 mt-2 rounded-sm shadow-b-sm  bg-white">
+                                        <mat-select [(ngModel)]="element.frameType" class="text-base px-3">
+                                            <mat-option value="x">x</mat-option>
+                                            <mat-option value="xx">xx</mat-option>
+                                            <mat-option value="xxd">xxd</mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsframes"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsframes;">
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                </div>
+
+                <!-- <button class=" justify-self-start place-self-start bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500 px-2 py-1 rounded-sm">Add Entities</button> -->
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions align="end">
+            <div class="flex flex-row items-center gap-2 mb-3">
+                <button mat-raised-button class="rounded-sm bg-slate-900 text-slate-50 hover:text-slate-900 hover:bg-orange-500" (click)="closeDialog()" type="button">Close</button>
+            </div>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

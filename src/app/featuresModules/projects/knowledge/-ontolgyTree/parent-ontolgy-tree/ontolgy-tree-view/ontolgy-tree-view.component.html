@@ -15,12 +15,12 @@
             <tree-root class=" w-full my-4" id="tree32" [focused]="true" [nodes]="TREE_DATA" [options]="options" #tree (moveNode)="onMoveNode($event)">
                 <ng-template class="w-full  " #treeNodeTemplate let-node let-index="index">
                     <div (click)="seLectedNode(node.data)" class="  py-2  w-full mat-tree-node flex justify-between bg-[#F6F6F6] rounded-sm px-2  border border-slate-300 hover:border-black" [id]="node.data._id">
-                        <p [ngClass]="{'text-[#EE655D]': node.data.entityType == 'action','text-[#4CD442]': node.data.entityType == 'prop'}" class="text-lg font-medium border-r-black"> {{node.data.entityText}} </p>
+                        <p [ngClass]="{'text-[#e6251f]': node.data.entityType == 'action','text-[#4CD442]': node.data.entityType == 'prop'}" class="text-[22px] fontFamily font-medium mt-1 border-r-black"> {{node.data.entityText}} </p>
                         <div class="flex gap-2 px-2">
-                            <button (click)="openAddSibblingAndChild('s', node.data)" matTooltip="Add Sibbling" class=""><mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon></button>
-                            <button (click)="openAddSibblingAndChild('c', node.data)" matTooltip="Add Child" class=""><mat-icon class="icon-sm" svgIcon="mat:add_circle_outline"></mat-icon></button>
-                            <button (click)="openAddVerb('v', node.data)" matTooltip="Add Verb" class=""><mat-icon class="icon-sm" svgIcon="mat:format_paint"></mat-icon></button>
-                            <button (click)="deleteNode(node.data)" *ngIf="node.data.editable" class=""><mat-icon class="icon-sm" svgIcon="mat:delete"></mat-icon></button>
+                            <button (click)="openAddSibblingAndChild('s', node.data)" matTooltip="Add Sibbling" class=""><mat-icon class="icon-sm iconColor" svgIcon="mat:add"></mat-icon></button>
+                            <button (click)="openAddSibblingAndChild('c', node.data)" matTooltip="Add Child" class=""><mat-icon class="icon-sm iconColor" svgIcon="mat:add_circle_outline"></mat-icon></button>
+                            <button (click)="openAddVerb('v', node.data)" matTooltip="Add Verb" class=""><mat-icon class="icon-sm iconColor" svgIcon="mat:format_paint"></mat-icon></button>
+                            <button (click)="deleteNode(node.data)" *ngIf="node.data.editable" class=""><mat-icon class="icon-sm iconColor" svgIcon="mat:delete"></mat-icon></button>
                         </div>
                     </div>
 
@@ -74,7 +74,7 @@
 
         </div>
 
-        <div class=" border p-2 mt-2 rounded-sm">
+        <div class=" border p-2 mt-2 rounded-sm" *ngIf="SelectedNode.entityType != 'action'">
             <p class="text-[#FFB04E] font-semibold text-base rounded-sm ">Data Properties :&nbsp; <span></span></p>
             <div (click)="clickOnProperty()" class="bg-[#e9e8e8] flex px-3 pt-2 border-b h-12 overflow-x-auto">
                 <p class="text-base text-[#ADADAD] font-semibold " *ngFor="let prop of properties">({{prop?.entityText}})</p>
@@ -103,7 +103,7 @@
             </div>
             <div class="flex items-center">
                 <p class="text-lg text-[#FF963D]">Facts :&nbsp;&nbsp;</p>
-                <button class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"> <mat-icon class="text-[#FF963D]" svgIcon="mat:widgets"></mat-icon></button>
+                <button (click)="GoToFactProperties(SelectedNode)" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"> <mat-icon class="text-[#FF963D]" svgIcon="mat:widgets"></mat-icon></button>
             </div>
         </div>
         <div class=" border p-2 mt-2 rounded-sm" *ngIf="SelectedNode.entityType != 'action'">
@@ -116,7 +116,7 @@
 
                 <div (click)="currentIndividualIndex = index " *ngFor="let individual of individuals; let index = index" [ngClass]="{'bg-[#F5D6BB]':index == currentIndividualIndex}" class=" px-5 mt-1 hover:bg-[#EEEEEE]">
                     <div class="flex items-center justify-between py-1" *ngIf="individuals.length > 0">
-                        <button class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:widgets"></mat-icon></button>
+                        <button (click)="GoToFactProperties(individual)" matTooltip="Show Individual Properties" class="bg-[#F7F7F7] border pt-1 px-1 shadow-md"><mat-icon class="text-[#FF963D] icon-sm" svgIcon="mat:widgets"></mat-icon></button>
                         <p class="text-base font-medium">{{individual.entityInfo[0].entityText}}</p>
                         <button (click)="deleteIndividual(individual)"><mat-icon class="" svgIcon="mat:delete"></mat-icon></button>
                     </div>

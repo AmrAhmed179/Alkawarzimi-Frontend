@@ -8,6 +8,7 @@ export class ProjectOptionsModel {
   language:              string;
   languages:             string[];
   proccessingMode:       boolean;
+  botSystem :number
   faq:                   boolean;
   mainEntityId:          number;
   clientEntityId:        number;
@@ -20,18 +21,38 @@ export class ProjectOptionsModel {
   socialWelcomeInterval: number;
   clearSessionInterval:  number;
   loginType:             number;
+  brainMode:string
+  stopInterruption:boolean
+  includeAiMessage:boolean
+  nluMode:string
+  hybridMode:string
   loginValidateService:  number;
   hasFooter:             boolean;
-  responseFooter:        ResponseFooter[];
+  responseFooter:        ResponseFooter[] = []
   foolterlanguageIndex:  number;
   useResource:Boolean
+  aiAgent:AiAgent = new AiAgent()
 }
 
 export class FactCategory {
   name: string;
   id:   number;
 }
-
+export class AiAgent {
+  model: string;
+  prompt:   string;
+  routing:Routing[] = []
+  task: string;
+  intentHeading: string;
+  intentRoutying: string;
+  entity: string;
+  instructions: string;
+  example: string;
+}
+export class Routing{
+  intent:string
+  taskId:string
+}
 export class ResponseFooter {
   footer: string;
   lang:   string;

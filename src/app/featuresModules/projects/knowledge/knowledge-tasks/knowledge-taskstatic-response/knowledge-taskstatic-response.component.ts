@@ -91,6 +91,10 @@ export class KnowledgeTaskstaticResponseComponent implements OnInit {
         }
       })
   }
+  ngOnChanges(): void {
+    this.convertData()
+    this.initializeForm()
+  }
 
   addValue(control){
 
@@ -329,6 +333,10 @@ debugger
 
 
   convertData(){
+    debugger
+     var x = this.workspace_id
+     var x1= this.intentId
+     var x2 = this.dialogNodes
     this.dialogNodes?.output?.forEach((el,outputIndex)=>{
       this.dialogNodes.output[outputIndex].text.valueArEn =[]
       if(el.response_type == 'Text'){

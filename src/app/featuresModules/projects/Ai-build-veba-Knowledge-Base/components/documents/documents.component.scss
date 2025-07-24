@@ -1,0 +1,90 @@
+.doc-item.active {
+    background-color: #c7f0ff;
+}
+
+.maxHeight {
+    height: calc(100vh - 200px);
+    min-height: 200px;
+    overflow: auto;
+}
+
+.maxdocumentsHeight {
+    height: calc(100vh - 270px);
+    min-height: 200px;
+    overflow: auto;
+}
+
+.search-input {
+    flex: 1;
+    width: 96%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.search-input:focus {
+    border: 1px solid #F0903E !important;
+    outline: none !important;
+    box-shadow: 0 0 3px #F0903E;
+    /* Optional visual feedback */
+}
+
+.deleteRed,
+.deleteRed:hover {
+    color: #f09e56
+}
+
+.selectesDocBg,
+.selectesDocBg:hover {
+    background-color: #f5b57d
+}
+
+.contentText {
+    white-space: pre-line;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.8;
+    font-size: 14px;
+    font-weight: 500;
+    height: calc(100vh - 330px);
+    min-height: 200px;
+    overflow: auto;
+    background-color: #ffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.contentChunkButton {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+/* Hover style */
+
+.contentChunkButton:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+
+/* Active route style */
+
+.active {
+    background-color: #F0903E;
+    color: white;
+}
+
+
+/* Optional: Hover style when already active */
+
+.active:hover {
+    background-color: #F0903E;
+}
+
+.displayNone {
+    display: none !important;
+}

@@ -33,6 +33,10 @@
     // --color-warn-contrast: black;
 }
 
+.cdk-overlay-container .mat-menu-panel {
+    max-width: none !important;
+}
+
 //.mat-button-toggle {background-color: (var(--color-primary),1)  !important}
 //.mat-button-toggle-label-content {background-color: (var(--color-primary),1) !important}
 .content-container {
@@ -99,7 +103,7 @@
 }
 
 .mat-input-element {
-    font-size: 20px !important;
+    font-size: 16px !important;
     font-weight: 400 !important;
 }
 

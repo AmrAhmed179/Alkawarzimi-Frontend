@@ -29,6 +29,7 @@ export class IntentSettings {
   category: string;
   returnAfterDigression: boolean;
   stopDigression: boolean;
+  allawReturnToPreviousFlow: boolean;
   mainTaskCondations?: any;
   mainTask: boolean;
   responseMode: number;

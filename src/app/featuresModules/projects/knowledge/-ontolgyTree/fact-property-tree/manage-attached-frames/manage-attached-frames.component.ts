@@ -18,6 +18,7 @@ import { NotifyService } from 'src/app/core/services/notify.service';
 })
 export class ManageAttachedFramesComponent implements OnInit {
 
+  arg:string = '0'
   search:string = ''
   entityTypeValue:string = 'all'
   lang:string
@@ -37,8 +38,8 @@ export class ManageAttachedFramesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-      this.classesAndProps = this.data.entities.filter(x=>x.entityType == "action")
+    debugger
+    this.classesAndProps = this.data.entities.filter(x=>x.entityType == "action")
   }
 
   formChang(){
@@ -54,7 +55,7 @@ export class ManageAttachedFramesComponent implements OnInit {
     debugger
     if(this.currentClassAndPrpsIndex || this.currentClassAndPrpsIndex == 0 ){
       let entity = this.classesAndProps[this.currentClassAndPrpsIndex]
-      this.dialogRef.close(entity._id)
+      this.dialogRef.close({FrameEntityId:entity._id,arg:this.arg})
     }
   }
 

@@ -80,13 +80,15 @@ import { AdminModule } from "./featuresModules/admin/admin.module";
 import { AnaylaticsModule } from "./featuresModules/projects/anaylatics/anaylatics/anaylatics.module";
 import { AppConfigService } from "./Services/app-config.service";
 import { ClickOutsideModule } from 'ng-click-outside';
+import { NotificationComponent } from "./shared/notification/notification.component";
 
 
 export function initializeApp(appConfig: AppConfigService) {
   return () => appConfig.load();
 }
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,  NotificationComponent,
+],
   imports: [
     DragDropModule,
     BrowserModule,
@@ -141,7 +143,6 @@ export function initializeApp(appConfig: AppConfigService) {
     MatCheckboxModule,
     MatChipsModule,
     // NgxMaterialTimepickerModule.setLocale("ar-SA"),
-
     ToolbarUserModule,
     ToolbarModule,
     TranslateModule.forRoot({

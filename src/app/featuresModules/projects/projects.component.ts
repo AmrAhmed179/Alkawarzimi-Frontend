@@ -34,6 +34,8 @@ export class ProjectsComponent implements OnInit {
   code:string = "";
   showButton=false;
   projectS:any
+  searchText: string = '';
+  filteredProjects: any[] = [];
   showDetailsClass:boolean = false
   showEditClass:boolean = false
   projectname:any
@@ -130,7 +132,9 @@ export class ProjectsComponent implements OnInit {
     debugger
     this._analyticalService.proJectName$.next(name);
   }
-
+  openDashboard(){
+    window.open('/Dashboard', '_blank');
+  }
   myAvailabilityCount: number;
   /**
    * GET PROJECTS AND SAVE IN THE STORAGE: PROJECT ID - PROJECT NAME - USE ROLE   */
@@ -343,8 +347,14 @@ export class ProjectsComponent implements OnInit {
     this._optionsService.getAllProjects().subscribe((res:any)=>{
       debugger
     this.projectS = res
+    this.filterProjects();
     })
   }
+  filterProjects() {
+  this.filteredProjects = this.projectS.filter((project: any) =>
+    project.name?.toLowerCase().includes(this.searchText.toLowerCase())
+  );
+}
   projectDetails(item){
     this.showDetailsClass = true
     this.projectname = item._id

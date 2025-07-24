@@ -30,7 +30,7 @@
 
                         <div class="flex w-full px-3 justify-between">
                             <p class="w-full font-semibold">{{classAndpropEntity.entityType}}</p>
-                            <p class="w-full font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
+                            <p [ngClass]="{'text-red-600':checkIfExsisted(classAndpropEntity.entityInfo[0].entityText) == true}" class="w-full font-semibold">{{classAndpropEntity.entityInfo[0].entityText}}</p>
                             <div class="flex gap-2 items-center">
                                 <P class="bg-[#999999] rounded-sm text-white px-1 mx-2 h-5">{{i+1}}</P>
                             </div>

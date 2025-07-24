@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { Example, Intent } from 'src/app/Models/build-model/intent-model';
+import { Example, Intent, IntentSettings } from 'src/app/Models/build-model/intent-model';
 import { TaskTree } from 'src/app/Models/build-model/task-tree-model';
 import { TasksService } from 'src/app/Services/Build/tasks.service';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
@@ -203,6 +203,10 @@ export class ParentTaskEditOptionsComponent implements OnInit {
     }
   }
 
+  savedSettingIntent(intentSettings:IntentSettings){
+    this.responseMode = intentSettings.responseMode
+    this.detectTapeName()
+  }
   expandAllNodes(): void {
     this.dataSource.data.forEach(node => {
       this.expandTree(node);

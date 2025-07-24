@@ -143,6 +143,17 @@ export class AnalyticServiceService {
     }
     return this.http.post(environment.URLS.CreateConversationsReport, {dataFilter:dataFilterrr}, {responseType: 'text'})
   }
+  CreateConversationsReport2(dataFilterr:filterAnalytical){
+    let dataFilterrr = {
+      chatBotId: dataFilterr.chatBotId,
+      endDate: dataFilterr.endDate,
+      startDate: dataFilterr.startDate,
+      filter:dataFilterr.filter,
+      search:dataFilterr.search
+
+    }
+    return this.http.post(environment.URLS.CreateConversationsReport2, {dataFilter:dataFilterr}, {responseType: 'blob' as 'json'})
+  }
   GetLeadGenerationReport(endDate:any,startDate:any,projectId:any,id:any){
     let parm = {
       endDate : endDate,

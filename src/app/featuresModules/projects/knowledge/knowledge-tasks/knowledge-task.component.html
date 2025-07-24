@@ -20,8 +20,8 @@
     <mat-paginator #paginator class="demo-paginator" [showFirstLastButtons]="true" [length]="totalItems" [pageSize]="10" aria-label="Select page"> </mat-paginator>
 </div>
 
-<div class="grid grid-cols-2 ">
-    <div class="mx-6 mt-2 tableHeight py-1 ">
+<div class="grid grid-cols-5 ">
+    <div class="mx-6 mt-2 tableHeight py-1 col-span-3">
         <table mat-table [dataSource]="dataSource" class="">
             <ng-container matColumnDef="position">
                 <td mat-cell *matCellDef="let element">
@@ -30,25 +30,27 @@
                             <mat-expansion-panel (click)="set_id(element._id,element)" [expanded]="_selected_id == element._id" (opened)="_selected_id == element._id" (closed)="_selected_id != element._id">
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
-                                        <div class="grid grid-cols-3 w-full">
+                                        <div class="grid grid-cols-4 w-full">
                                             <div class="flex w-60 items-center">
                                                 <p class="bg-[#F9A154] p-2 text-white font-medium rounded-sm">{{element._id}}</p>
-                                                <div class="mx-10">
+                                                <div class="mx-5">
                                                     <p *ngIf="element.name != null" class="text-sm text-[#3F3F3F] font-medium">{{element.name}}</p>
                                                     <p *ngIf="element.name == null" class="text-sm text-[#3F3F3F] font-medium">{{element.intentId}}</p>
                                                 </div>
                                             </div>
 
-                                            <div class="flex items-center mx-12" *ngIf="element.examples.length > 0">
-                                                <p class="text-base text-[#3F3F3F] font-medium">{{element.examples[0].text}}</p>
+                                            <div class="flex items-center overflow-auto h-[50px] col-span-2" *ngIf="element.examples.length > 0">
+                                                <p class="text-[15px]  text-center text-[#3F3F3F] font-medium overflow-auto break-words whitespace-normal">
+                                                    {{element.examples[0].text}}
+                                                </p>
                                             </div>
                                             <div class="flex items-center mx-12" *ngIf="element.examples.length < 1">
                                             </div>
-                                            <div *ngIf="element.linkedFact != null" class="justify-self-end">
+                                            <div *ngIf="element.linkedFact != null" class="justify-self-end mt-2">
                                                 <button (click)="openLinkedFact($event, element)" class="text-orange-600 flex items-center font-medium border-black border-[2px] p-1"> <mat-icon svgIcon="mat:attach_file"></mat-icon> Linked To Fact</button>
                                             </div>
                                             <div *ngIf="element.linkedFact == null && _selected_id == element._id" class="justify-self-end">
-                                                <div class="flex gap-2 items-center">
+                                                <div class="flex gap-2 items-center mt-3">
                                                     <button (click)="saveTask(element, '0')" matTooltip="Save Task" class="text-orange-400 border border-[#ebe4e4] flex items-center hover:bg-slate-200 hover:text-black rounded-sm"><mat-icon svgIcon="mat:save"></mat-icon></button>
                                                     <button (click)="deleteTask(element)" matTooltip="Delete Task" class="text-orange-400 border border-[#ebe4e4] flex items-center hover:bg-slate-200 hover:text-black rounded-sm"><mat-icon svgIcon="mat:delete"></mat-icon></button>
                                                 </div>
@@ -94,14 +96,14 @@
 
     </div>
 
-    <div *ngIf="selectedIntent" class="mr-3 mt-2">
+    <div *ngIf="selectedIntent && selectedIntent.dialog_nodes.length > 0  && selectedIntent.linkedFact == null" class="mr-3 mt-2 col-span-2">
         <div class="bg-white border rounded-sm">
             <mat-radio-group color="primary" [(ngModel)]="selectedIntent.responseMode" (change)="changeResponseMode()" class="flex justify-evenly p-2">
                 <mat-radio-button [value]="1">Static Responses</mat-radio-button>
                 <mat-radio-button [value]="2">Diagram-Flow</mat-radio-button>
             </mat-radio-group>
         </div>
-        <div *ngIf="selectedIntent.responseMode == 1">
+        <div *ngIf="selectedIntent.responseMode == 1 ">
             <vex-knowledge-taskstatic-response (sendObject)="saveTask($event, '1')" [workspace_id]="projectId" [intentId]="selectedIntent.dialog_nodes[0].intentId" [dialogNodes]="selectedIntent.dialog_nodes[0]"></vex-knowledge-taskstatic-response>
         </div>
     </div>

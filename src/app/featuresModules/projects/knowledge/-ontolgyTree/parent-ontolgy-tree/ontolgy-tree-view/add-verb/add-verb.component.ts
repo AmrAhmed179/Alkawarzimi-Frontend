@@ -74,7 +74,7 @@ export class AddVerbComponent implements OnInit {
 
   addClass(){
     debugger
-    if(this.currentClassAndPrpsIndex){
+    if(this.currentClassAndPrpsIndex || this.currentClassAndPrpsIndex == 0 ){
       let entity = this.classesAndProps[this.currentClassAndPrpsIndex]
       this.dialogRef.close(entity.senseId)
     }

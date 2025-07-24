@@ -47,5 +47,9 @@ debugger
     a.click();
     URL.revokeObjectURL(a.href);
   };
-
+  changeDateFormate(dateString:string){
+    const timestamp = parseInt(dateString.replace(/\/Date\((\d+)\)\//, '$1'), 10);
+    const date = new Date(timestamp);
+    return date.toString();
+  }
 }

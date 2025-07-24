@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Details</h2>
+
+<mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput [value]="data.name" readonly />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>File Text</mat-label>
+        <textarea matInput [value]="data.fileText" rows="4" readonly></textarea>
+    </mat-form-field>
+
+    <div class="chunk-section">
+        <p class="chunk-id">chunk-id: 0950448c-9ffc-4c43-af5d-4d4ac15ded06</p>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Chunk</mat-label>
+            <textarea matInput [value]="data.chunk" rows="6" readonly></textarea>
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="update()">Update</button>
+</mat-dialog-actions>

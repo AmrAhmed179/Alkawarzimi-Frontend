@@ -15,7 +15,7 @@ import { MagicWordWriteComponent } from 'src/app/shared/components/magic-word-wr
 import { CreateOntologyEntityComponent } from '../ontology-entities/parent-ontology-entities/ontology-entities/dialogs/create-ontology-entity/create-ontology-entity.component';
 import { isThisSecond } from 'date-fns';
 import { LinkedToFactComponent } from './linked-to-fact/linked-to-fact.component';
-import { IntentModel } from 'src/app/Models/IntentsModel';
+import { DialogNode, IntentModel } from 'src/app/Models/IntentsModel';
 
 @Component({
   selector: 'vex-knowledge-task',
@@ -88,6 +88,12 @@ export class KnowledgeTaskComponent implements OnInit {
     })
   }
   set_id(_id, element){
+    debugger
+    if(element.dialog_nodes.length < 1){
+      var dialog = new DialogNode()
+      dialog.type = "standard"; dialog.disable = false; dialog.intentId = element.intentId; dialog.dialog_node = element.intentId ;
+      this.Intents[this.Intents.findIndex(x=>x._id == _id)].dialog_nodes.push(dialog)
+    }
     this._selected_id = _id
     this.selectedIntent = element
     this.addExampleValue = ""

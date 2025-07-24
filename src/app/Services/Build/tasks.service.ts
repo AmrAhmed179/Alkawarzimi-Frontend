@@ -30,6 +30,7 @@ export class TasksService {
         start: dataFilter.start,
         type: dataFilter.type,
         workspace_id: dataFilter.workspace_id,
+        search:dataFilter.search
       }
     } else {
       params = {

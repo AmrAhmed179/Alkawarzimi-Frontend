@@ -14,7 +14,7 @@ export class IntentModel {
   statelessFlow: boolean
   stopPostResponse: boolean
   callPostResponse: boolean
-  dialog_nodes: DialogNode[]
+  dialog_nodes: DialogNode[] = []
   created: string
   updated: string
   deleted: boolean
@@ -74,9 +74,9 @@ export class DialogNode {
   parent: any
   description: any
   next_step: any
-  conditionGroup?: any[]
+  conditionGroup?: any[] = []
   event_name: any
-  output?: Output[]
+  output?: Output[] = []
   display_policy: string
   filled: any
   behavior: any
@@ -84,11 +84,11 @@ export class DialogNode {
   ignoreOldValue: boolean
   sourceBot: any
   serviceObject: any
-  triggeredObject?: any[]
-  expProcess?: any[]
+  triggeredObject?: any[] =[]
+  expProcess?: any[] = []
   executeService: any
-  services?: any[]
-  variables?: any[]
+  services?: any[] = []
+  variables?: any[] = []
   previous_sibling: any
   variable: any
   focus: any

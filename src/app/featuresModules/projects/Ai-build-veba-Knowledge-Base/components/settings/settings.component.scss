@@ -1,0 +1,66 @@
+/* chatbot.component.css */
+
+.chat-container {
+    width: 600px;
+    max-width: 100%;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f8f8f8;
+}
+
+.input-area {
+    display: flex;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.input-area button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #F0903E;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.user .bubble {
+    background-color: #d1e7ff;
+    color: #000;
+    margin-left: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px 15px 0 15px;
+    max-width: 80%;
+    font-size: 17px;
+}
+
+.bot .bubble {
+    background-color: #e6ffe6;
+    color: #000;
+    margin-right: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px 15px 15px 0;
+    max-width: 80%;
+    font-size: 17px;
+}

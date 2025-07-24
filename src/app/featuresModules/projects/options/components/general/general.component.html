@@ -1,48 +1,111 @@
-<div class="mx-6">
-    <form class="flex flex-col  justify-between py-2" [formGroup]="generalOptions" *ngIf="projectOptions">
-        <mat-form-field class="flex-auto" (change)="getFormValue()">
-            <mat-label>Name</mat-label>
-            <input matInput Enmity="Name" formControlName="name">
-        </mat-form-field>
+<div class=" pageHight">
+    <form class="flex flex-col  justify-between py-2 mx-6" [formGroup]="generalOptions" *ngIf="projectOptions">
+        <div class="grid grid-cols-3 gap-4">
+            <mat-form-field class="flex-auto" (change)="getFormValue()">
+                <mat-label>Name</mat-label>
+                <input matInput Enmity="Name" formControlName="name">
+            </mat-form-field>
 
-        <mat-form-field class="flex-auto" (change)="getFormValue()">
-            <mat-label>Description</mat-label>
-            <input matInput Enmity="Description" formControlName="description">
-        </mat-form-field>
-        <div class="flex flex-row items-center gap-12">
-            <p class="text-base" *ngIf="selectedLang ==='ar'">Knowledge Main Entity : <span class="text-orange-500 text-lg font-medium" style="min-width: 40px;">&emsp;{{mainEntityAr}}</span> </p> <button mat-raised-button (click)="openAddDomainDialog('mainEntity','ar')" *ngIf="selectedLang ==='ar'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
-            <p class="text-base" *ngIf="selectedLang ==='en'">Knowledge Main Entity :<span class="text-orange-500 text-lg font-medium">&emsp;{{mainEntityEn}}</span> </p> <button mat-raised-button (click)="openAddDomainDialog('mainEntity','en')" *ngIf="selectedLang ==='en'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
+            <mat-form-field class="flex-auto col-span-2" (change)="getFormValue()">
+                <mat-label>Description</mat-label>
+                <input matInput Enmity="Description" formControlName="description">
+            </mat-form-field>
+        </div>
+        <mat-divider class="mb-2 bg-slate-400"></mat-divider>
+
+        <div class="grid grid-cols-4 gap-4">
+            <div class="flex flex-row mt-7 ">
+                <p class="text-base" *ngIf="selectedLang ==='ar'">Knowledge Main Entity : <span class="text-orange-500 text-lg font-medium" style="min-width: 40px;">&emsp;{{mainEntityAr}}</span> </p>
+                <button mat-raised-button (click)="openAddDomainDialog('mainEntity','ar')" *ngIf="selectedLang ==='ar'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8">Select
+                   </button>
+                <p class="text-base" *ngIf="selectedLang ==='en'">Knowledge Main Entity :<span class="text-orange-500 text-lg font-medium">&emsp;{{mainEntityEn}}</span> </p> <button mat-raised-button (click)="openAddDomainDialog('mainEntity','en')" *ngIf="selectedLang ==='en'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
+            </div>
+
+            <div class="flex flex-row  mt-7">
+                <p class="text-base" *ngIf="selectedLang ==='ar'">Knowledge Client Entity : <span class="text-orange-500 text-lg font-medium w-20" style="min-width: 40px;">&emsp;{{clientEntityAr}}</span> </p>
+                <button mat-raised-button (click)="openAddClientDialog('clientEntity','ar')" *ngIf="selectedLang ==='ar'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8">Select </button>
+                <p class="text-base" *ngIf="selectedLang ==='en'">Knowledge Client Entity :<span class="text-orange-500 text-lg font-medium">&emsp;{{ClientEntityEn}}</span> </p> <button mat-raised-button (click)="openAddClientDialog('clientEntity','en')" *ngIf="selectedLang ==='en'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
+            </div>
+            <mat-form-field class="flex-auto col-span-2 mt-3" (change)="getFormValue()">
+                <mat-label>Domain</mat-label>
+                <input matInput Enmity="Domain" formControlName="domainName">
+            </mat-form-field>
+
+        </div>
+        <mat-divider class="mb-2 bg-slate-400"></mat-divider>
+
+        <div class="grid grid-cols-3 my-2">
+            <div>
+                <div>
+                    <p class="text-base">BotSystem Mode</p>
+                </div>
+                <div class="mb-5 mt-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="botSystem" (change)="getFormValue()" class="example-radio-group flex  gap-5 my-3">
+                        <mat-radio-button class="example-radio-button" color="primary" [value]="0">kh-NLU</mat-radio-button>
+                        <mat-radio-button class="example-radio-button" color="primary" [value]="1">ChatBotService</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <p class="text-base">Brain Mode</p>
+                </div>
+                <div class="mb-5 mt-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="brainMode" (change)="getFormValue()" class="example-radio-group flex  gap-4 my-3">
+                        <mat-radio-button class="example-radio-button" color="primary" value="0">NLU</mat-radio-button>
+                        <mat-radio-button class="example-radio-button" color="primary" value="1">AI Agent Full Control</mat-radio-button>
+                        <mat-radio-button class="example-radio-button" color="primary" value="2">AI Agent Single Task</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+        <mat-divider class="mb-2 bg-slate-400"></mat-divider>
+
+        <div class=" grid grid-cols-6 my-2">
+            <div class="my-3">
+                <p class="text-base mb-2">Interruption Mode</p>
+                <mat-slide-toggle matTooltip="Interruption Mode" color="primary" (change)="getFormValue()" [labelPosition]="'before'" formControlName="stopInterruption"> Stop Interruption</mat-slide-toggle>
+            </div>
+            <div class="my-3">
+                <p class="text-base mb-2">Include AI Message</p>
+                <mat-slide-toggle matTooltip="Include AI Message" color="primary" (change)="getFormValue()" [labelPosition]="'before'" formControlName="includeAiMessage"> Include AI Message</mat-slide-toggle>
+            </div>
+            <div class="col-span-2">
+                <div class="my-3">
+                    <p class="text-base mb-2">Select the NLU Mode</p>
+
+                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="nluMode" (change)="getFormValue()" class="example-radio-group grid grid-cols-4 gap-1 my-3">
+                        <mat-radio-button class="example-radio-button text-sm " color="primary" value="0">Ontology only</mat-radio-button>
+                        <mat-radio-button class="example-radio-button text-sm mx-4" color="primary" value="1">Hybrid</mat-radio-button>
+                        <mat-radio-button class="example-radio-button text-sm mx-4" color="primary" value="2">LLM only</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div class="col-span-2" *ngIf="this.projectOptions.nluMode == '1'">
+                <div class="my-3">
+                    <p class="text-base mb-2">Select the Hybrid Mode</p>
+
+                    <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="hybridMode" (change)="getFormValue()" class="example-radio-group grid grid-cols-4 gap-1 my-3">
+                        <mat-radio-button class="example-radio-button text-sm " color="primary" value="0">Always Call LLM</mat-radio-button>
+                        <mat-radio-button class="example-radio-button text-sm mx-4" color="primary" value="1">Call LLM in Null State only</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
         </div>
 
-        <div class="flex flex-row items-center gap-10 my-5">
-            <p class="text-base" *ngIf="selectedLang ==='ar'">Knowledge Client Entity : <span class="text-orange-500 text-lg font-medium w-20" style="min-width: 40px;">&emsp;{{clientEntityAr}}</span> </p> <button mat-raised-button (click)="openAddClientDialog('clientEntity','ar')" *ngIf="selectedLang ==='ar'"
-                class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
-            <p class="text-base" *ngIf="selectedLang ==='en'">Knowledge Client Entity :<span class="text-orange-500 text-lg font-medium">&emsp;{{ClientEntityEn}}</span> </p> <button mat-raised-button (click)="openAddClientDialog('clientEntity','en')" *ngIf="selectedLang ==='en'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
-        </div>
-        <mat-form-field class="flex-auto" (change)="getFormValue()">
-            <mat-label>Domain</mat-label>
-            <input matInput Enmity="Domain" formControlName="domainName">
-        </mat-form-field>
+        <mat-divider class="mb-4 bg-slate-400"></mat-divider>
 
-        <div>
-            <p class="text-base">Proccessing Mode</p>
-            <p class="text-xs">Select the Proccessing Mode that suits your bot best. Use Pattern Match mode for bots with a small number of examplesin intents. Use ML only mode for bots with a large number of examples in intents.</p>
-        </div>
-        <div class="my-5">
-            <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="ProccessingMode" (change)="getFormValue()" class="example-radio-group grid grid-cols-3 gap-1 my-3">
-                <mat-radio-button class="example-radio-button" color="primary" [value]="false">Pattern Matching</mat-radio-button>
-                <mat-radio-button class="example-radio-button" color="primary" [value]="true">Machine Learning</mat-radio-button>
-            </mat-radio-group>
+        <div class="grid grid-cols-4 gap-4">
+            <mat-form-field class="flex-auto" (change)="getFormValue()">
+                <mat-label>Social Welcome Interval</mat-label>
+                <input matInput Enmity="Social Welcome Interval" formControlName="socialWelcomeInterval">
+            </mat-form-field>
+            <mat-form-field class="flex-auto" (change)="getFormValue()">
+                <mat-label>Clear Session Interval</mat-label>
+                <input matInput Enmity="Clear Session Interval" formControlName="clearSessionInterval">
+            </mat-form-field>
         </div>
 
 
-        <mat-form-field class="flex-auto" (change)="getFormValue()">
-            <mat-label>Social Welcome Interval</mat-label>
-            <input matInput Enmity="Social Welcome Interval" formControlName="socialWelcomeInterval">
-        </mat-form-field>
-        <mat-form-field class="flex-auto" (change)="getFormValue()">
-            <mat-label>Clear Session Interval</mat-label>
-            <input matInput Enmity="Clear Session Interval" formControlName="clearSessionInterval">
-        </mat-form-field>
     </form>
 </div>

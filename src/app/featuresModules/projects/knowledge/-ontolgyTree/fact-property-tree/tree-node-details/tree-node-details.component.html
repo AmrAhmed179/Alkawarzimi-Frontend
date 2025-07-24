@@ -4,7 +4,9 @@
     <mat-checkbox [(ngModel)]="SeLectedNode.stopPostResponse" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Stop Post Response: </mat-checkbox>
     <mat-checkbox [(ngModel)]="SeLectedNode.paraPhraseFact" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">ParaPhrase Fact: </mat-checkbox>
     <div>
-        <p class="text-sm text-orange-500">{{SeLectedNode.subjectId}}</p>
+        <p class="text-sm text-orange-500">
+            {{ SeLectedNode.predicateId == -1 ? SeLectedNode.entityId : SeLectedNode.entityId + ' - ' + SeLectedNode.predicateId }}
+        </p>
     </div>
 </div>
 <div class="mr-6">
@@ -17,18 +19,18 @@
     <mat-divider></mat-divider>
     <div *ngIf="activeTap == 'response'">
         <div class="p-2 border mt-1">
-            <mat-radio-group [(ngModel)]="responseOrDiagram">
-                <mat-radio-button class="" color="primary" value="1">Response</mat-radio-button>
-                <mat-radio-button class="ml-20" color="primary" value="2">Diagram-Flow</mat-radio-button>
+            <mat-radio-group [(ngModel)]="SeLectedNode.responseMode">
+                <mat-radio-button class="" color="primary" [value]="0">Response</mat-radio-button>
+                <mat-radio-button class="ml-20" color="primary" [value]="2">Diagram-Flow</mat-radio-button>
             </mat-radio-group>
         </div>
     </div>
-    <div *ngIf="responseOrDiagram == '2'">
+    <div *ngIf="SeLectedNode.responseMode == 2 && activeTap == 'response'">
         <div class="diagramHeight">
             <vex-diagramflow-ifram [workspace_id]="projectId" [propertyId]="propertyId" [intentId]="SeLectedNode.entityId"></vex-diagramflow-ifram>
         </div>
     </div>
-    <div *ngIf="responseOrDiagram == '1' && activeTap == 'response'" class="mt-2 overflow-auto maxHeight">
+    <div *ngIf="SeLectedNode.responseMode == 0 && activeTap == 'response'" class="mt-2 overflow-auto maxHeight">
         <mat-accordion>
             <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="isPanelOpen">
                 <mat-expansion-panel-header [collapsedHeight]="'60px'">
@@ -105,14 +107,14 @@
                     </div>
 
                     <div class="overflow-auto h-[125px]">
-                        <div [ngClass]="{'bg-slate-200': currentIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
+                        <div [ngClass]="{'clickOnList': currentIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
 
                             <div class="flex w-full px-3 justify-between">
                                 <p class="font-semibold">{{entity.value[0].value}}</p>
                                 <div class="flex items-center gap-1">
                                     <mat-checkbox *ngIf="entity.entityType == 'frame'" labelPosition="before" [(ngModel)]="SeLectedNode.response.objectEntitiesValues[i].negative" class="text-orange-500 mb-2 text-base custom-checkbox" color="primary">Neg : </mat-checkbox>
 
-                                    <button class=" font-semibold"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
+                                    <button matTooltip="Add New Event" class=" font-semibold" (click)="AddFrame(entity, i); $event.stopPropagation()"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
                                     <button (click)="deteteFact(entity)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
                                 </div>
 
@@ -138,7 +140,7 @@
                     </div>
 
                     <div class="overflow-auto h-[125px]">
-                        <div [ngClass]="{'bg-slate-200': currentItemIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
+                        <div [ngClass]="{'clickOnList': currentItemIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList2(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
 
                             <div class="flex w-full px-3 justify-between">
                                 <p class="font-semibold">{{entity.value[0].value}}</p>
