@@ -40,7 +40,6 @@ export class SettingsComponent implements OnInit {
     this.route.parent?.parent?.paramMap.subscribe(params => {
     this.chatbotId = params.get('projectid');
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    this.intiateForm()
     this.getConfigs()
     });
   }
@@ -71,6 +70,7 @@ export class SettingsComponent implements OnInit {
     this._ragKnowledgeBaseService.getConfigs(body).subscribe({
       next: (res: any) => {
         this.configs = res.configs
+        this.intiateForm()
       },
       error: (err) => {
         console.error('API Error:', err);
