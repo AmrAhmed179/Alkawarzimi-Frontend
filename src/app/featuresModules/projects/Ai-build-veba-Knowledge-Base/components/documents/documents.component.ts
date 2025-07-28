@@ -102,6 +102,7 @@ export class DocumentsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
+        "projectId":"",
         "mode": "test"
       }
     }
@@ -123,6 +124,7 @@ export class DocumentsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
+        "projectId":"",
         "mode": "test"
       }
     }
@@ -178,6 +180,7 @@ export class DocumentsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
+        "projectId":"",
         "mode": "test"
       }
     }
