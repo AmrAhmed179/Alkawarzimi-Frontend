@@ -101,4 +101,20 @@ export class DashboardService {
     }
     return this.http.put(environment.URLS.RestorProjects,{params:parm})
   }
+
+  GetAllAiModels(){
+
+    return this.http.get(environment.URLS.GetAllAImodels)
+  }
+
+  SaveAIModel(body){
+
+    return this.http.post(environment.URLS.SaveAIModel,body)
+  }
+   deleteProvider(id){
+    let body = {
+      id:id
+    }
+    return this.http.post(environment.URLS.DeleteProvider,body)
+  }
 }

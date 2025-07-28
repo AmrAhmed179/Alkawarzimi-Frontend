@@ -46,22 +46,22 @@ export class AdminComponent implements OnInit {
   }
 
   createNavigation(user) {
-
+    debugger
 
     this.navigationService.items = [];
 
-    if (user.role == "System Admin") {
-      this.navigationService.items.push({
-        type: "link",
-        label: "home",
-        route: "./home",
-        icon: "mat:home",
-        routerLinkActiveOptions: { exact: true },
-        breadCrumbs: ["الرئيسية"],
-      });
+    // if (user.role == "System Admin") {
+    //   this.navigationService.items.push({
+    //     type: "link",
+    //     label: "home",
+    //     route: "./home",
+    //     icon: "mat:home",
+    //     routerLinkActiveOptions: { exact: false },
+    //     breadCrumbs: ["الرئيسية"],
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
     // this.navigationService.items.push({
     //   type: "link",
     //   label: "home",
@@ -79,35 +79,35 @@ export class AdminComponent implements OnInit {
         type: "link",
         label: "User Profile",
         route: "userprofile",
-        icon: "mat:dinner_dining",
+        icon: "mat:person",
       },
       {
         type: "link",
         label: "Dashboard",
         route: "dashboard",
-        icon: "mat:dinner_dining",
+        icon: "mat:dashboard",
     },{
     type: "dropdown",
       label: "Bot Developer",
-      icon: "mat:settings",
+      icon: "mat:supervisor_account",
       children: [
         {
           type: "link",
           label: "All Bot-Developer",
           route: "allBotDeveloper",
-          icon: "mat:people",
+          // icon: "mat:people",
         },
         {
           type: "link",
           label: "Add Bot-Developer",
           route: "addBotDeveloper",
-          icon: "mat:people",
+          // icon: "mat:people",
         },
         {
           type: "link",
           label: "Attache Bot-Developer To Projects",
           route: "addchBotDeveloperToProject",
-          icon: "mat:people",
+          // icon: "mat:people",
         },
       ],
     },
@@ -121,13 +121,13 @@ export class AdminComponent implements OnInit {
             type: "link",
             label: "Delete Projects",
             route: "deleteproject",
-            icon: "mat:people",
+            // icon: "mat:people",
           },
           {
             type: "link",
             label: "Update Domain Data",
             route: "updatedomaindata",
-            icon: "mat:people",
+            // icon: "mat:people",
           },
         ],
       },
@@ -135,7 +135,7 @@ export class AdminComponent implements OnInit {
         type: "link",
         label: "System test",
         route: "./users",
-        icon: "mat:people",
+        icon: "mat:build",
       },
       {
         type: "link",
@@ -149,6 +149,13 @@ export class AdminComponent implements OnInit {
         route: "./users",
         icon: "mat:people",
       },
+      {
+        type: "link",
+        label: "AIModels",
+        route: "./AIModels",
+        icon: "mat:developer_board",
+        // breadCrumbs: ["الإعدادت", "المستخدمين"],
+      }
       )
     }
 
@@ -160,63 +167,63 @@ export class AdminComponent implements OnInit {
         type: "link",
         label: "User Profile",
         route: "userprofile",
-        icon: "mat:dinner_dining",
-        breadCrumbs: ["المحتوى", "المطعم"],
+        icon: "mat:person",
+        // breadCrumbs: ["المحتوى", "المطعم"],
       },
       {
         type: "link",
         label: "Dashboard",
         route: "dashboard",
-        icon: "mat:dinner_dining",
-        breadCrumbs: ["المحتوى", "المطعم"],
+        icon: "mat:dashboard",
+        // breadCrumbs: ["المحتوى", "المطعم"],
     },{
     type: "dropdown",
       label: "Bot Developer",
-      icon: "mat:settings",
+      icon: "mat:supervisor_account",
 
       children: [
         {
           type: "link",
           label: "All Bot-Developer",
           route: "allBotDeveloper",
-          icon: "mat:people",
-          breadCrumbs: ["الإعدادت", "المستخدمين"],
+          // icon: "mat:people",
+          // breadCrumbs: ["الإعدادت", "المستخدمين"],
         },
         {
           type: "link",
           label: "Add Bot-Developer",
           route: "addBotDeveloper",
-          icon: "mat:people",
-          breadCrumbs: ["الإعدادت", "المستخدمين"],
+          // icon: "mat:people",
+          // breadCrumbs: ["الإعدادت", "المستخدمين"],
         },
         {
           type: "link",
           label: "Attache Bot-Developer To Projects",
           route: "addchBotDeveloperToProject",
-          icon: "mat:people",
-          breadCrumbs: ["الإعدادت", "المستخدمين"],
+          // icon: "mat:people",
+          // breadCrumbs: ["الإعدادت", "المستخدمين"],
         },
       ],
     },
     {
       type: "dropdown",
         label: "Account",
-        icon: "mat:settings",
+        icon: "mat:account_balance",
 
         children: [
           {
             type: "link",
             label: "All Accounts",
             route: "allcompanies",
-            icon: "mat:people",
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
+            // icon: "mat:people",
+            // breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
           {
             type: "link",
             label: "Create Account",
             route: "createcompanies",
-            icon: "mat:people",
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
+            // icon: "mat:people",
+            // breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
         ],
       },
@@ -230,15 +237,15 @@ export class AdminComponent implements OnInit {
             type: "link",
             label: "Delete Projects",
             route: "deleteproject",
-            icon: "mat:people",
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
+            // icon: "mat:people",
+            // breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
           {
             type: "link",
             label: "Update Domain Data",
             route: "updatedomaindata",
-            icon: "mat:people",
-            breadCrumbs: ["الإعدادت", "المستخدمين"],
+            // icon: "mat:people",
+            // breadCrumbs: ["الإعدادت", "المستخدمين"],
           },
         ],
       },
@@ -246,8 +253,15 @@ export class AdminComponent implements OnInit {
         type: "link",
         label: "System test",
         route: "./users",
-        icon: "mat:people",
-        breadCrumbs: ["الإعدادت", "المستخدمين"],
+        icon: "mat:build",
+        // breadCrumbs: ["الإعدادت", "المستخدمين"],
+      },
+      {
+        type: "link",
+        label: "AIModels",
+        route: "./AIModels",
+        icon: "mat:developer_board",
+        // breadCrumbs: ["الإعدادت", "المستخدمين"],
       }
       )
     }
@@ -261,7 +275,7 @@ export class AdminComponent implements OnInit {
         type: "link",
         label: "User Profile",
         route: "userprofile",
-        icon: "mat:dinner_dining",
+        icon: "mat:person",
       },
       {
         type: "link",
@@ -275,7 +289,15 @@ export class AdminComponent implements OnInit {
         route: "./users",
         icon: "mat:people",
       },
+      {
+        type: "link",
+        label: "AIModels",
+        route: "./AIModels",
+        icon: "mat:developer_board",
+        // breadCrumbs: ["الإعدادت", "المستخدمين"],
+      }
       )
     }
+    this.navigationService.triggerItemsChange();
 }
 }

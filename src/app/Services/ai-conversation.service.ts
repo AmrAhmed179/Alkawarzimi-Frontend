@@ -60,7 +60,20 @@ export class AiConversationService {
       chatbotId: chatbotId
     }
       return this.http.get(environment.URLS.GetAgents,  { params: parm })
+  }
+  GetAgentDataFromAgentTemplete(chatbotId,agent_id, provider, model){
+         let parm = {
+      chatbotId: chatbotId,
+      agent_id: agent_id,
+      provider: provider,
+      model: model
     }
+      return this.http.get(environment.URLS.GetAgentDataFromAgentTemplete,  { params: parm })
+  }
+  GetAIModels(){
+      return this.http.get(environment.URLS.GetAIModels)
+  }
+
   DeleteAgent(_id){
          let parm = {
       _id: _id

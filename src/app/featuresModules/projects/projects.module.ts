@@ -177,6 +177,7 @@ import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/do
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/chat.component";
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
+import { ConfirmationForAgentTemplteSearchComponent } from './ai-conversation/AI-Agent/agents/confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
 
 @NgModule({
   declarations: [
@@ -341,7 +342,8 @@ import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/set
     DocumentsComponent,
     ChatComponent,
     IndexDetailsComponent,
-    SettingsComponent
+    SettingsComponent,
+    ConfirmationForAgentTemplteSearchComponent
   ],
   imports: [
     TreeModule,

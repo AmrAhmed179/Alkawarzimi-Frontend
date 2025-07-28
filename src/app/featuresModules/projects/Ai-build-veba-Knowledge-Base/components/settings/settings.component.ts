@@ -61,12 +61,12 @@ export class SettingsComponent implements OnInit {
   }
   getConfigs(){
     let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
-    "chatbotId": this.chatbotId,
-    "projectId":"",
-    "mode": "test"
+        "deployment": "Local",
+        "key": "",
+        "url": "http://weaviate:8080",
+        "chatbotId": this.chatbotId,
+        "projectId":"",
+        "mode": "test",
     }
     this._ragKnowledgeBaseService.getConfigs(body).subscribe({
       next: (res: any) => {
@@ -82,13 +82,15 @@ export class SettingsComponent implements OnInit {
 
   saveConfigs(){
     let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
-    "chatbotId": this.chatbotId,
-    "projectId":"",
-    "mode": "test",
-    configs:this.form.value
+      "credentials":{
+        "deployment": "Local",
+        "key": "",
+        "url": "http://weaviate:8080",
+        "chatbotId": this.chatbotId,
+        "projectId":"",
+        "mode": "test",
+      },
+    ragConfig:this.form.value
     }
     this._ragKnowledgeBaseService.save_configs(body).subscribe({
       next: (res: any) => {

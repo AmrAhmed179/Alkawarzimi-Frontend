@@ -15,6 +15,7 @@ import { DeleteProjectComponent } from "./pages/delete-project/delete-project.co
 import { HomePage } from "./pages/home/home.page";
 import { UpdateDomainDataComponent } from "./pages/update-domain-data/update-domain-data.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
+import { AIModelsComponent } from "./pages/aimodels/aimodels.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "dashboard", pathMatch: "full"},
@@ -43,6 +44,7 @@ const routes: Routes = [
           ] },
           { path: "createcompanies", component: CreateCompanyComponent },
           { path: "allcompanies/:id", component: CompanyDetailsComponent },
+          { path: "AIModels", component: AIModelsComponent },
 
 
 

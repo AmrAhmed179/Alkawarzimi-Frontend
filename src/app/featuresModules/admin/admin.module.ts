@@ -22,6 +22,7 @@ import { CreateCompanyComponent } from './pages/create-company/create-company.co
 import { EditCompanyComponent } from './pages/edit-company/edit-company.component';
 import { CompanyDetailsComponent } from './pages/company-details/company-details.component';
 import { DialogEditUserComponent } from './pages/dialog-edit-user/dialog-edit-user.component';
+import { AIModelsComponent } from './pages/aimodels/aimodels.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { DialogEditUserComponent } from './pages/dialog-edit-user/dialog-edit-us
     EditCompanyComponent,
     CompanyDetailsComponent,
     DialogEditUserComponent,
+    AIModelsComponent,
 
   ],
   imports: [

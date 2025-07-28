@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators, FormControl } from '@angular/forms';
 import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ProjectOptionsModel, Routing } from 'src/app/core/models/options-model';
+import { AIModels, Models } from 'src/app/Models/Ai-Agent/toolInfo';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
 
@@ -12,8 +13,10 @@ import { OptionsServiceService } from 'src/app/Services/options-service.service'
 })
 export class BrainComponent implements OnInit {
 
- onDestroy$: Subject<void> = new Subject();
+   onDestroy$: Subject<void> = new Subject();
+   ProviderModels:Models[] = []
    projectOptions:ProjectOptionsModel = null
+   aIModelsProvider:AIModels[] = []
    brainForm:FormGroup
    tasks:any[] = []
     isEntityExpand:boolean = false
@@ -28,7 +31,10 @@ export class BrainComponent implements OnInit {
      this._optionsService.projectOptions$.pipe(takeUntil(this.onDestroy$)).subscribe((res:ProjectOptionsModel)=>{
        if(res){
          this.projectOptions = res
-           this.initiateForm()
+         debugger
+          this.GetAIModelsProvider()
+
+
            if(this.tasks.length < 1)
              this.GetAgentsTasks()
        }
@@ -43,10 +49,14 @@ export class BrainComponent implements OnInit {
     }
 
    initiateForm(){
+    debugger
+     const providerModel = this.aIModelsProvider.find(x => x.provider == this.projectOptions.aiAgent.provider);
+     this.ProviderModels = providerModel ? providerModel.models : [];
      this.brainForm = this.fb.group({
       //  nluMode: [this.projectOptions.nluMode],
        aiAgent : this.fb.group({
         model:[this.projectOptions.aiAgent.model],
+        provider:[this.projectOptions.aiAgent?.provider || ''],
         task:[this.projectOptions.aiAgent.task],
         intentHeading:[this.projectOptions.aiAgent.intentHeading],
         intentRoutying:[this.projectOptions.aiAgent.intentRoutying],
@@ -59,7 +69,13 @@ export class BrainComponent implements OnInit {
      })
 
    }
-
+  GetAIModelsProvider(){
+    debugger
+     this._aiConversationService.GetAIModels().subscribe((res:any)=>{
+         this.aIModelsProvider = res
+         this.initiateForm()
+     })
+  }
 
   createRoutingGroup(route?: Routing): FormGroup {
     return this.fb.group({
@@ -93,6 +109,7 @@ export class BrainComponent implements OnInit {
       });
       // this.projectOptions.nluMode = this.brainForm.get('nluMode')?.value;
       this.projectOptions.aiAgent.model = this.brainForm.get('aiAgent.model')?.value;
+      this.projectOptions.aiAgent.provider = this.brainForm.get('aiAgent.provider')?.value;
       this.projectOptions.aiAgent.prompt = this.constractThePrompt();
       this.projectOptions.aiAgent.routing = this.brainForm.get('aiAgent.routing')?.value;
       this.projectOptions.aiAgent.task = this.brainForm.get('aiAgent.task')?.value;
@@ -101,6 +118,9 @@ export class BrainComponent implements OnInit {
       this.projectOptions.aiAgent.entity = this.brainForm.get('aiAgent.entity')?.value;
       this.projectOptions.aiAgent.instructions = this.brainForm.get('aiAgent.instructions')?.value;
       this.projectOptions.aiAgent.example = this.brainForm.get('aiAgent.example')?.value;
+
+      const providerModel = this.aIModelsProvider.find(x => x.provider == this.projectOptions.aiAgent.provider);
+      this.ProviderModels = providerModel ? providerModel.models : [];
       this._optionsService.projectOptions$.next(this.projectOptions)
    }
    getIntentRoutingValue(){

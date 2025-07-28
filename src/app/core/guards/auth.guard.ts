@@ -58,6 +58,7 @@ export class AuthGuard
   }
 
   checkUserLogin(route: ActivatedRouteSnapshot, url: string): boolean {
+    debugger
     console.log(route);
     let checked = false;
     if (this._UsersService.USER_ROLE) {

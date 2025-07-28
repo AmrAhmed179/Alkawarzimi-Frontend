@@ -4,8 +4,9 @@
         </div>
         <div *ngFor="let agent of agents,let i = index" class="flex justify-between items-center bg-slate-200 p-2 my-1 rounded-sm min-h-8 hover:bg-[#f3a649]" (click)="selectedAgent(i)" [ngClass]="{'selectedAgentBg': agent._id == SelectedAgent?._id}">
             <p class="text-base">{{agent.name}} </p>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
                 <mat-slide-toggle matTooltip="Main Agent" (change)="setMainAgent(agent)" (click)="$event.stopPropagation()" [(ngModel)]="agent.mainAgent"></mat-slide-toggle>
+                <button *ngIf="agent._id == SelectedAgent?._id" class="rounded-sm py-1 px-2 bg-[#FF7F27] text-base text-white hover:bg-slate-200 hover:text-black" (click)="onSubmit()">Save</button>
                 <button (click)="deleteAgent(i, agent._id, $event)" matTooltip="Delete Agent"><mat-icon class="icon-lg" svgIcon="mat:delete" ></mat-icon></button>
             </div>
 
@@ -14,11 +15,11 @@
 
     <div id="agentFormScroll" class="col-span-3 border h-full px-3 pb-3 overflow-auto ">
 
-        <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="form-container h-full ">
+        <form *ngIf="form" [formGroup]="form" class="form-container h-full ">
             <!-- ////// -->
-            <div [ngClass]="{'hideItems': isExpand == true}" class="sticky top-0 z-10 bg-[#f5f5f8] p-2"> <button class="mb-4" mat-raised-button color="primary" type="submit">Save Agent</button>
-            </div>
-            <div class="grid grid-cols-3 gap-4">
+            <!-- <div [ngClass]="{'hideItems': isExpand == true}" class="sticky top-0 z-10 bg-[#f5f5f8] p-2"> <button class="mb-4" mat-raised-button color="primary" type="submit">Save Agent</button>
+            </div> -->
+            <div class="grid grid-cols-3 gap-4 mt-4">
                 <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full ">
                     <mat-label>Name</mat-label>
                     <input matInput formControlName="name" />
@@ -26,14 +27,21 @@
 
 
                 <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full">
-                    <mat-label>Model</mat-label>
-                    <mat-select formControlName="model">
-                        <mat-option value="gpt-4o-mini">gpt-4o-mini</mat-option>
-                        <mat-option value="gpt-4o">gpt-4o</mat-option>
-                        <mat-option value="gpt-4.1-nano">gpt-4.1-nano</mat-option>
-                        <mat-option value="gpt-4.1-mini">gpt-4.1-mini</mat-option>
-                        <mat-option value="gpt-4.1">gpt-4.1</mat-option>
+                    <mat-label>Provider</mat-label>
+                    <mat-select (selectionChange)="selectProvider($event)" formControlName="provider">
+                        <mat-option *ngFor="let provider of aIModelsProvider" [value]="provider.provider">{{provider.provider}}</mat-option>
                     </mat-select>
+                </mat-form-field>
+                <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full">
+                    <mat-label>Model</mat-label>
+                    <mat-select (selectionChange)="selectModel($event)" formControlName="model">
+                        <mat-option *ngFor="let model of ProviderModels" [value]="model.model">{{model.model}}</mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full col-span-2 ">
+                    <mat-label>ApiKey</mat-label>
+                    <input type="text" matInput formControlName="apiKey" />
                 </mat-form-field>
                 <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill" class="w-full ">
                     <mat-label>Max Memory Length</mat-label>

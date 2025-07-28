@@ -5,11 +5,12 @@ const whatsappServerUrl = "https://alkhwarizmi.xyz:5050/";
 const webHookUrl = "/";
 const BaseUrl = "/";
 const messenger = "https://orchestrator.alkhwarizmi.xyz/";
+const VerbaBaseUrl = "https://verba.alkhwarizmi.run/";
 // const ResourceHandler = "http://localhost:52848/ResourceHandler";
 const ResourceHandler = "https://resources.alkhwarizmi.xyz/ResourceHandler";
 export const environment = {
   production: true,
-
+  VerbaBaseUrl: "https://verba.alkhwarizmi.run/",
   URLS: {
     BASE_URL: `${serverUrl}`,
     BASE_API_URL: `${serverUrl}Api/`,
@@ -229,6 +230,10 @@ export const environment = {
     GetprojectsInGenerateDomainData: `${serverUrl}api/GenerateDomainData/GetProjects`,
     GetDeletedProjects: `${serverUrl}api/Process/GetDeletedProjects`,
     RestorProjects: `${serverUrl}api/Process/RestorProjects`,
+    GetAllAImodels: `${serverUrl}AIModels/GetAll`,
+    SaveAIModel: `${serverUrl}AIModels/Save`,
+    DeleteProvider: `${BaseUrl}AIModels/DeleteProvider`,
+
     //////////// End Dashboard Url //////////////
 
     ////////////analyticalUrl //////////////////
@@ -259,18 +264,20 @@ export const environment = {
     GetTools: `${BaseUrl}AiAgent/GetTools`,
     EditTool: `${BaseUrl}AiAgent/EditTool`,
     GetAgents: `${BaseUrl}AiAgent/GetAgents`,
+    GetAIModels: `${BaseUrl}AiAgent/GetAIModels`,
+    GetAgentDataFromAgentTemplete: `${BaseUrl}AiAgent/GetAgentDataFromAgentTemplete`,
     saveAgents: `${BaseUrl}AiAgent/saveAgent`,
     SetMainAgent: `${BaseUrl}AiAgent/SetMainAgent`,
     DeleteAgent: `${BaseUrl}AiAgent/DeleteAgent`,
     GetAgentsTasks: `${BaseUrl}Intents/GetTasks`,
-    GetAllDocuments: `https://verba.alkhwarizmi.online/api/get_all_documents`,
-    get_content: `https://verba.alkhwarizmi.online/api/get_content`,
-    get_chunks: `https://verba.alkhwarizmi.online/api/get_chunks`,
-    delete_document: `https://verba.alkhwarizmi.online/api/delete_document`,
-    Createindex: `https://verba.alkhwarizmi.online/kh/api/create_index`,
-    get_index_status: `https://verba.alkhwarizmi.online/kh/api/get_index_status`,
-    get_configs: `https://verba.alkhwarizmi.online/kh/api/get_configs`,
-    save_configs: `https://verba.alkhwarizmi.online/kh/api/save_configs`,
+    GetAllDocuments: `${VerbaBaseUrl}api/get_all_documents`,
+    get_content: `${VerbaBaseUrl}api/get_content`,
+    get_chunks: `${VerbaBaseUrl}api/get_chunks`,
+    delete_document: `${VerbaBaseUrl}api/delete_document`,
+    Createindex: `${VerbaBaseUrl}kh/api/create_index`,
+    get_index_status: `${VerbaBaseUrl}kh/api/get_index_status`,
+    get_configs: `${VerbaBaseUrl}kh/api/get_configs`,
+    save_configs: `${VerbaBaseUrl}kh/api/save_configs`,
     //#endregion
 
     ////////////Knowledge Graph////////////////

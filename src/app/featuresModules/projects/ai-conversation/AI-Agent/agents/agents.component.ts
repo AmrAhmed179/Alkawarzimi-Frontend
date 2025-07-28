@@ -3,11 +3,12 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
-import { AIToolInfo, Agents, Routing } from 'src/app/Models/Ai-Agent/toolInfo';
+import { AIModels, AIToolInfo, Agents, Models, Routing } from 'src/app/Models/Ai-Agent/toolInfo';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { ObjectId } from 'bson';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
+import { ConfirmationForAgentTemplteSearchComponent } from './confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
 
 @Component({
   selector: 'vex-agents',
@@ -24,9 +25,14 @@ export class AgentsComponent implements OnInit {
     conversationsList:string[] = []
     selectedSession
     aIToolsInfo:AIToolInfo[]
+    aIModelsProvider:AIModels[] = []
+    selectedProvider:AIModels
+    ProviderModels:Models[] = []
+    selectedModel:string
     tasks:any[] = []
     SelectedAgent:Agents
     agents:Agents[] = []
+    agentFromAgentTemplete:Agents
     selectedAgentId:string = 'all'
     isExpand:boolean = false
     expandName:string = ''
@@ -43,28 +49,34 @@ export class AgentsComponent implements OnInit {
               this.projectId = project._id;}
               this.GetAgents()
               this.GetAgentsTasks()
+              this.GetAIModelsProvider()
             }
             )
     }
 
-  intiateForm(){
+  intiateForm(SelectedAgent:Agents){
+    if(SelectedAgent.provider)
+     this.ProviderModels =   this.aIModelsProvider.find(x=>x.provider == SelectedAgent.provider).models
+
     this.form = this.fb.group({
-      _id: [this.SelectedAgent._id?this.SelectedAgent._id :new ObjectId().toHexString()],
-      name: [this.SelectedAgent.name, Validators.required],
-      chatbotId: [this.SelectedAgent.chatbotId? this.SelectedAgent.chatbotId : this.projectId, Validators.required],
-      model: [this.SelectedAgent.model, Validators.required],
-      prompt: [this.SelectedAgent.prompt],
-      mainAgent: [this.SelectedAgent.mainAgent],
-      maxMemoryLength: [this.SelectedAgent.maxMemoryLength],
-      routing: this.fb.array(this.SelectedAgent.routing?.map(route => this.createRoutingGroup(route)) || []),
+      _id: [SelectedAgent._id? SelectedAgent._id :new ObjectId().toHexString()],
+      name: [SelectedAgent.name, Validators.required],
+      chatbotId: [SelectedAgent.chatbotId? SelectedAgent.chatbotId : this.projectId, Validators.required],
+      model: [SelectedAgent.model, Validators.required],
+      prompt: [SelectedAgent.prompt],
+      provider: [SelectedAgent.provider],
+      apiKey: [SelectedAgent.apiKey],
+      mainAgent: [SelectedAgent.mainAgent],
+      maxMemoryLength: [SelectedAgent.maxMemoryLength],
+      routing: this.fb.array(SelectedAgent.routing?.map(route => this.createRoutingGroup(route)) || []),
             // / 👇 Now promptSections is a nested FormGroup
     promptSections: this.fb.group({
-    identity: [this.SelectedAgent.promptSections?.identity],
-    responseStyle: [this.SelectedAgent.promptSections?.responseStyle],
-    functionCallRules: [this.SelectedAgent.promptSections?.functionCallRules],
-    conversationFlow: [this.SelectedAgent.promptSections?.conversationFlow],
-    crtitcalNote: [this.SelectedAgent.promptSections?.crtitcalNote],
-    fewShotExamples: [this.SelectedAgent.promptSections?.fewShotExamples]
+    identity: [SelectedAgent.promptSections?.identity],
+    responseStyle: [SelectedAgent.promptSections?.responseStyle],
+    functionCallRules: [SelectedAgent.promptSections?.functionCallRules],
+    conversationFlow: [SelectedAgent.promptSections?.conversationFlow],
+    crtitcalNote: [SelectedAgent.promptSections?.crtitcalNote],
+    fewShotExamples: [SelectedAgent.promptSections?.fewShotExamples]
   })
     });
 
@@ -105,10 +117,20 @@ export class AgentsComponent implements OnInit {
    selectedAgent(index){
      this.SelectedAgent = this.agents[index]
      this.selectedIndex = index
-     this.intiateForm();
+     this.intiateForm(this.SelectedAgent);
    }
+  selectProvider(event){
+    debugger
+    this.selectedProvider = event.value
+    this.ProviderModels =   this.aIModelsProvider.find(x=>x.provider == event.value).models
+  }
+  selectModel(event){
+        debugger
 
-     deleteAgent(index,_id, event: Event): void {
+    this.selectedModel = event.value
+    this.GetAgentDataFromAgentTemplete()
+  }
+  deleteAgent(index,_id, event: Event): void {
     event.stopPropagation();
 
     const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
@@ -126,6 +148,7 @@ export class AgentsComponent implements OnInit {
       }
     });
   }
+
 
   scrollToElement(id){
     debugger
@@ -147,6 +170,7 @@ export class AgentsComponent implements OnInit {
   }, 100);
   }
    addAgent(){
+    debugger
     this.agents.push(new Agents())
     this.selectedAgent(this.agents.length -1)
    }
@@ -176,6 +200,32 @@ export class AgentsComponent implements OnInit {
          this.agents = res
      })
    }
+
+  GetAIModelsProvider(){
+     this._aiConversationService.GetAIModels().subscribe((res:any)=>{
+         this.aIModelsProvider = res
+     })
+  }
+ GetAgentDataFromAgentTemplete(){
+     this._aiConversationService.GetAgentDataFromAgentTemplete(this.projectId, this.SelectedAgent._id, this.form.get('provider')?.value , this.selectedModel).subscribe((res:any)=>{
+         this.agentFromAgentTemplete = res
+         debugger
+         if(res){
+           const dialogRef = this.dialog.open(ConfirmationForAgentTemplteSearchComponent, {
+            width: '300px',
+            data: { message: 'Existing data is available for this agent with the selected provider and model. Do you want to bind this data to the agent?' }
+          });
+
+              dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                  const agentTemplt:Agents =  res
+                  agentTemplt._id = res.agent_id
+                  this.intiateForm(res)
+                }
+              });
+         }
+     })
+  }
   buildPromptFromSections(): void {
     const promptSections = this.form.get('promptSections')?.value;
 

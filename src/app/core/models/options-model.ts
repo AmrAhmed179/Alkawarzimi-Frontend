@@ -40,6 +40,7 @@ export class FactCategory {
 }
 export class AiAgent {
   model: string;
+  provider: string;
   prompt:   string;
   routing:Routing[] = []
   task: string;

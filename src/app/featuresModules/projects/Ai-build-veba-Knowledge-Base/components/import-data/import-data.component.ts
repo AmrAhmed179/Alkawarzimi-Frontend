@@ -8,6 +8,7 @@ import { WebSocketService } from 'src/app/Services/web-socket-service.service';
 import { FileImportChunk } from 'src/app/Models/Ai-Agent/Rag';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class ImportDataComponent implements OnInit {
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     //this.get_index_status()
     });
-    this.wsService.connect('wss://verba.alkhwarizmi.online/ws/import_files');
+    this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
 
     this.wsService.onMessage().subscribe({
       next: (message) => this.handleServerMessage(message),
@@ -62,6 +63,7 @@ export class ImportDataComponent implements OnInit {
         key: '',
         url: 'http://weaviate:8080',
         chatbotId: this.chatbotId,
+        projectId:"",
         mode: 'test'
       };
 
@@ -185,6 +187,7 @@ export class ImportDataComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
+    "projectId":"",
     "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
@@ -204,6 +207,7 @@ export class ImportDataComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
+    "projectId":"",
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
