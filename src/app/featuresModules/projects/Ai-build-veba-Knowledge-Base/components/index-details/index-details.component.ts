@@ -58,6 +58,7 @@ export class IndexDetailsComponent implements OnInit {
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
       next: (res: any) => {
+        this._ragKnowledgeBaseService.indexStaus$.next(res.status)
         this.indexStatus = res.status
       },
       error: (err) => {

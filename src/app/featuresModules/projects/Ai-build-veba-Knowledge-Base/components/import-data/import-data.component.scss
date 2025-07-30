@@ -114,3 +114,40 @@
     font-size: 14px;
     color: #555;
 }
+
+.Not_Imported {}
+
+.IMPORTED {
+    background-color: #4caf50;
+    /* Green – Success */
+}
+
+.STARTING {
+    background-color: #2196f3;
+    /* Blue – Starting up */
+}
+
+.LOADING {
+    background-color: #03a9f4;
+    /* Light Blue – Loading resources */
+}
+
+.EMBEDDING {
+    background-color: #ff9800;
+    /* Orange – Embedding in progress */
+}
+
+.INGESTING {
+    background-color: #e79924;
+    /* Yellow – Ingesting data */
+}
+
+.CHUNKING {
+    background-color: #9c27b0;
+    /* Purple – Chunking text */
+}
+
+.FAILD {
+    background-color: #f44336;
+    /* Red – Failure */
+}

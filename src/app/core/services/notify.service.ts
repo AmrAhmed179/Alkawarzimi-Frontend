@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subject } from "rxjs";
-export type NotificationType = 'success' | 'error';
+export type NotificationType = 'success' | 'error' | 'CHUNKING'|'INGESTING'|'EMBEDDING'|'LOADING' | 'STARTING';
 
 export interface Notification {
   message: string;
@@ -34,10 +34,24 @@ export class NotifyService {
   private notificationSubject = new Subject<Notification>();
   notification$ = this.notificationSubject.asObservable();
 
+  showSTARTING(message: string) {
+    this.notificationSubject.next({ message, type: 'STARTING' });
+  }
+  showLOADING(message: string) {
+    this.notificationSubject.next({ message, type: 'LOADING' });
+  }
+  showINGESTING(message: string) {
+    this.notificationSubject.next({ message, type: 'INGESTING' });
+  }
+   showEMBEDDING(message: string) {
+    this.notificationSubject.next({ message, type: 'EMBEDDING' });
+  }
   showSuccess(message: string) {
     this.notificationSubject.next({ message, type: 'success' });
   }
-
+  showCHUNKING(message: string) {
+    this.notificationSubject.next({ message, type: 'CHUNKING' });
+  }
   showError(message: string) {
     this.notificationSubject.next({ message, type: 'error' });
   }

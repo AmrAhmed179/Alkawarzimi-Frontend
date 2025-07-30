@@ -1,5 +1,4 @@
 <div class="grid grid-cols-11 gap-4 p-4 containerHight overflow-auto">
-
     <div class="col-span-3 border p-3">
         <div class="flex justify-between gap-2 mb-2 items-center">
             <div class="flex gap-2">
@@ -46,7 +45,10 @@
                 <!-- <p> <span>Creted At:</span> {{ new Date(+message.createdAt.replace(/\D/g,'')) | date:'medium' }}</p> -->
                 <p class="text-xs text-gray-600 font-semibold"> <span>Step: </span>{{ message?.step}}</p>
                 <p class="text-xs text-gray-600 font-semibold"> <span>CretedAt: </span>{{ message?.createdAt | parseDate | date:'medium' }}</p>
-                <p [ngClass]="{'redColor':message.elapsedTime != 0}" class="text-xs text-gray-600 font-semibold"> <span>Cost:</span> {{message?.cost | number:'1.0-7'}}</p>
+                <p [ngClass]="{'redColor':message.cost != 0}" class="text-xs text-gray-600 font-semibold"> <span>Cost:</span> {{message?.cost | number:'1.0-7'}}</p>
+                <p *ngIf="message?.usage != null" [ngClass]="{'redColor':message?.usage != null}" class="text-xs text-gray-600 font-semibold"> <span>CachedInputTokenCount:</span> {{message?.usage?.CachedInputTokenCount | number:'1.0-7'}}</p>
+                <p *ngIf="message?.usage != null" [ngClass]="{'redColor':message?.usage != null}" class="text-xs text-gray-600 font-semibold"> <span>OutputTokenCount:</span> {{message?.usage?.OutputTokenCount | number:'1.0-7'}}</p>
+                <p *ngIf="message?.usage != null" [ngClass]="{'redColor':message?.usage != null}" class="text-xs text-gray-600 font-semibold"> <span>InputTokenCount:</span> {{message?.usage?.InputTokenCount | number:'1.0-7'}}</p>
                 <p [ngClass]="{'redColor':message.elapsedTime != 0}" class="text-xs text-gray-600 font-semibold"> <span>ElapsedTime: </span>{{message?.elapsedTime | number:'1.0-7'}}</p>
             </div>
         </div>

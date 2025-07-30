@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -7,6 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class RagKnowledgeBaseService {
 
+  indexStaus$ = new BehaviorSubject<any>(null)
   constructor(private http:HttpClient) { }
   getAllDocuments(body){
     return this.http.post(environment.URLS.GetAllDocuments,body)
@@ -33,4 +35,7 @@ export class RagKnowledgeBaseService {
      return this.http.post(environment.URLS.save_configs,body)
   }
 
+  indexStaus(){
+    return this.indexStaus$.asObservable()
+  }
 }

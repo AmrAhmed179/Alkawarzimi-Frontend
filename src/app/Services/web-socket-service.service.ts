@@ -1,6 +1,6 @@
 // web-socket.service.ts
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 
 export interface FileUploadChunk {
   chunk: string; // Stringified FileChunkData
@@ -56,7 +56,7 @@ export interface RAGConfig {
 })
 export class WebSocketService {
   private socket!: WebSocket;
-  private messageSubject = new Subject<any>();
+  private messageSubject = new BehaviorSubject<any>(null);
   private readonly CHUNK_SIZE = 20000; // 30KB chunks
 
   constructor() { }
@@ -76,6 +76,7 @@ export class WebSocketService {
 
     this.socket.onmessage = (event) => {
       try {
+        debugger
         const message = JSON.parse(event.data);
         this.messageSubject.next(message);
       } catch (error) {

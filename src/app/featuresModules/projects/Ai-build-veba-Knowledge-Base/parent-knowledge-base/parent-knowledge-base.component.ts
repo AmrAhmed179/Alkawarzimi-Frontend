@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs/dist/types';
+import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
 import { IndexDetailsComponent } from '../components/index-details/index-details.component';
@@ -17,7 +17,7 @@ import { NotifyService } from 'src/app/core/services/notify.service';
 export class ParentKnowledgeBaseComponent implements OnInit {
   chatbotId:string
   indexStatus:string
-
+  onDestroy$: Subject<void> = new Subject();
   constructor(private wsService: WebSocketService,
          private dialog:MatDialog,
          private route: ActivatedRoute,
@@ -30,6 +30,10 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     this.get_index_status()
     });
+
+    this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
+      this.indexStatus = res
+    })
 
     }
   openIndexDetalis(){
@@ -57,7 +61,8 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
       next: (res: any) => {
-        this.indexStatus = res.status
+         this._ragKnowledgeBaseService.indexStaus$.next(res.status)
+        //  this.indexStatus = res.status
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -65,5 +70,10 @@ export class ParentKnowledgeBaseComponent implements OnInit {
         this._notify.openFailureSnackBar(errorMsg);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }

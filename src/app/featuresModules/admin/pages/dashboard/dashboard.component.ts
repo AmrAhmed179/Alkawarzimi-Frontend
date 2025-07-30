@@ -52,7 +52,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getDashboardDetails(){
-
     this.dashboardService.getDashBoardDetails().subscribe((res:any)=>{
       debugger
       this.chatbotCount =res.chatbotCount;

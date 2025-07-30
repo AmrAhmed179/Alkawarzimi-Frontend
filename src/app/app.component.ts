@@ -33,7 +33,7 @@ import { NotifyService } from "./core/services/notify.service";
 })
 export class AppComponent {
   message = '';
-  type: 'success' | 'error' = 'success';
+  type: 'success' | 'error' | 'CHUNKING'|'INGESTING'|'EMBEDDING'|'LOADING' | 'STARTING' = 'success';
   projectId = "ewewqewqe";
   currentLang = "";
   direction$ = this.configService.config$.pipe(

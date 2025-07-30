@@ -36,6 +36,31 @@
     background-color: #f44336;
 }
 
+.notification.STARTING {
+    background-color: #2196f3;
+    /* Blue – Starting up */
+}
+
+.notification.LOADING {
+    background-color: #03a9f4;
+    /* Light Blue – Loading resources */
+}
+
+.notification.EMBEDDING {
+    background-color: #ff9800;
+    /* Orange – Embedding in progress */
+}
+
+.notification.INGESTING {
+    background-color: #e79924;
+    /* Yellow – Ingesting data */
+}
+
+.notification.CHUNKING {
+    background-color: #9c27b0;
+    /* Purple – Chunking text */
+}
+
 @keyframes fadeInOut {
     0% {
         opacity: 0;

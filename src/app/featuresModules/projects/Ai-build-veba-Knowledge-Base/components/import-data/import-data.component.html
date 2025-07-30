@@ -26,16 +26,16 @@
         </div>
         <div class="doc-list maxdocumentsHeight px-1">
             <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
-                <div [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
-                    <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 0"> Not Imported</p>
-                    <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 1"> Imported</p>
-                    <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == -2"> Faild</p>
+                <div [class]="file.importStatus" [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
+                    <p class="font-normal font-medium text-sm"> {{file.importStatus}}</p>
+                    <!-- <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 1"> Imported</p>
+                    <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == -2"> Faild</p> -->
                 </div>
                 <div [ngClass]="{'selectesDocBg':selectedFileIndex == i}" class="col-span-7 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
                     <p class="font-normal text-base"> {{file.name}}</p>
                 </div>
                 <div class="col-span-1 h-12 text-center rounded-md  bg-white hover:bg-slate-200">
-                    <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedFileIndex == i}" (click)="removeFile(i)">
+                    <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedFileIndex == i}" (click)="removeFile(i); $event.stopPropagation()">
       <mat-icon svgIcon="mat:delete"></mat-icon>
     </button>
                 </div>
