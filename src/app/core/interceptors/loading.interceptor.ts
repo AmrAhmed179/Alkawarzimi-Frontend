@@ -19,15 +19,29 @@ export class LoadingInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     // let url = window.location.href
     let url = request.url
+    const skipLoader = request.headers.has('skipLoader') ||
+      url.includes('GetUniqeUsersCount') ||
+      url.includes('GetOnlineUsersCount') ||
+      url.includes('GetUsersCount') ||
+      url.includes('ontologyTreeChild');
+
     // if (request.url.indexOf("SearchOrder") === -1) this.busyService.busy();
-    if (!url.includes('GetUniqeUsersCount') && !url.includes('GetOnlineUsersCount') && !url.includes('GetUsersCount') && !url.includes('ontologyTreeChild')) {
-      this.busyService.busy()
+    // if (!url.includes('GetUniqeUsersCount') && !url.includes('GetOnlineUsersCount') && !url.includes('GetUsersCount') && !url.includes('ontologyTreeChild')) {
+    //   this.busyService.busy()
+    // }
+    if (!skipLoader) {
+      this.busyService.busy();
     }
 
-    return next.handle(request).pipe(
+    const modifiedRequest = request.clone({
+      headers: request.headers.delete('skipLoader')
+    });
+    return next.handle(modifiedRequest).pipe(
       delay(700),
       finalize(() => {
-        this.busyService.idle();
+        if (!skipLoader) {
+          this.busyService.idle();
+        }
       })
     );
   }

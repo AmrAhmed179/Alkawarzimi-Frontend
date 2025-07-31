@@ -9,9 +9,14 @@
 }
 
 .maxdocumentsHeight {
+    height: calc(100vh - 330px);
+    min-height: 150px;
+    overflow: auto;
+}
+
+.maxDocumentContainer {
     height: calc(100vh - 270px);
     min-height: 200px;
-    overflow: auto;
 }
 
 .search-input {

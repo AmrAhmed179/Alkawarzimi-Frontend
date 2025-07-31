@@ -1,6 +1,6 @@
 <div class="rounded-sm border  mx-6 p-4 maxHeight">
     <div class="flex justify-end">
-        <button [disabled]="!form.valid" class="mb-4 " mat-raised-button color="primary" (click)="saveConfigs()">
+        <button [disabled]="!form.valid" class="mb-4 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
           Save Configs
         </button>
     </div>
@@ -10,45 +10,50 @@
             <textarea matInput rows="24" formControlName="prompt" class="font-mono"></textarea>
         </mat-form-field>
         <div>
-            <div class="flex gap-4 items-center">
+            <div class="grid grid-cols-4 gap-4">
                 <mat-form-field appearance="fill" class="w-full">
                     <mat-label>Embedding Model</mat-label>
                     <mat-select formControlName="embedding_model">
                         <mat-option value="jina-embeddings-v3">jina-embeddings-v3</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-slide-toggle matTooltip="Use Exact Cache" formControlName="UseExactCache" (click)="$event.stopPropagation()">Use Exact Cache</mat-slide-toggle>
 
+
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Semantic Docs Number</mat-label>
+                    <input type="number" matInput formControlName="semantic_docs_no" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>KeyWord Docs Number</mat-label>
+                    <input type="number" matInput formControlName="KeyWord_docs_no" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Reranker1 Limit</mat-label>
+                    <input type="number" matInput formControlName="reranker1_limit" />
+                </mat-form-field>
             </div>
+            <div class="grid grid-cols-4 gap-4">
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Reranker2 Limit</mat-label>
+                    <input type="number" matInput formControlName="reranker2_limit" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Window Size</mat-label>
+                    <input type="number" matInput formControlName="window_size" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Threshold After Reranker1</mat-label>
+                    <input type="number" matInput formControlName="threshold_after_reranker1" />
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full ">
+                    <mat-label>Threshold After Reranker2</mat-label>
+                    <input type="number" matInput formControlName="threshold_after_reranker2" />
+                </mat-form-field>
+            </div>
+            <mat-slide-toggle matTooltip="Use Exact Cache" formControlName="UseExactCache" (click)="$event.stopPropagation()">Use Exact Cache</mat-slide-toggle>
 
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Semantic Docs Number</mat-label>
-                <input type="number" matInput formControlName="semantic_docs_no" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>KeyWord Docs Number</mat-label>
-                <input type="number" matInput formControlName="KeyWord_docs_no" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Reranker1 Limit</mat-label>
-                <input type="number" matInput formControlName="reranker1_limit" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Reranker2 Limit</mat-label>
-                <input type="number" matInput formControlName="reranker2_limit" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Window Size</mat-label>
-                <input type="number" matInput formControlName="window_size" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Threshold After Reranker1</mat-label>
-                <input type="number" matInput formControlName="threshold_after_reranker1" />
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="w-full ">
-                <mat-label>Threshold After Reranker2</mat-label>
-                <input type="number" matInput formControlName="threshold_after_reranker2" />
-            </mat-form-field>
+
         </div>
+
     </form>
 </div>

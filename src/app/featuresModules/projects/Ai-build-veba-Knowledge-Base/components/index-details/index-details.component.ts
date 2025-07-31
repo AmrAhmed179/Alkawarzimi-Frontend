@@ -12,7 +12,9 @@ import { WebSocketService } from 'src/app/Services/web-socket-service.service';
 })
 export class IndexDetailsComponent implements OnInit {
  chatbotId:string
- indexStatus:string
+ isIndexRunning:boolean
+ indexStatus:any
+ intervalId: any;
   constructor(private wsService: WebSocketService,
       private dialog:MatDialog,
       private route: ActivatedRoute,
@@ -24,6 +26,10 @@ export class IndexDetailsComponent implements OnInit {
     this.chatbotId = params.get('projectid');
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     this.get_index_status()
+     // Set interval to call get_index_status every 10 seconds
+    this.intervalId = setInterval(() => {
+      this.get_index_status();
+    }, 10000);
     });
   }
   CreateIndex(){
@@ -38,6 +44,7 @@ export class IndexDetailsComponent implements OnInit {
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
       next: (res: any) => {
         this._notify.openSuccessSnackBar("Index created successfully");
+        this.get_index_status()
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -58,8 +65,9 @@ export class IndexDetailsComponent implements OnInit {
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
       next: (res: any) => {
-        this._ragKnowledgeBaseService.indexStaus$.next(res.status)
-        this.indexStatus = res.status
+        // this._ragKnowledgeBaseService.indexStaus$.next(res.status)
+        this.indexStatus = res
+         this.isIndexRunning = res.running_status === "Running";
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -68,4 +76,10 @@ export class IndexDetailsComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy(): void {
+  if (this.intervalId) {
+    clearInterval(this.intervalId);
+  }
+}
 }

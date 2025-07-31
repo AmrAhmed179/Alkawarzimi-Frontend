@@ -1,7 +1,30 @@
 .maxHeight {
+    height: calc(100vh - 500px);
+    min-height: 150px;
+    overflow: auto;
+}
+
+.containerHeight {
     height: calc(100vh - 200px);
 }
 
 * {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+.outdated {
+    background-color: #f70505;
+}
+
+.up-to-date {
+    background-color: #4caf50;
+}
+
+.parentClass .outdated {
+    color: #f70505;
+    background-color: #FF7F27
+}
+
+.parentClass .up-to-date {
+    color: #4caf50;
 }

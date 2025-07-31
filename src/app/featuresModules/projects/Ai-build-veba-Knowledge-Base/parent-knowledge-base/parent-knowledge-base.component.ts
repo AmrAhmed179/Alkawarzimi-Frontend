@@ -28,12 +28,12 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     this.route.parent?.parent?.paramMap.subscribe(params => {
     this.chatbotId = params.get('projectid');
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    this.get_index_status()
+    // this.get_index_status()
     });
 
-    this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
-      this.indexStatus = res
-    })
+    // this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
+    //   this.indexStatus = res
+    // })
 
     }
   openIndexDetalis(){

@@ -1,13 +1,15 @@
-<div class="grid grid-cols-2 ">
-    <div class=" border  p-4  maxHeight">
-        <button mat-raised-button (click)="CreateIndex()" class="flex items-center py-1 rounded-sm">
-                <mat-icon svgIcon="mat:add" class="icon"></mat-icon>
-                <h3 class="title">Create Index</h3>
+<div class="flex mt-10 justify-center containerHeight" *ngIf="indexStatus">
+    <div class=" border  p-4  maxHeight w-1/3">
+        <button mat-raised-button [class]="indexStatus.index_status" (click)="CreateIndex()" class="flex items-center py-1 rounded-sm">
+          <div *ngIf="isIndexRunning" class="w-4 h-4 border-2 mx-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <h3 *ngIf="isIndexRunning" class="text-white">Creating Index...</h3>
+                <h3 *ngIf="!isIndexRunning" class="text-white">Create Index</h3>
    </button>
-        <div class="mt-4 mx-4">
-            <p class="text-lg font-medium text-[#092e50] my-2">Total Indices:</p>
-            <p class="text-lg font-medium text-[#092e50] my-2">Total documents:</p>
-            <p class="text-lg font-medium text-[#092e50] my-2">Total chunks:</p>
+        <div class="mt-4 mx-4 ">
+            <p *ngIf="indexStatus.index_status == 'up-to-date'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#4caf50]">{{indexStatus.index_status}}</span></p>
+            <p *ngIf="indexStatus.index_status == 'outdated'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#f70505]">{{indexStatus.index_status}}</span></p>
+            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Indexed At: <span class="text-base ">{{indexStatus.indexedAt | date:'medium'}}</span></p>
+            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Chunks count: <span class="text-base ">{{indexStatus.chunks_count}}</span></p>
         </div>
     </div>
 

@@ -7,7 +7,7 @@ import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
-export interface DocumentItem {
+export class DocumentItem {
   title: string;
   extension: string;
   fileSize: number;
@@ -17,6 +17,7 @@ export interface DocumentItem {
   doc_uuid: string;
   file_id: string;
   uuid: string;
+  select:boolean = false
 }
 @Component({
   selector: 'vex-documents',
@@ -139,6 +140,50 @@ export class DocumentsComponent implements OnInit {
     return this.documents.filter(doc => doc.title.includes(this.search));
   }
 
+  clearSelectedDocuments(){
+    var deletedDocuments =  this.filteredDocuments().filter(x=>x.select == true)
+    const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
+          width: '300px',
+          data: { message: 'Do you want to delete selected documents?' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+    deletedDocuments.forEach(doc=>{
+      let body =
+    {
+    "uuid": doc.uuid,
+    "credentials": {
+        "deployment": "Local",
+        "key": "",
+        "url": "http://weaviate:8080",
+        "chatbotId": this.chatbotId,
+        "projectId":"",
+        "mode": "test"
+      }
+    }
+     this._ragKnowledgeBaseService.delete_document(body).subscribe((res:any)=>{
+     const docIndex = this.documents.findIndex(d => d.uuid === doc.uuid);
+      if (docIndex !== -1) {
+        this.documents.splice(docIndex, 1);
+      }
+      this.notify.openSuccessSnackBar(`Successfully Deleted`);
+      },
+       (err) => {
+    this.notify.openFailureSnackBar(`Failed to delete document ${doc.title}`);
+    console.error('Delete error:', err);
+  }
+    )
+    })
+          }
+        });
+
+  }
+  showClearButtom() : boolean{
+     if(this.filteredDocuments().find(x=>x.select == true))
+      return true;
+    return false
+  }
   selectDocument(doc: DocumentItem): void {
     this.selectedDocId = doc.uuid
     this.title = doc.title

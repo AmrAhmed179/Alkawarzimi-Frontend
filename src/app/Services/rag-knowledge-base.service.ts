@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -26,7 +26,9 @@ export class RagKnowledgeBaseService {
      return this.http.post(environment.URLS.Createindex,body)
   }
   get_index_status(body){
-     return this.http.post(environment.URLS.get_index_status,body)
+     return this.http.post(environment.URLS.get_index_status,body,{
+      headers: new HttpHeaders({ skipLoader: 'true' })
+     })
   }
   getConfigs(body){
      return this.http.post(environment.URLS.get_configs,body)
