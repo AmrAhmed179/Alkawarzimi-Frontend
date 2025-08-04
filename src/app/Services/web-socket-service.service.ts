@@ -1,5 +1,6 @@
 // web-socket.service.ts
 import { Injectable } from '@angular/core';
+import { Console } from 'console';
 import { Subject, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 
 export interface FileUploadChunk {
@@ -76,7 +77,7 @@ export class WebSocketService {
 
     this.socket.onmessage = (event) => {
       try {
-        debugger
+        console.log("messageEventInservice", event.data)
         const message = JSON.parse(event.data);
         this.messageSubject.next(message);
       } catch (error) {

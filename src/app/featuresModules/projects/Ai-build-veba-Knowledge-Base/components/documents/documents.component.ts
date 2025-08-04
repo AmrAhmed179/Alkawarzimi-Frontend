@@ -31,6 +31,7 @@ export class DocumentsComponent implements OnInit {
     search = '';
     clickedItemIndex:number
     flag:boolean = false
+    selectAllDocuments:boolean = false
     onDestroy$: Subject<void> = new Subject();
     selectedDocId:String
     documentContent:any
@@ -137,7 +138,11 @@ export class DocumentsComponent implements OnInit {
     }
 
   filteredDocuments(): DocumentItem[] {
-    return this.documents.filter(doc => doc.title.includes(this.search));
+    return this.documents.filter(doc => doc.title.includes(this.search))
+    // .map(x => {
+    //         x.select = false;
+    //         return x;
+    //     });
   }
 
   clearSelectedDocuments(){
@@ -251,10 +256,15 @@ export class DocumentsComponent implements OnInit {
     )
           }
         });
-
-
     }
 
+  selectAll(){
+    debugger
+    this.filteredDocuments().map(x => {
+            x.select = this.selectAllDocuments;
+            return x;
+        })
+    }
   ngOnDestroy() {
     console.log("general destroy!!!")
     this.onDestroy$.next();

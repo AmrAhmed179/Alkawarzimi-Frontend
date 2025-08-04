@@ -1,6 +1,6 @@
 <div class="grid grid-cols-11 gap-2">
     <div class="col-span-5 border  p-2 relative">
-        <div class="flex justify-end gap-2 h-9 ">
+        <div class="flex justify-between gap-2 h-9 mb-3 ">
             <!-- <div class="flex items-center">
                 <p class="text-[#4caf50] text-[15px]" *ngIf="indexStatus == 'up-to-date'">Index is {{indexStatus}}</p>
                 <p class="text-[#f44336] text-[15px]" *ngIf="indexStatus != 'up-to-date' && indexStatus != ''">Index is {{indexStatus}}</p>
@@ -10,19 +10,27 @@
                 <mat-icon svgIcon="mat:add" class="icon"></mat-icon>
                 <h3 class="title">Create Index</h3>
             </button> -->
-            <button mat-raised-button (click)="openUrlsDialog()" class="flex items-center rounded-sm">
+            <div class="flex gap-2">
+                <button mat-raised-button (click)="openUrlsDialog()" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:link" class="icon"></mat-icon>
                 <h3 class="title">URLs</h3>
             </button>
-            <button mat-raised-button (click)="openPlainTextDialog()" class="flex items-center rounded-sm">
-                <mat-icon svgIcon="mat:article" class="icon">article</mat-icon>
+                <button mat-raised-button (click)="openPlainTextDialog()" class="flex items-center rounded-sm">
+                <mat-icon svgIcon="mat:article" class="icon ">article</mat-icon>
                 <h3 class="title">Plain text</h3>
             </button>
 
-            <button mat-raised-button (click)="openUploadDialog()" class="flex items-center rounded-sm">
-                <mat-icon svgIcon="mat:upload_file" class="icon ">upload_file</mat-icon>
-                <h3 class="title ">Upload file</h3>
+                <button mat-raised-button (click)="openUploadDialog()" class="flex items-center rounded-sm">
+                <mat-icon svgIcon="mat:folder_open" class="icon">upload_file</mat-icon>
+                <h3 class="title ">Select Files</h3>
             </button>
+            </div>
+
+            <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="importFiles()" class=" flex items-center rounded-sm ">
+                <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
+                <h3 class="title ">Import Files</h3>
+            </button>
+
         </div>
         <div class="doc-list maxdocumentsHeight px-1">
             <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
@@ -42,14 +50,14 @@
 
             </div>
         </div>
-        <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="importFiles()" class="absolute rounded-sm bottom-2 right-3">Import Files</button>
     </div>
 
     <div class="col-span-6 maxHeight border  p-2 px-3 relative">
-        <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3 " *ngIf="uploadedFiles.length > 0">
-            <div class="flex items-center">
-                <p class="font-medium text-base">Import Config</p>
-            </div>
+        <!-- <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3 " *ngIf="uploadedFiles.length > 0"> -->
+        <div class="flex items-center justify-between gap-2 mb-3  " *ngIf="uploadedFiles.length > 0">
+            <p class="font-medium text-base">Import Config</p>
+            <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="applySettingsToAll()" class="title rounded-sm">Apply To All</button>
+
 
             <!-- <div class="flex items-center gap-4">
                 <button (click)="overViewOrconfig('overView')" [ngClass]="{'active':overViewOrConfigValue =='overView'}" class="overViewOrconfigButton">Overview</button>
@@ -114,6 +122,5 @@
                 </mat-form-field>
             </div>
         </div>
-        <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="applySettingsToAll()" class="absolute rounded-sm bottom-2 left-3">Apply To All</button>
     </div>
 </div>

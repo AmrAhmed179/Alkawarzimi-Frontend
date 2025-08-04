@@ -42,22 +42,23 @@ export class ImportDataComponent implements OnInit {
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     //this.get_index_status()
     });
-    this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
+    //this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
 
     // this.wsService.onMessage().subscribe({
     //   next: (message) => this.handleServerMessage(message),
     //   error: (err) => console.error('WebSocket error:', err)
     // });
-      this.wsService.onMessage().pipe(takeUntil(this.onDestroy$)). pipe(
+      this.wsService.onMessage()
+      // .pipe(takeUntil(this.onDestroy$))
+      .pipe(
           bufferTime(3000) // Group messages within 100ms
         ).subscribe(messages => {
-          debugger
           messages.forEach(message => this.handleServerMessage(message));
      });
   }
 
   ngOnDestroy(): void {
-    this.wsService.close();
+    // this.wsService.close();
     this.onDestroy$.next();
      this.onDestroy$.complete();
   }
@@ -117,7 +118,9 @@ export class ImportDataComponent implements OnInit {
   }
 
   private handleServerMessage(message: any): void {
-    debugger
+    if(message.type != "ping")
+       debugger
+    console.log("messageEventInhanleMessgae", message)
     if (message.fileID) {
       this.importStatus[message.fileID] = message.status;
       if (message.status === 'DONE') {

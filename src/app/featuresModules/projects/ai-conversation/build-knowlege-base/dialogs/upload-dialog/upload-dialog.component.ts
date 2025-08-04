@@ -29,7 +29,7 @@ export class UploadDialogComponent implements OnInit {
     }
   }
 
-  upload() {
+  selectFiles() {
     if (this.selectedFiles && this.selectedFiles.length > 0) {
       console.log('Uploading:', this.selectedFiles);
       this.dialogRef.close(this.selectedFiles);

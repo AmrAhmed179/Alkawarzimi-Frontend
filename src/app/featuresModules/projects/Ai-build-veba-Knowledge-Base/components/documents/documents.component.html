@@ -1,7 +1,14 @@
 <div class="grid grid-cols-10 gap-2">
     <div class="col-span-4 border  p-2">
-        <div class=" w-full mb-3 px-1">
-            <input type="text" [(ngModel)]="search" placeholder="Search..." class="search-input" />
+        <div class=" grid grid-cols-10 items-center gap-4 w-full mb-3 px-1">
+            <input type="text" [(ngModel)]="search" placeholder="Search..." class="col-span-9 search-input" />
+            <div class="flex items-center gap-1 justify-center">
+                <mat-checkbox *ngIf="filteredDocuments().length > 0" [(ngModel)]="selectAllDocuments" color="primary" matTooltip="Select All" (change)="selectAll()">
+                </mat-checkbox>
+                <button matTooltip="Delete Selected Documents" *ngIf="showClearButtom()" (click)="clearSelectedDocuments()" class=" text-base mt-1 rounded-sm text-[#ff0000]"><mat-icon class="icon-lg" svgIcon="mat:delete"></mat-icon> </button>
+            </div>
+
+
         </div>
         <div class="relative maxDocumentContainer">
             <div class="doc-list maxdocumentsHeight px-1">
@@ -25,7 +32,6 @@
 
                 </div>
             </div>
-            <button mat-raised-button *ngIf="showClearButtom()" (click)="clearSelectedDocuments()" class="absolute text-base py-1 rounded-sm bottom-1 right-3">Clear Selected Documents</button>
 
         </div>
     </div>

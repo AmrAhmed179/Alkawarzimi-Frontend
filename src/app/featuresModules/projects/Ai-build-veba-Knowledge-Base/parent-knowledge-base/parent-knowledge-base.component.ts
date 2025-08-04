@@ -8,6 +8,7 @@ import { IndexDetailsComponent } from '../components/index-details/index-details
 import { ActivatedRoute } from '@angular/router';
 import { WebSocketService } from 'src/app/Services/web-socket-service.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'vex-parent-knowledge-base',
@@ -30,7 +31,7 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     // this.get_index_status()
     });
-
+    this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
     // this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
     //   this.indexStatus = res
     // })
@@ -75,5 +76,6 @@ export class ParentKnowledgeBaseComponent implements OnInit {
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+    this.wsService.close();
   }
 }

@@ -33,7 +33,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close class="cancel-btn">Cancel</button>
-    <button mat-raised-button color="primary" [disabled]="!selectedFiles || selectedFiles.length === 0" (click)="upload()">
-        Import {{ selectedFiles?.length > 0 ? '(' + selectedFiles.length + ')' : '' }}
+    <button mat-raised-button color="primary" [disabled]="!selectedFiles || selectedFiles.length === 0" (click)="selectFiles()">
+        Select {{ selectedFiles?.length > 0 ? '(' + selectedFiles.length + ')' : '' }}
     </button>
 </mat-dialog-actions>

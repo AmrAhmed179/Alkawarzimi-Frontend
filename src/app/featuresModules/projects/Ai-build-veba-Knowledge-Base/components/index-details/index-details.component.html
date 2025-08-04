@@ -9,6 +9,7 @@
             <p *ngIf="indexStatus.index_status == 'up-to-date'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#4caf50]">{{indexStatus.index_status}}</span></p>
             <p *ngIf="indexStatus.index_status == 'outdated'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#f70505]">{{indexStatus.index_status}}</span></p>
             <p class="parentClass text-lg font-medium text-[#092e50] my-2">Indexed At: <span class="text-base ">{{indexStatus.indexedAt | date:'medium'}}</span></p>
+            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Data updated At: <span class="text-base ">{{indexStatus.dataUpdatedAt | date:'medium'}}</span></p>
             <p class="parentClass text-lg font-medium text-[#092e50] my-2">Chunks count: <span class="text-base ">{{indexStatus.chunks_count}}</span></p>
         </div>
     </div>

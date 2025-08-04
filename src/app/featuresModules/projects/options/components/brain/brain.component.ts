@@ -25,15 +25,15 @@ export class BrainComponent implements OnInit {
 
    constructor(private fb:FormBuilder,
      private _optionsService:OptionsServiceService,
-    private _aiConversationService:AiConversationService, ) { }
+    private _aiConversationService:AiConversationService, ) {
+     this.GetAIModelsProvider()
+    }
 
    ngOnInit(): void {
      this._optionsService.projectOptions$.pipe(takeUntil(this.onDestroy$)).subscribe((res:ProjectOptionsModel)=>{
        if(res){
          this.projectOptions = res
          debugger
-          this.GetAIModelsProvider()
-
 
            if(this.tasks.length < 1)
              this.GetAgentsTasks()
