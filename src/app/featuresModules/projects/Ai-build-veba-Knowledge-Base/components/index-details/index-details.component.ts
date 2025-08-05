@@ -38,7 +38,7 @@ export class IndexDetailsComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
-    "projectId":"",
+    "projectId":this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
@@ -60,7 +60,7 @@ export class IndexDetailsComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
-    "projectId":"",
+    "projectId":this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({

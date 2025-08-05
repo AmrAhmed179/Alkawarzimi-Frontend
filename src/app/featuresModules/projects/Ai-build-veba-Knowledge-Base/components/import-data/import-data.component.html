@@ -35,7 +35,8 @@
         <div class="doc-list maxdocumentsHeight px-1">
             <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
                 <div [class]="file.importStatus" [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
-                    <p class="font-normal font-medium text-sm"> {{file.importStatus}}</p>
+                    <p class="font-normal text-base"> {{file.importStatus}}</p>
+                    <div *ngIf="file.importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
                     <!-- <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 1"> Imported</p>
                     <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == -2"> Faild</p> -->
                 </div>

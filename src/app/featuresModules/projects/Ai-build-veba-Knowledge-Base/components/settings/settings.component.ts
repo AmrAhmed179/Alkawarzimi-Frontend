@@ -64,7 +64,7 @@ export class SettingsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
-        "projectId":"",
+        "projectId":this.chatbotId,
         "mode": "test",
     }
     this._ragKnowledgeBaseService.getConfigs(body).subscribe({
@@ -87,7 +87,7 @@ export class SettingsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
-        "projectId":"",
+        "projectId":this.chatbotId,
         "mode": "test",
       },
     ragConfig:this.form.value

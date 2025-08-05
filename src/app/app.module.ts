@@ -161,7 +161,7 @@ export function initializeApp(appConfig: AppConfigService) {
   providers: [
     ProjectService,
     DataService,
-    NotifyService,
+   // NotifyService,
     CookieService,
     UsersService,
     AuthGuard,

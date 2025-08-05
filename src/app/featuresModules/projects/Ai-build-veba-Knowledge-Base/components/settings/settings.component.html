@@ -1,10 +1,10 @@
-<div class="rounded-sm border  mx-6 p-4 maxHeight">
+<div *ngIf="form" class="rounded-sm border  mx-6 p-4 maxHeight">
     <div class="flex justify-end">
         <button [disabled]="!form.valid" class="mb-4 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
           Save Configs
         </button>
     </div>
-    <form *ngIf="form" [formGroup]="form" class="grid grid-cols-2 gap-4">
+    <form [formGroup]="form" class="grid grid-cols-2 gap-4">
         <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>Prompt</mat-label>
             <textarea matInput rows="24" formControlName="prompt" class="font-mono"></textarea>

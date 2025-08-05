@@ -57,7 +57,7 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
-    "projectId":"",
+    "projectId":this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({

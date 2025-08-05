@@ -119,11 +119,13 @@
 
 .IMPORTED {
     background-color: #4caf50;
+    color: #ffff;
     /* Green – Success */
 }
 
 .STARTING {
     background-color: #2196f3;
+    color: #ffff;
     /* Blue – Starting up */
 }
 
@@ -149,5 +151,6 @@
 
 .FAILD {
     background-color: #f44336;
+    color: #ffff;
     /* Red – Failure */
 }

@@ -77,9 +77,15 @@ export class WebSocketService {
 
     this.socket.onmessage = (event) => {
       try {
-        console.log("messageEventInservice", event.data)
-        const message = JSON.parse(event.data);
-        this.messageSubject.next(message);
+    if (!event.data) return;
+    console.log("messageEventInService:", event.data);
+    const message = JSON.parse(event.data);
+    const allowedStatuses = ['STARTING', 'DONE', 'ERROR'];
+    if (message?.status && allowedStatuses.includes(message?.status)) {
+      this.messageSubject.next(message); // triggers handleServerMessage
+    } else if (message?.type !== 'ping') {
+      console.warn('Unhandled message status:', message.status);
+    }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }

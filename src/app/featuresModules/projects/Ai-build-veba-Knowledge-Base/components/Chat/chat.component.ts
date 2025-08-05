@@ -34,7 +34,7 @@ export class ChatComponent implements OnInit {
       modelName: 'gpt',
       embeddingType: 'no_embeddingType',
       chatbotId: this.chatbotId,
-      projectId:"",
+      projectId:this.chatbotId,
       query: q
     };
 

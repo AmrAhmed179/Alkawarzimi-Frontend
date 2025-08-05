@@ -15,12 +15,14 @@ export class NotificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.notificationService.notification$.subscribe(notification => {
-      this.notifications.push(notification);
-
+       const isDuplicate = this.notifications.some(n => n.message === notification.message && n.type === notification.type);
+    if (!isDuplicate) {
+         this.notifications.push(notification)
       setTimeout(() => {
         this.notifications = this.notifications.filter(n => n !== notification);
       }, 4000); // Auto-remove after 4 seconds
-    });
+    }
+  });
   }
 
 }

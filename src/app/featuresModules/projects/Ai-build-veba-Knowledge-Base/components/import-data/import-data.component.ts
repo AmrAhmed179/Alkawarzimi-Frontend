@@ -74,7 +74,7 @@ export class ImportDataComponent implements OnInit {
         key: '',
         url: 'http://weaviate:8080',
         chatbotId: this.chatbotId,
-        projectId:"",
+        projectId:this.chatbotId,
         mode: 'test'
       };
 
@@ -106,7 +106,7 @@ export class ImportDataComponent implements OnInit {
           "key":"",
           "url":"http://weaviate:8080",
           "chatbotId":this.chatbotId,
-          "projectId":"",
+          "projectId":this.chatbotId,
           "mode":"test"},
         "isLastDocument":true
       }
@@ -137,36 +137,36 @@ export class ImportDataComponent implements OnInit {
         const file = this.uploadedFiles.find(x => x.name === message.fileID);
           file ? file.importStatus = "STARTING" : null;
       }
-           if (message.status === 'LOADING') {
-        this.importProgress[message.fileID] = 100;
-        this._notify.showLOADING(message.message)
-        console.log("LOADING", message.message)
-        const file = this.uploadedFiles.find(x => x.name === message.fileID);
-          file ? file.importStatus = "LOADING" : null;
-      }
-        if (message.status === 'EMBEDDING') {
-        this.importProgress[message.fileID] = 100;
-        if(message.message !='')
-          this._notify.showEMBEDDING(message.message)
-        console.log("EMBEDDING", message.message)
-        const file = this.uploadedFiles.find(x => x.name === message.fileID);
-          file ? file.importStatus = "EMBEDDING" : null;
-      }
-         if (message.status === 'INGESTING') {
-        this.importProgress[message.fileID] = 100;
-        this._notify.showINGESTING(message.message)
-        console.log("INGESTING", message.message)
-        const file = this.uploadedFiles.find(x => x.name === message.fileID);
-          file ? file.importStatus = "INGESTING" : null;
-      }
-      if (message.status === 'CHUNKING') {
-        this.importProgress[message.fileID] = 100;
-        if(message.message !='')
-          this._notify.showCHUNKING(message.message)
-        console.log("CHUNKING", message.message)
-        const file = this.uploadedFiles.find(x => x.name === message.fileID);
-          file ? file.importStatus = "CHUNKING" : null;
-      }
+      //      if (message.status === 'LOADING') {
+      //   this.importProgress[message.fileID] = 100;
+      //   this._notify.showLOADING(message.message)
+      //   console.log("LOADING", message.message)
+      //   const file = this.uploadedFiles.find(x => x.name === message.fileID);
+      //     file ? file.importStatus = "LOADING" : null;
+      // }
+      //   if (message.status === 'EMBEDDING') {
+      //   this.importProgress[message.fileID] = 100;
+      //   if(message.message !='')
+      //     this._notify.showEMBEDDING(message.message)
+      //   console.log("EMBEDDING", message.message)
+      //   const file = this.uploadedFiles.find(x => x.name === message.fileID);
+      //     file ? file.importStatus = "EMBEDDING" : null;
+      // }
+      //    if (message.status === 'INGESTING') {
+      //   this.importProgress[message.fileID] = 100;
+      //   this._notify.showINGESTING(message.message)
+      //   console.log("INGESTING", message.message)
+      //   const file = this.uploadedFiles.find(x => x.name === message.fileID);
+      //     file ? file.importStatus = "INGESTING" : null;
+      // }
+      // if (message.status === 'CHUNKING') {
+      //   this.importProgress[message.fileID] = 100;
+      //   if(message.message !='')
+      //     this._notify.showCHUNKING(message.message)
+      //   console.log("CHUNKING", message.message)
+      //   const file = this.uploadedFiles.find(x => x.name === message.fileID);
+      //     file ? file.importStatus = "CHUNKING" : null;
+      // }
       if(message.status === 'ERROR'){
         this._notify.showError(message.message)
         console.log('message error',message)
@@ -238,7 +238,7 @@ export class ImportDataComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
-    "projectId":"",
+    "projectId":this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
@@ -258,7 +258,7 @@ export class ImportDataComponent implements OnInit {
     "key": "",
     "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
-    "projectId":"",
+    "projectId":this.chatbotId,
     "mode": "test"
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
