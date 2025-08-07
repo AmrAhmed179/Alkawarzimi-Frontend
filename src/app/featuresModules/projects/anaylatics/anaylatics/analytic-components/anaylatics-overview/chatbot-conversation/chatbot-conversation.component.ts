@@ -17,6 +17,7 @@ export class StepsReponseCreation{
   rOptionList:string[] =[]
 }
 
+
 @Component({
   selector: 'vex-chatbot-conversation',
   templateUrl: './chatbot-conversation.component.html',
@@ -139,6 +140,9 @@ export class ChatbotConversationComponent implements OnInit {
   })
  }
 
+  responses(row) {
+  return row?.steps?.[0]?.output?.Responses || [];
+}
  intiateForm(){
   this.form =this.fb.group({
     intents: new FormControl(this.formValue.intents),
@@ -401,7 +405,9 @@ export class ChatbotConversationComponent implements OnInit {
     this.formValue.userId = userId
     this._analyticalService.filterAnylatic$.next(this.filter)
     this.intiateForm()
+    debugger
     this.dataSource = new MatTableDataSource([{_id:userId}])
+    this.totalItem = 1
     this.messangerCount = 1
    }
    removeUserId(){

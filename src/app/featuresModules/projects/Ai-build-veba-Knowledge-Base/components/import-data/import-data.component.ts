@@ -18,7 +18,8 @@ import { bufferTime, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./import-data.component.scss']
 })
 export class ImportDataComponent implements OnInit {
-
+  addPlainText:boolean = false
+   plainText: string = ''
   indexStatus:string = ''
   selectedFileIndex = 0
   selectedFileData:File
@@ -287,6 +288,16 @@ export class ImportDataComponent implements OnInit {
     }
   });
 }
+    downloadTextFile(): void {
+    const blob = new Blob([this.plainText], { type: 'text/plain' });
+    const file = new File([blob], 'plain-text.txt', { type: 'text/plain' }) as any;
+
+    file.rag_config = this.wsService.getDefaultRAGConfig();
+    file.importStatus = "Not_Imported"
+    this.uploadedFiles = []
+    this.uploadedFiles.push(file)
+    this.importFiles()
+  }
   ///////////////////////////////////
 
 }

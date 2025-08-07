@@ -11,51 +11,67 @@
                 <h3 class="title">Create Index</h3>
             </button> -->
             <div class="flex gap-2">
-                <button mat-raised-button (click)="openUrlsDialog()" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)="openUrlsDialog(); addPlainText = false" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:link" class="icon"></mat-icon>
                 <h3 class="title">URLs</h3>
             </button>
-                <button mat-raised-button (click)="openPlainTextDialog()" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)="openPlainTextDialog(); addPlainText = true" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:article" class="icon ">article</mat-icon>
                 <h3 class="title">Plain text</h3>
             </button>
 
-                <button mat-raised-button (click)="openUploadDialog()" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)="openUploadDialog() ; addPlainText = false" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:folder_open" class="icon">upload_file</mat-icon>
                 <h3 class="title ">Select Files</h3>
             </button>
             </div>
 
-            <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="importFiles()" class=" flex items-center rounded-sm ">
+            <button *ngIf="uploadedFiles.length > 0 && !addPlainText" mat-raised-button (click)="importFiles()" class=" flex items-center rounded-sm ">
                 <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
                 <h3 class="title ">Import Files</h3>
             </button>
 
+            <button *ngIf="addPlainText" mat-raised-button (click)="downloadTextFile()" class=" flex items-center rounded-sm ">
+                <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
+                <h3 class="title ">Add Plain Text</h3>
+            </button>
+
         </div>
         <div class="doc-list maxdocumentsHeight px-1">
-            <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
-                <div [class]="file.importStatus" [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
-                    <p class="font-normal text-base"> {{file.importStatus}}</p>
-                    <div *ngIf="file.importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                    <!-- <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 1"> Imported</p>
+            <div *ngIf="!addPlainText">
+                <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
+                    <div [class]="file.importStatus" [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
+                        <p class="font-normal text-base"> {{file.importStatus}}</p>
+                        <div *ngIf="file.importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                        <!-- <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == 1"> Imported</p>
                     <p class="font-normal font-medium text-sm" *ngIf="file.importStatus == -2"> Faild</p> -->
-                </div>
-                <div [ngClass]="{'selectesDocBg':selectedFileIndex == i}" class="col-span-7 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
-                    <p class="font-normal text-base"> {{file.name}}</p>
-                </div>
-                <div class="col-span-1 h-12 text-center rounded-md  bg-white hover:bg-slate-200">
-                    <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedFileIndex == i}" (click)="removeFile(i); $event.stopPropagation()">
+                    </div>
+                    <div [ngClass]="{'selectesDocBg':selectedFileIndex == i}" class="col-span-7 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
+                        <p class="font-normal text-base"> {{file.name}}</p>
+                    </div>
+                    <div class="col-span-1 h-12 text-center rounded-md  bg-white hover:bg-slate-200">
+                        <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedFileIndex == i}" (click)="removeFile(i); $event.stopPropagation()">
       <mat-icon svgIcon="mat:delete"></mat-icon>
     </button>
+                    </div>
+
                 </div>
+            </div>
+
+            <div *ngIf="addPlainText">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Enter plain text</mat-label>
+                    <textarea matInput [(ngModel)]="plainText" rows="23"></textarea>
+                </mat-form-field>
 
             </div>
+
         </div>
     </div>
 
     <div class="col-span-6 maxHeight border  p-2 px-3 relative">
         <!-- <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3 " *ngIf="uploadedFiles.length > 0"> -->
-        <div class="flex items-center justify-between gap-2 mb-3  " *ngIf="uploadedFiles.length > 0">
+        <div class="flex items-center justify-between gap-2 mb-3  " *ngIf="uploadedFiles.length > 0 && !addPlainText">
             <p class="font-medium text-base">Import Config</p>
             <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="applySettingsToAll()" class="title rounded-sm">Apply To All</button>
 
@@ -65,7 +81,7 @@
                 <button (click)="overViewOrconfig('config')" [ngClass]="{'active':overViewOrConfigValue =='config'}" class="overViewOrconfigButton">Config</button>
             </div> -->
         </div>
-        <div *ngIf="uploadedFiles.length > 0" class="mt-14 px-4">
+        <div *ngIf="uploadedFiles.length > 0 && !addPlainText" class="mt-14 px-4">
             <div class="relative w-full border px-2 py-4 rounded-sm">
                 <span class="absolute -top-3 left-3  px-2 text-base ">File Information</span>
                 <mat-form-field appearance="fill" class="w-full ">
