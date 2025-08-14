@@ -1,9 +1,18 @@
 <div class="grid grid-cols-10 gap-2">
     <div class="col-span-4 border  p-2">
-        <div class=" grid grid-cols-10 items-center gap-4 w-full mb-3 px-1">
-            <input type="text" [(ngModel)]="search" placeholder="Search..." class="col-span-9 search-input" />
-            <div class="flex items-center gap-1 justify-center col-span-1 mr-5">
-                <mat-checkbox *ngIf="filteredDocuments().length > 0" [(ngModel)]="selectAllDocuments" color="primary" matTooltip="Select All" (change)="selectAll()">
+        <div class=" grid grid-cols-11 content-center items-center gap-2 w-full mb-3 px-1">
+            <input (keyup)="getDocumentsFilter()" type="text" [(ngModel)]="search" placeholder="Search..." class="col-span-5 search-input" />
+            <div class="col-span-5 flex gap-4 w-full ">
+                <div class=" py-[6px] border border-[#ccc] rounded-[8px] flex gap-2 mb-[3px] items-center px-1 bg-white flex flex-col xl:flex-row ">
+                    <!-- <legend class="mx-2 text-xs">Select Documents types</legend> -->
+                    <mat-checkbox (change)="getDocumentsFilter()" [(ngModel)]="fileType" color="primary" matTooltip="Select files"> Files</mat-checkbox>
+                    <mat-checkbox (change)="getDocumentsFilter()" [(ngModel)]="plainTextType" color="primary" matTooltip="Select Palin Text">PlainText</mat-checkbox>
+                    <mat-checkbox (change)="getDocumentsFilter()" [(ngModel)]="urlType" color="primary" matTooltip="Select Url">URLS</mat-checkbox>
+                </div>
+
+            </div>
+            <div class="flex items-center gap-1 justify-center col-span-1 ">
+                <mat-checkbox *ngIf="filteredDocuments.length > 0" [(ngModel)]="selectAllDocuments" color="primary" matTooltip="Select All" (change)="selectAll()">
                 </mat-checkbox>
                 <button matTooltip="Delete Selected Documents" *ngIf="showClearButtom()" (click)="clearSelectedDocuments()" class=" text-base mt-1 rounded-sm text-[#ff0000]"><mat-icon class="icon-lg" svgIcon="mat:delete"></mat-icon> </button>
             </div>
@@ -12,15 +21,15 @@
         </div>
         <div class="relative maxDocumentContainer">
             <div class="doc-list maxdocumentsHeight px-1">
-                <div class="mx-14 mt-10" *ngIf="filteredDocuments().length == 0">
+                <div class="mx-14 mt-10" *ngIf="filteredDocuments.length == 0">
                     <p class="text-red-600 text-base">No Documents Added Yet</p>
                 </div>
-                <div *ngFor="let doc of filteredDocuments(); let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 overflow-auto" (click)="selectDocument(doc)">
+                <div *ngFor="let doc of filteredDocuments; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2" (click)="selectDocument(doc)">
                     <!-- <mat-checkbox color="primary" (click)="$event.stopPropagation()" [(ngModel)]="doc.select">
                 </mat-checkbox> -->
 
-                    <div [ngClass]="{'selectesDocBg':selectedDocId == doc.uuid}" class="col-span-9 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
-                        <p class="font-normal text-base"> {{ doc.title }}</p>
+                    <div [ngClass]="{'selectesDocBg':selectedDoc_uuid == doc.doc_uuid}" class="col-span-9 h-12 rounded-md px-2  bg-white flex items-center justify-center hover:bg-slate-200">
+                        <p class="font-normal text-base truncate-text"> {{ doc.title }}</p>
                     </div>
                     <div class="col-span-1 h-12  flex items-center justify-center rounded-md  bg-white hover:bg-slate-200">
                         <!-- <button class="text-slate-500" mat-icon-button [ngClass]="{'deleteRed':selectedDocId == doc.uuid}" (click)="deleteDocument(doc, i)">
@@ -37,21 +46,32 @@
     </div>
 
     <div class="col-span-6 maxHeight border  p-2 px-3 relative">
-        <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3" *ngIf="selectedDocId">
-            <div class="flex items-center">
-                <p class="font-medium text-base">{{title}}</p>
+        <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3" *ngIf="selectedDoc_uuid">
+            <div class="flex items-center w-1/2">
+                <p class="font-medium text-base truncate-text">{{title}}</p>
             </div>
 
             <div class="flex items-center gap-4">
-                <button (click)="selectChunkOrContent('content')" [ngClass]="{'active':contentOrChunks =='content'}" class="contentChunkButton">Content</button>
-                <button (click)="selectChunkOrContent('chunk')" [ngClass]="{'active':contentOrChunks =='chunk'}" class="contentChunkButton">Chunks</button>
+
+                <button *ngIf="docType == 0" (click)="deletePlaintext()"><mat-icon matTooltip="Delete Plaintext" class="icon-lg text-gray-600" svgIcon="mat:delete"></mat-icon></button>
+                <button [ngClass]="{'active':contentOrChunks =='chunk'}" class="contentChunkButton">Chunks</button>
             </div>
 
         </div>
-        <div [innerHTML]="documentContent" dir="rtl" class="contentText mt-12" *ngIf="selectedDocId">
+        <div [innerHTML]="documentContent" dir="rtl" class="contentText mt-12" *ngIf="selectedDoc_uuid && chunked == false && docType == 0">
             {{documentContent?.content}}
         </div>
-        <mat-paginator [ngClass]="{'displayNone':!selectedDocId}" #paginator class="absolute bottom-1 right-3 left-3" [showFirstLastButtons]="true" [length]="totalPages" [pageSize]="pageSize" aria-label="Select page"></mat-paginator>
+        <div [innerHTML]="documentContent" dir="rtl" class="contentText mt-12" *ngIf="selectedDoc_uuid && chunked == true">
+            {{documentContent?.content}}
+        </div>
+        <!-- <div [innerHTML]="documentContent" dir="rtl" class="contentText mt-12" *ngIf="selectedDoc_uuid">
+            {{documentContent?.content}}
+        </div> -->
+
+        <div dir="rtl" class="contentText mt-12" *ngIf="selectedDoc_uuid && chunked == false && ( docType == 1 || docType == 2)">
+            <p dir="ltr" class="text-red-600 text-base mt-12 mx-9">The Item has not been processed yet.</p>
+        </div>
+        <mat-paginator [ngClass]="{'displayNone':!selectedDoc_uuid}" #paginator class="absolute bottom-1 right-3 left-3" [showFirstLastButtons]="true" [length]="totalPages" [pageSize]="pageSize" aria-label="Select page"></mat-paginator>
 
     </div>
 </div>

@@ -5,7 +5,8 @@
 }
 
 .containerHeight {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 250px);
+    overflow: auto;
 }
 
 * {
@@ -20,11 +21,31 @@
     background-color: #4caf50;
 }
 
-.parentClass .outdated {
-    color: #f70505;
-    background-color: #FF7F27
+.queued {}
+
+.running {
+    background-color: #1f9fe9;
+    color: #ffff;
 }
 
-.parentClass .up-to-date {
+// .succeeded {
+//     background-color: #4caf50;
+// }
+// .failed {
+//     background-color: #f70505;
+// }
+// .canceled {
+//     background-color: #f70505;
+// }
+.running_1 {
+    color: #1f9fe9;
+}
+
+.succeeded_1 {
     color: #4caf50;
+}
+
+.failed_1,
+.canceled_1 {
+    color: #f70505;
 }

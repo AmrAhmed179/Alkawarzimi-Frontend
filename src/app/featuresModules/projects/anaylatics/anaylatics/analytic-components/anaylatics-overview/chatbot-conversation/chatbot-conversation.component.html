@@ -1,5 +1,5 @@
 <div class="mx-6">
-    <form [formGroup]="form" (change)="formvalue()" class="grid grid-cols-3 gap-x-4">
+    <form [formGroup]="form" class="grid grid-cols-3 gap-x-4">
         <mat-form-field appearance="fill">
             <mat-label>Intents</mat-label>
             <mat-select formControlName="intents" (ngModelChange)="formvalue()" multiple>
@@ -30,13 +30,14 @@
 
         <mat-form-field appearance="fill">
             <mat-label>Utterance</mat-label>
-            <input formControlName="search" matInput>
+            <input (change)="formvalue()" formControlName="search" matInput>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>UserId</mat-label>
             <div class="flex items-center">
-                <input class="w-[70%]" formControlName="userId" matInput><button *ngIf="filter.userId" mat-raised-button class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm max-w-xs text-base" (click)="removeUserId()">{{form.controls['userId'].value}}</button>
+                <input (change)="formvalue()" class="w-[70%]" formControlName="userId" matInput><button type="button" *ngIf="form?.controls['userId']?.value" mat-raised-button class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm max-w-xs text-base"
+                    (click)="removeUserId();$event.stopPropagation() ">{{form.controls['userId'].value}}</button>
             </div>
         </mat-form-field>
         <!-- <button (click)="formvalue()" (click)="getIntents();  getEntityies() ;getServices()">clicck</button> -->

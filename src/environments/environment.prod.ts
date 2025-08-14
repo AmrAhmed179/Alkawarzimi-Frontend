@@ -5,7 +5,8 @@ const whatsappServerUrl = "https://alkhwarizmi.xyz:5050/";
 const webHookUrl = "/";
 const BaseUrl = "/";
 const messenger = "https://orchestrator.alkhwarizmi.xyz/";
-const VerbaBaseUrl = "https://verba.alkhwarizmi.run/";
+const RagBaseUrl = "https://rag.alkhwarizmi.run/";
+const RagResourceManagment = "https://resources.alkhwarizmi.xyz/";
 // const ResourceHandler = "http://localhost:52848/ResourceHandler";
 const ResourceHandler = "https://resources.alkhwarizmi.xyz/ResourceHandler";
 export const environment = {
@@ -270,14 +271,17 @@ export const environment = {
     SetMainAgent: `${BaseUrl}AiAgent/SetMainAgent`,
     DeleteAgent: `${BaseUrl}AiAgent/DeleteAgent`,
     GetAgentsTasks: `${BaseUrl}Intents/GetTasks`,
-    GetAllDocuments: `${VerbaBaseUrl}api/get_all_documents`,
-    get_content: `${VerbaBaseUrl}api/get_content`,
-    get_chunks: `${VerbaBaseUrl}api/get_chunks`,
-    delete_document: `${VerbaBaseUrl}api/delete_document`,
-    Createindex: `${VerbaBaseUrl}kh/api/create_index`,
-    get_index_status: `${VerbaBaseUrl}kh/api/get_index_status`,
-    get_configs: `${VerbaBaseUrl}kh/api/get_configs`,
-    save_configs: `${VerbaBaseUrl}kh/api/save_configs`,
+    GetAllDocuments: `${RagResourceManagment}ResourceHandler/GetDocuments`,
+    get_content: `${RagBaseUrl}api/get_content`,
+    get_chunks: `${RagResourceManagment}ResourceHandler/GetDocumentInfo`,
+    delete_document: `${RagResourceManagment}ResourceHandler/DeleteDocument`,
+    Createindex: `${RagBaseUrl}create_index`,
+    cancel_index: `${RagBaseUrl}cancel_index`,
+    get_index_status: `${RagBaseUrl}index_status`,
+    get_configs: `${RagBaseUrl}get_configs`,
+    save_configs: `${RagBaseUrl}save_configs`,
+    UplaodRagDocument: `${RagResourceManagment}ResourceHandler/UploadRAGResource`,
+
     //#endregion
 
     ////////////Knowledge Graph////////////////

@@ -15,6 +15,7 @@ export class IndexDetailsComponent implements OnInit {
  isIndexRunning:boolean
  indexStatus:any
  intervalId: any;
+ upTodated:boolean
   constructor(private wsService: WebSocketService,
       private dialog:MatDialog,
       private route: ActivatedRoute,
@@ -29,21 +30,17 @@ export class IndexDetailsComponent implements OnInit {
      // Set interval to call get_index_status every 10 seconds
     this.intervalId = setInterval(() => {
       this.get_index_status();
-    }, 10000);
+    }, 20000);
     });
   }
   CreateIndex(){
    let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
     "projectId":this.chatbotId,
-    "mode": "test"
     }
     this._ragKnowledgeBaseService.createIndex(body).subscribe({
       next: (res: any) => {
-        this._notify.openSuccessSnackBar("Index created successfully");
+        this._notify.openSuccessSnackBar("Index Starting");
         this.get_index_status()
       },
       error: (err) => {
@@ -54,20 +51,37 @@ export class IndexDetailsComponent implements OnInit {
     });
   }
 
-   get_index_status(){
+  cancelIndex(){
    let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
     "chatbotId": this.chatbotId,
     "projectId":this.chatbotId,
-    "mode": "test"
+    }
+    this._ragKnowledgeBaseService.cancelIndex(body).subscribe({
+      next: (res: any) => {
+        this._notify.openSuccessSnackBar("Index Canceled");
+        this.get_index_status()
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+        const errorMsg = err?.error?.message || 'Failed to Canceled index. Please try again.';
+        this._notify.openFailureSnackBar(errorMsg);
+      }
+    });
+  }
+
+   get_index_status(){
+   let body =  {
+    "chatbotId": this.chatbotId,
+    "projectId":this.chatbotId,
     }
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
       next: (res: any) => {
-        // this._ragKnowledgeBaseService.indexStaus$.next(res.status)
         this.indexStatus = res
-         this.isIndexRunning = res.running_status === "Running";
+         this.isIndexRunning = res.status === "running";
+         if(this.indexStatus.updated_at > this.indexStatus.lastDocUpdatedAt && this.indexStatus.status == 'succeeded')
+          this.upTodated = true
+        else
+          this.upTodated = false
       },
       error: (err) => {
         console.error('API Error:', err);

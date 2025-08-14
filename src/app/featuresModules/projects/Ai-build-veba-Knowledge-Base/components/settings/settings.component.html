@@ -1,56 +1,80 @@
-<div *ngIf="form" class="rounded-sm border  mx-6 p-4 maxHeight">
+<div *ngIf="configForm" class="rounded-sm border  mx-6 p-4 maxHeight">
     <div class="flex justify-end">
-        <button [disabled]="!form.valid" class="mb-4 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
+        <button [disabled]="!configForm.valid" class="mb-4 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
           Save Configs
         </button>
     </div>
-    <form [formGroup]="form" class="grid grid-cols-2 gap-4">
+    <form [formGroup]="configForm" class="grid grid-cols-2 gap-4">
         <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>Prompt</mat-label>
             <textarea matInput rows="24" formControlName="prompt" class="font-mono"></textarea>
         </mat-form-field>
         <div>
-            <div class="grid grid-cols-4 gap-4">
-                <mat-form-field appearance="fill" class="w-full">
-                    <mat-label>Embedding Model</mat-label>
-                    <mat-select formControlName="embedding_model">
-                        <mat-option value="jina-embeddings-v3">jina-embeddings-v3</mat-option>
+            <div class="">
+                <div formGroupName="reader">
+                    <mat-form-field appearance="fill" class="w-1/2 mb-4">
+                        <mat-label>Reader Name</mat-label>
+                        <mat-select formControlName="name">
+                            <mat-option value="Default">Default</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <mat-divider class="mb-4"></mat-divider>
+
+
+                <div class="flex gap-4" formGroupName="chunker">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Chunker Name</mat-label>
+                        <mat-select formControlName="name">
+                            <mat-option value="Token">Token</mat-option>
+                            <mat-option value="Semantic">Semantic</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="w-full ">
+                        <mat-label>Tokens</mat-label>
+                        <input matInput type="number" formControlName="tokens" />
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Overlap</mat-label>
+                        <input matInput type="number" formControlName="overlap" />
+                    </mat-form-field>
+                </div>
+
+
+                <mat-divider class="mb-4"></mat-divider>
+
+                <!-- INDEXING -->
+                <mat-form-field appearance="fill" class="w-1/2 ">
+                    <mat-label>Select Indexing Types</mat-label>
+                    <mat-select formControlName="indexing" multiple>
+                        <mat-option *ngFor="let opt of indexingOptions" [value]="opt">{{ opt }}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
+                <mat-divider class="mb-4"></mat-divider>
+                <!-- RETRIEVER -->
+                <!-- RETRIEVER Multi-select -->
+                <mat-form-field appearance="fill" class="w-1/2 mb-4">
+                    <mat-label>Select Retriever Types</mat-label>
+                    <mat-select formControlName="retrieverSelection" multiple>
+                        <mat-option *ngFor="let opt of retrieverOptions" [value]="opt">{{ opt }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Semantic Docs Number</mat-label>
-                    <input type="number" matInput formControlName="semantic_docs_no" />
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>KeyWord Docs Number</mat-label>
-                    <input type="number" matInput formControlName="KeyWord_docs_no" />
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Reranker1 Limit</mat-label>
-                    <input type="number" matInput formControlName="reranker1_limit" />
-                </mat-form-field>
+                <!-- Docs Count Inputs for Selected Retrievers -->
+                <div [formGroup]="retrieverDocsGroup" class="grid grid-cols-3 gap-4 ">
+                    <div class="w-full" *ngFor="let name of configForm.get('retrieverSelection')?.value">
+                        <mat-form-field appearance="fill" class="w-full">
+                            <mat-label>{{ name }} Docs Count</mat-label>
+                            <input matInput type="number" [formControlName]="name" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <mat-divider class=""></mat-divider>
             </div>
-            <div class="grid grid-cols-4 gap-4">
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Reranker2 Limit</mat-label>
-                    <input type="number" matInput formControlName="reranker2_limit" />
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Window Size</mat-label>
-                    <input type="number" matInput formControlName="window_size" />
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Threshold After Reranker1</mat-label>
-                    <input type="number" matInput formControlName="threshold_after_reranker1" />
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="w-full ">
-                    <mat-label>Threshold After Reranker2</mat-label>
-                    <input type="number" matInput formControlName="threshold_after_reranker2" />
-                </mat-form-field>
-            </div>
-            <mat-slide-toggle matTooltip="Use Exact Cache" formControlName="UseExactCache" (click)="$event.stopPropagation()">Use Exact Cache</mat-slide-toggle>
 
 
         </div>

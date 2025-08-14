@@ -34,6 +34,48 @@
     /* Optional visual feedback */
 }
 
+.custom-multi-select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    min-height: 38px;
+    background-color: white;
+    font-family: inherit;
+    font-size: inherit;
+    /* Important for multi-select functionality */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.custom-multi-select:focus {
+    border: 1px solid #F0903E !important;
+    outline: none !important;
+    box-shadow: 0 0 3px #F0903E;
+}
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* Better visual feedback for selected options */
+
+.custom-multi-select option:checked {
+    background-color: #F0903E;
+    color: white;
+}
+
+
+/* Hover state for options */
+
+.custom-multi-select option:hover {
+    background-color: #f5f5f5;
+}
+
 .deleteRed,
 .deleteRed:hover {
     color: #f09e56

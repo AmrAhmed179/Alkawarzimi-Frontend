@@ -19,7 +19,9 @@ import { bufferTime, Subject, takeUntil } from 'rxjs';
 })
 export class ImportDataComponent implements OnInit {
   addPlainText:boolean = false
+  addUrl:boolean = false
    plainText: string = ''
+   url:string = ''
   indexStatus:string = ''
   selectedFileIndex = 0
   selectedFileData:File
@@ -64,59 +66,59 @@ export class ImportDataComponent implements OnInit {
      this.onDestroy$.complete();
   }
 
-  async importFiles(): Promise<void> {
-    if (this.isImporting || this.uploadedFiles.length === 0) return;
+  // async importFiles(): Promise<void> {
+  //   if (this.isImporting || this.uploadedFiles.length === 0) return;
 
-    this.isImporting = true;
+  //   this.isImporting = true;
 
-    try {
-      const credentials = {
-        deployment: 'Local',
-        key: '',
-        url: 'http://weaviate:8080',
-        chatbotId: this.chatbotId,
-        projectId:this.chatbotId,
-        mode: 'test'
-      };
+  //   try {
+  //     const credentials = {
+  //       deployment: 'Local',
+  //       key: '',
+  //       url: 'http://weaviate:8080',
+  //       chatbotId: this.chatbotId,
+  //       projectId:this.chatbotId,
+  //       mode: 'test'
+  //     };
 
-      for (let i = 0; i < this.uploadedFiles.length; i++) {
-        const file = this.uploadedFiles[i];
-        this.importStatus[file.name] = 'STARTING';
-        this.importProgress[file.name] = 0;
+  //     for (let i = 0; i < this.uploadedFiles.length; i++) {
+  //       const file = this.uploadedFiles[i];
+  //       this.importStatus[file.name] = 'STARTING';
+  //       this.importProgress[file.name] = 0;
 
-        try {
-          await this.wsService.uploadFile(
-            file,
-            credentials,
-            i === this.uploadedFiles.length - 1
-          );
-          this.importStatus[file.name] = 'UPLOAD_COMPLETE';
-        } catch (error) {
-          this.importStatus[file.name] = 'ERROR';
-          console.error(`Error uploading ${file.name}:`, error);
-        }
-      }
-      var data = {
-        "chunk":"",
-        "isLastChunk":false,
-        "total":0,
-        "order":0,
-        "fileID":"",
-        "credentials":{
-          "deployment":"Local",
-          "key":"",
-          "url":"http://weaviate:8080",
-          "chatbotId":this.chatbotId,
-          "projectId":this.chatbotId,
-          "mode":"test"},
-        "isLastDocument":true
-      }
+  //       try {
+  //         await this.wsService.uploadFile(
+  //           file,
+  //           credentials,
+  //           i === this.uploadedFiles.length - 1
+  //         );
+  //         this.importStatus[file.name] = 'UPLOAD_COMPLETE';
+  //       } catch (error) {
+  //         this.importStatus[file.name] = 'ERROR';
+  //         console.error(`Error uploading ${file.name}:`, error);
+  //       }
+  //     }
+  //     var data = {
+  //       "chunk":"",
+  //       "isLastChunk":false,
+  //       "total":0,
+  //       "order":0,
+  //       "fileID":"",
+  //       "credentials":{
+  //         "deployment":"Local",
+  //         "key":"",
+  //         "url":"http://weaviate:8080",
+  //         "chatbotId":this.chatbotId,
+  //         "projectId":this.chatbotId,
+  //         "mode":"test"},
+  //       "isLastDocument":true
+  //     }
 
-      this.wsService.send(data)
-    } finally {
-      this.isImporting = false;
-    }
-  }
+  //     this.wsService.send(data)
+  //   } finally {
+  //     this.isImporting = false;
+  //   }
+  // }
 
   private handleServerMessage(message: any): void {
     if(message.type != "ping")
@@ -176,7 +178,29 @@ export class ImportDataComponent implements OnInit {
         }
     }
   }
-  openUploadDialog() {
+  // openUploadDialog() {
+  //     const dialogRef = this.dialog.open(UploadDialogComponent, {
+  //       width: '400px',
+  //       disableClose: true
+  //     });
+
+  //     dialogRef.afterClosed().subscribe(result => {
+  //       if (result) {
+  //        const filesWithConfig = result.map((file: any) => {
+  //         file.rag_config = this.wsService.getDefaultRAGConfig();
+  //         file.importStatus = "Not_Imported"
+  //         return file;
+  //       });
+
+
+  //     this.uploadedFiles.push(...filesWithConfig);
+  //     console.log("files", this.uploadedFiles)
+  //       }
+  //   });
+  // }
+
+    openUploadDialog() {
+      this.uploadedFiles = []
       const dialogRef = this.dialog.open(UploadDialogComponent, {
         width: '400px',
         disableClose: true
@@ -184,9 +208,15 @@ export class ImportDataComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
+          debugger
          const filesWithConfig = result.map((file: any) => {
-          file.rag_config = this.wsService.getDefaultRAGConfig();
+          file.reader = this._ragKnowledgeBaseService.getDefaultReader();
+          file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
           file.importStatus = "Not_Imported"
+          file.projectId = this.chatbotId
+          file.fileContent = ""
+          file.chatBotId = this.chatbotId
+          file.PlainTextOrDocument = 1   //1 document  0  plaintext
           return file;
         });
 
@@ -196,32 +226,61 @@ export class ImportDataComponent implements OnInit {
         }
     });
   }
-  openPlainTextDialog() {
-  // const dialogRef = this.dialog.open(PlainTextDialogComponent, {
-  //   width: '700px',
-  //   disableClose: true
-  // });
 
-  // dialogRef.afterClosed().subscribe(result => {
-  //   if (result) {
-  //     console.log('Plain text submitted:', result);
-  //     // Handle the plain text content here
-  //   }
-  // });
+   importFiles(): Promise<void> {
+    if (this.isImporting || this.uploadedFiles.length === 0) return;
+    this.uploadedFiles.forEach((e:any)=>{
+      if(e.importStatus == "IMPORTED" || e.importStatus == "FAILD" ||e.importStatus == "STARTING"){
+        return
+      }
+      e.importStatus = "STARTING"
+      this._ragKnowledgeBaseService.uploadRagResource(e).subscribe((res:any)=>{
+        if(res.status == 1){
+          e.importStatus = "IMPORTED"
+          this.plainText = ''
+          this.url = ''
+        }
+        else
+          e.importStatus = "FAILD"
+      })
+    })
   }
-  openUrlsDialog() {
-  // const dialogRef = this.dialog.open(UrlsDialogComponent, {
-  //   width: '700px',
-  //   disableClose: true
-  // });
 
-  // dialogRef.afterClosed().subscribe(result => {
-  //   if (result) {
-  //     debugger
-  //     console.log('Plain text submitted:', result);
-  //     // Handle the plain text content here
-  //   }
-  // });
+  uplaodTextFile(): void {
+    if(this.plainText.trim() == '')
+        return
+    const blob = new Blob([this.plainText], { type: 'text/plain' });
+    const file = new File([blob], 'plain-text.txt', { type: 'text/plain' }) as any;
+
+    file.reader = this._ragKnowledgeBaseService.getDefaultReader();
+    file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
+    file.importStatus = "Not_Imported"
+    file.projectId = this.chatbotId
+    file.chatBotId = this.chatbotId
+    file.PlainTextOrDocument = 0
+    file.fileContent = this.plainText
+    this.uploadedFiles = []
+    this.uploadedFiles.push(file)
+    this.importFiles()
+  }
+
+  uplaodUrl(): void {
+    if(this.url.trim() == '')
+        return
+    const blob = new Blob([this.url], { type: 'text/plain' });
+    const file = new File([blob], this.url, { type: 'text/plain' }) as any;
+
+    file.reader = this._ragKnowledgeBaseService.getDefaultReader();
+    file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
+    file.importStatus = "Not_Imported"
+    file.projectId = this.chatbotId
+    file.chatBotId = this.chatbotId
+    file.PlainTextOrDocument = 2
+    file.url = this.url
+    file.fileContent = ''
+    this.uploadedFiles = []
+    this.uploadedFiles.push(file)
+    this.importFiles()
   }
 
   overViewOrconfig(type){
@@ -288,16 +347,7 @@ export class ImportDataComponent implements OnInit {
     }
   });
 }
-    downloadTextFile(): void {
-    const blob = new Blob([this.plainText], { type: 'text/plain' });
-    const file = new File([blob], 'plain-text.txt', { type: 'text/plain' }) as any;
 
-    file.rag_config = this.wsService.getDefaultRAGConfig();
-    file.importStatus = "Not_Imported"
-    this.uploadedFiles = []
-    this.uploadedFiles.push(file)
-    this.importFiles()
-  }
   ///////////////////////////////////
 
 }

@@ -11,34 +11,42 @@
                 <h3 class="title">Create Index</h3>
             </button> -->
             <div class="flex gap-2">
-                <button mat-raised-button (click)="openUrlsDialog(); addPlainText = false" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)=" addPlainText = false ; addUrl = true ;uploadedFiles = []; ; plainText = ''" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:link" class="icon"></mat-icon>
                 <h3 class="title">URLs</h3>
             </button>
-                <button mat-raised-button (click)="openPlainTextDialog(); addPlainText = true" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)="addPlainText = true ; uploadedFiles = []; addUrl = false; url = ''" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:article" class="icon ">article</mat-icon>
                 <h3 class="title">Plain text</h3>
             </button>
 
-                <button mat-raised-button (click)="openUploadDialog() ; addPlainText = false" class="flex items-center rounded-sm">
+                <button mat-raised-button (click)="openUploadDialog() ; addPlainText = false; addUrl = false; url = '' ;uploadedFiles = []; plainText = ''" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:folder_open" class="icon">upload_file</mat-icon>
                 <h3 class="title ">Select Files</h3>
             </button>
             </div>
 
-            <button *ngIf="uploadedFiles.length > 0 && !addPlainText" mat-raised-button (click)="importFiles()" class=" flex items-center rounded-sm ">
+            <button *ngIf="uploadedFiles.length > 0 && !addPlainText &&!addUrl" mat-raised-button (click)="importFiles()" class=" flex items-center rounded-sm ">
                 <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
                 <h3 class="title ">Import Files</h3>
             </button>
 
-            <button *ngIf="addPlainText" mat-raised-button (click)="downloadTextFile()" class=" flex items-center rounded-sm ">
+            <button *ngIf="addPlainText" mat-raised-button (click)="uplaodTextFile()" class=" flex items-center rounded-sm ">
                 <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
                 <h3 class="title ">Add Plain Text</h3>
+                <div *ngIf=" uploadedFiles.length > 0 && uploadedFiles[0].importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                <div *ngIf=" uploadedFiles.length > 0" [class]="uploadedFiles[0].importStatus" class=" mx-1 rounded-sm"><p class="font-light text-xs p-1"> {{uploadedFiles[0].importStatus}}</p></div>
+            </button>
+            <button *ngIf="addUrl" mat-raised-button (click)="uplaodUrl()" class=" flex items-center rounded-sm ">
+                <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
+                <h3 class="title ">Add Url</h3>
+                <div *ngIf=" uploadedFiles.length > 0 && uploadedFiles[0].importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                <div *ngIf=" uploadedFiles.length > 0" [class]="uploadedFiles[0].importStatus" class=" mx-1 rounded-sm"><p class="font-light text-xs p-1"> {{uploadedFiles[0].importStatus}}</p></div>
             </button>
 
         </div>
         <div class="doc-list maxdocumentsHeight px-1">
-            <div *ngIf="!addPlainText">
+            <div *ngIf="!addPlainText && !addUrl">
                 <div *ngFor="let file of uploadedFiles; let i = index" class="grid grid-cols-10 items-center gap-4 mb-2 mt-4 overflow-auto" (click)="selectedFile(i)">
                     <div [class]="file.importStatus" [ngClass]="{'selectesDocBg':selectedFileIndex == i && file.importStatus == 0,'selectesDocBgSuccess': file.importStatus == 1,'selectesDocBgFaild': file.importStatus == -2}" class="col-span-2 h-12 rounded-md  bg-white flex items-center justify-center hover:bg-slate-200">
                         <p class="font-normal text-base"> {{file.importStatus}}</p>
@@ -66,6 +74,13 @@
 
             </div>
 
+            <div class="mt-4" *ngIf="addUrl">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Enter Url</mat-label>
+                    <textarea matInput [(ngModel)]="url" rows="2"></textarea>
+                </mat-form-field>
+            </div>
+
         </div>
     </div>
 
@@ -81,7 +96,7 @@
                 <button (click)="overViewOrconfig('config')" [ngClass]="{'active':overViewOrConfigValue =='config'}" class="overViewOrconfigButton">Config</button>
             </div> -->
         </div>
-        <div *ngIf="uploadedFiles.length > 0 && !addPlainText" class="mt-14 px-4">
+        <div *ngIf="uploadedFiles.length > 0 && !addPlainText && !addUrl" class="mt-5 px-4">
             <div class="relative w-full border px-2 py-4 rounded-sm">
                 <span class="absolute -top-3 left-3  px-2 text-base ">File Information</span>
                 <mat-form-field appearance="fill" class="w-full ">
@@ -98,37 +113,37 @@
                 </mat-form-field>
             </div>
             <div class="relative w-full border mt-5 px-2 py-4 rounded-sm">
-                <span *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Token'" class="absolute -top-3 left-3  px-2 text-base ">Token Settings</span>
-                <span *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Sentence'" class="absolute -top-3 left-3  px-2 text-base ">Sentence Settings</span>
-                <span *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.Semantic == 'Semantic'" class="absolute -top-3 left-3  px-2 text-base ">Semantic Settings</span>
-                <span *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Markdown'" class="absolute -top-3 left-3  px-2 text-base ">Markdown Settings</span>
                 <mat-form-field appearance="fill" class="w-full">
-                    <mat-label>Select Chunker</mat-label>
-                    <mat-select (selectionChange)="changeChunker($event)" [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected">
-                        <mat-option value="Token">Token</mat-option>
-                        <mat-option value="Sentence">Sentence</mat-option>
-                        <mat-option value="Semantic">Semantic</mat-option>
-                        <mat-option value="Markdown">Markdown</mat-option>
+                    <mat-label>Select Reader</mat-label>
+                    <mat-select (selectionChange)="changeChunker($event)" [(ngModel)]="uploadedFiles[selectedFileIndex].reader.name">
+                        <mat-option value="Default">Default</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Token'">
+                <span *ngIf="uploadedFiles[selectedFileIndex].chunker.name == 'Token'" class="absolute -top-3 left-3  px-2 text-base ">Token Settings</span>
+                <span *ngIf="uploadedFiles[selectedFileIndex].chunker.name  == 'Semantic'" class="absolute -top-3 left-3  px-2 text-base ">Semantic Settings</span>
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Select Chunker</mat-label>
+                    <mat-select (selectionChange)="changeChunker($event)" [(ngModel)]="uploadedFiles[selectedFileIndex].chunker.name">
+                        <mat-option value="Token">Token</mat-option>
+                        <mat-option value="Semantic">Semantic</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].chunker.name  == 'Token'">
                     <mat-label>Tokens</mat-label>
-                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Token.config.Tokens.value" type="number" matInput>
+                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].chunker.tokens" type="number" matInput>
                 </mat-form-field>
-                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Sentence'">
-                    <mat-label>Sentences</mat-label>
-                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Sentence.config.Sentences.value" type="number" matInput>
-                </mat-form-field>
-                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Token'">
-                    <mat-label>Overlap</mat-label>
-                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Token.config.Overlap.value" type="number" matInput>
+                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].chunker.name  == 'Semantic'">
+                    <mat-label>Minimum Tokens</mat-label>
+                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].chunker.tokens" type="number" matInput>
                 </mat-form-field>
 
-                <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Sentence'">
+                <mat-form-field class="w-full" appearance="fill">
                     <mat-label>Overlap</mat-label>
-                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Sentence.config.Overlap.value" type="number" matInput>
+                    <input [(ngModel)]="uploadedFiles[selectedFileIndex].chunker.overlap" type="number" matInput>
                 </mat-form-field>
 
+                <!--
                 <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Semantic'">
                     <mat-label>Breakpoint Percentile Threshold</mat-label>
                     <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Semantic.config['Breakpoint Percentile Threshold'].value" type="number" matInput>
@@ -136,7 +151,7 @@
                 <mat-form-field class="w-full" appearance="fill" *ngIf="uploadedFiles[selectedFileIndex].rag_config.Chunker.selected == 'Semantic'">
                     <mat-label>Max Sentences Per Chunk</mat-label>
                     <input [(ngModel)]="uploadedFiles[selectedFileIndex].rag_config.Chunker.components.Semantic.config['Max Sentences Per Chunk'].value" type="number" matInput>
-                </mat-form-field>
+                </mat-form-field> -->
             </div>
         </div>
     </div>

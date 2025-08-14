@@ -1,17 +1,103 @@
-<div class="flex mt-10 justify-center containerHeight" *ngIf="indexStatus">
-    <div class=" border  p-4  maxHeight w-1/3">
-        <button mat-raised-button [class]="indexStatus.index_status" (click)="CreateIndex()" class="flex items-center py-1 rounded-sm">
+<!-- <div class="flex mt-10 justify-center containerHeight" *ngIf="indexStatus">
+    <fieldset class=" border  p-4  maxHeight w-1/3">
+        <legend>
+            <p *ngIf="upTodated" class="parentClass text-lg font-medium text-[#092e50] mx-2"><span class="text-[#4caf50]">Up_to_date</span></p>
+            <p *ngIf="!upTodated" class="parentClass text-lg font-medium text-[#092e50] mx-2"> <span class="text-[#f70505]">Out_of_date</span></p>
+        </legend>
+        <div class="flex justify-between items-center">
+            <button mat-raised-button [class]="indexStatus.status" (click)="CreateIndex()" class="flex items-center py-1 rounded-sm">
           <div *ngIf="isIndexRunning" class="w-4 h-4 border-2 mx-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <h3 *ngIf="isIndexRunning" class="text-white">Creating Index...</h3>
-                <h3 *ngIf="!isIndexRunning" class="text-white">Create Index</h3>
+                <h3 *ngIf="isIndexRunning" class="">Creating Index...</h3>
+                <h3 *ngIf="!isIndexRunning" class="">Create Index</h3>
    </button>
-        <div class="mt-4 mx-4 ">
-            <p *ngIf="indexStatus.index_status == 'up-to-date'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#4caf50]">{{indexStatus.index_status}}</span></p>
-            <p *ngIf="indexStatus.index_status == 'outdated'" class="parentClass text-lg font-medium text-[#092e50] my-2">Index status: <span class="text-[#f70505]">{{indexStatus.index_status}}</span></p>
-            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Indexed At: <span class="text-base ">{{indexStatus.indexedAt | date:'medium'}}</span></p>
-            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Data updated At: <span class="text-base ">{{indexStatus.dataUpdatedAt | date:'medium'}}</span></p>
-            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Chunks count: <span class="text-base ">{{indexStatus.chunks_count}}</span></p>
-        </div>
-    </div>
 
+            <button *ngIf="indexStatus.status == 'running'" mat-raised-button class="text-white rounded-sm ounded-sm bg-[#f70505]" (click)="cancelIndex()">Cancel Index</button>
+
+            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Status: <span class="{{indexStatus.status}}_1" class="text-base font-medium ">{{indexStatus.status | uppercase}}</span></p>
+
+        </div>
+
+        <div class="mt-4 mx-4 ">
+            <p class="parentClass text-lg font-medium text-[#092e50] my-2">Updated At: <span class="text-base ">{{indexStatus.updated_at | date:'medium'}}</span></p>
+            <p *ngIf="indexStatus.status == 'running'" class="parentClass text-lg font-medium text-[#092e50] my-2">Stage: <span class="text-base ">{{indexStatus.phase | uppercase}}</span></p>
+            <p *ngIf="indexStatus.status == 'running'" class="parentClass text-lg font-medium text-[#092e50] my-2">Total: <span class="text-base ">{{indexStatus.total}}</span></p>
+            <p *ngIf="indexStatus.status == 'running'" class="parentClass text-lg font-medium text-[#092e50] my-2">Current: <span class="text-base ">{{indexStatus.current}}</span></p>
+        </div>
+    </fieldset>
+
+</div> -->
+<div class="flex mt-10 justify-center containerHeight" *ngIf="indexStatus">
+    <fieldset class="border border-gray-300 bg-white rounded-xl shadow-sm p-6 w-1/3 maxHeight" [ngClass]="{
+      'border-green-400 bg-green-50': upTodated,
+      'border-red-400 bg-red-50': !upTodated
+    }">
+        <!-- Legend -->
+        <legend>
+            <p *ngIf="upTodated" class="parentClass text-lg font-medium mx-2 text-green-700">
+                ✅ Up_to_date
+            </p>
+            <p *ngIf="!upTodated" class="parentClass text-lg font-medium mx-2 text-red-700">
+                ⚠ Out_of_date
+            </p>
+        </legend>
+
+        <!-- Controls -->
+        <div class="flex justify-between items-center mb-4">
+            <!-- Create Index Button -->
+            <button mat-raised-button (click)="CreateIndex()" class="flex items-center px-4 py-2 rounded-md font-semibold text-white transition duration-200" [ngClass]="{
+          'bg-[#ff9800] hover:bg-[#ffb950]': !isIndexRunning,
+          'bg-blue-400 cursor-not-allowed': isIndexRunning
+        }" [disabled]="isIndexRunning">
+        <div
+          *ngIf="isIndexRunning"
+          class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
+        ></div>
+        <h3>{{ isIndexRunning ? "Creating Index..." : "Create Index" }}</h3>
+      </button>
+
+            <!-- Cancel Button -->
+            <button *ngIf="indexStatus.status == 'running'" mat-raised-button (click)="cancelIndex()" class="px-4 rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 transition duration-200">
+        Cancel Index
+      </button>
+
+            <!-- Status -->
+            <p class="text-lg font-medium text-gray-700 my-2">
+                Status:
+                <span class="{{indexStatus.status}}_1" class="text-base font-semibold">
+          {{ indexStatus.status | uppercase }}
+        </span>
+            </p>
+        </div>
+
+        <!-- Details -->
+        <div class="mt-4 space-y-2">
+            <p class="text-lg font-medium text-gray-600">
+                Updated At:
+                <span class="text-base font-normal text-gray-800">
+          {{ indexStatus.updated_at | date:'medium' }}
+        </span>
+            </p>
+
+            <p *ngIf="indexStatus.status == 'running'" class="text-lg font-medium text-gray-600">
+                Stage:
+                <span class="text-base font-semibold text-blue-800 uppercase">
+          {{ indexStatus.phase }}
+        </span>
+            </p>
+
+            <p *ngIf="indexStatus.status == 'running'" class="text-lg font-medium text-gray-600">
+                Total:
+                <span class="text-base font-semibold text-gray-900">
+          {{ indexStatus.total }}
+        </span>
+            </p>
+
+            <p *ngIf="indexStatus.status == 'running'" class="text-lg font-medium text-gray-600">
+                Current:
+                <span class="text-base font-semibold text-green-900">
+          {{ indexStatus.current }}
+        </span>
+            </p>
+        </div>
+    </fieldset>
 </div>

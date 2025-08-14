@@ -99,9 +99,13 @@ export class ChatbotConversationComponent implements OnInit {
     this._analyticalService.showButton$.next(true)
     this._analyticalService.filterAnylatic$.pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
 
+      debugger
       this._analyticalService.formValue$.subscribe((result:formValueMapToForm)=>{
-        if(result)
-        this.formValue = result
+        if(result){
+           //debugger
+                   this.formValue = result
+
+        }
       })
 
 
@@ -111,8 +115,11 @@ export class ChatbotConversationComponent implements OnInit {
     if(this.servicesName.length <1){
       this.getServices()
     }
-    this.getSassProjects()
+    if(this.sassProjects.length < 1){
+       this.getSassProjects()
+    }
     this.intiateForm()
+
     if(this.entitiesName.length < 1){
       this.getEntityies()
     }
@@ -144,6 +151,7 @@ export class ChatbotConversationComponent implements OnInit {
   return row?.steps?.[0]?.output?.Responses || [];
 }
  intiateForm(){
+  debugger
   this.form =this.fb.group({
     intents: new FormControl(this.formValue.intents),
     services: new FormControl(this.formValue.services),
@@ -169,19 +177,22 @@ export class ChatbotConversationComponent implements OnInit {
  }
 
  getSassProjects(){
-  let projectType = null
-  if(this.filter.chatBotId == 320){
-    projectType = 1
-    this.showSassProjectsFilter = true
-    }
+  if(this.filter.chatBotId == 327 ||this.filter.chatBotId == 329 ||this.filter.chatBotId == 330 || this.filter.chatBotId == 320){
+      let projectType = null
+    if(this.filter.chatBotId == 320){
+      projectType = 1
+      this.showSassProjectsFilter = true
+      }
 
-  if(this.filter.chatBotId == 327 ||this.filter.chatBotId == 329 ||this.filter.chatBotId == 330){
-    projectType = 0
-    this.showSassProjectsFilter = true
+    if(this.filter.chatBotId == 327 ||this.filter.chatBotId == 329 ||this.filter.chatBotId == 330){
+      projectType = 0
+      this.showSassProjectsFilter = true
+    }
+    this._analyticalService.GetSassProjects(projectType).subscribe((res:any)=>{
+      this.sassProjects  = res.projects
+    })
   }
-  this._analyticalService.GetSassProjects(projectType).subscribe((res:any)=>{
-    this.sassProjects  = res.projects
-  })
+
  }
 
   getEntityies(){
@@ -406,9 +417,9 @@ export class ChatbotConversationComponent implements OnInit {
     this._analyticalService.filterAnylatic$.next(this.filter)
     this.intiateForm()
     debugger
-    this.dataSource = new MatTableDataSource([{_id:userId}])
-    this.totalItem = 1
-    this.messangerCount = 1
+    // this.dataSource = new MatTableDataSource([{_id:userId}])
+    // this.totalItem = 1
+    // this.messangerCount = 1
    }
    removeUserId(){
     this.filter.userId = ''

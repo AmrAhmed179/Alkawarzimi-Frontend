@@ -9,14 +9,10 @@ import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.ser
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
 export class DocumentItem {
   title: string;
-  extension: string;
-  fileSize: number;
-  labels: string[];
-  source: string;
-  meta: string;
+  type: number;
+  _id: string;
   doc_uuid: string;
-  file_id: string;
-  uuid: string;
+  chunked:boolean
   select:boolean = false
 }
 @Component({
@@ -26,17 +22,24 @@ export class DocumentItem {
 })
 export class DocumentsComponent implements OnInit {
 
-   documents:any[] = []
+    plainTextType:boolean = true
+    fileType:boolean = true
+    urlType:boolean = true
+    documents:any[] = []
+    filteredDocuments:any =[]
     chatbotId:string
     search = '';
     clickedItemIndex:number
+    docType:number
+    chunk_id:string
+    chunked:boolean
     flag:boolean = false
     selectAllDocuments:boolean = false
     onDestroy$: Subject<void> = new Subject();
-    selectedDocId:String
+    selectedDoc_uuid:String
     documentContent:any
     totalPages:number
-    contentOrChunks:string
+    contentOrChunks:string = 'chunk'
     pageNumber:number = 1
     pageSize:number = 1
     totalItems:number
@@ -75,28 +78,15 @@ export class DocumentsComponent implements OnInit {
 }
 
     getAllDocuments(){
-      let body = {
-      "query": "",
-      "labels": [],
-      "page": 1,
-      "pageSize": 50,
-      "credentials": {
-          "deployment": "Local",
-          "key": "",
-          "url": "http://weaviate:8080",
-          "chatbotId": this.chatbotId,
-          "projectId":this.chatbotId,
-          "mode": "test"
-      }
-  }
-      this._ragKnowledgeBaseService.getAllDocuments(body).subscribe((res:any)=>{
-          this.documents = res.documents
+      this._ragKnowledgeBaseService.getAllDocuments(this.chatbotId, this.chatbotId).subscribe((res:any)=>{
+          this.documents = res.data
+          this.filteredDocuments  =  this.documents
       })
     }
    get_Doucment_content(){
     let body =
     {
-    "uuid": this.selectedDocId,
+    "uuid": this.selectedDoc_uuid,
     "page": this.pageNumber,
     "chunkScores": [],
     "credentials": {
@@ -114,39 +104,28 @@ export class DocumentsComponent implements OnInit {
           this.totalPages = res.maxPage
       })
     }
-   get_Doucment_chunks(){
-    let body =
-    {
-    "uuid": this.selectedDocId,
-    "page": this.pageNumber,
-    "pageSize":1,
-    "chunkScores": [],
-    "credentials": {
-        "deployment": "Local",
-        "key": "",
-        "url": "http://weaviate:8080",
-        "chatbotId": this.chatbotId,
-        "projectId":this.chatbotId,
-        "mode": "test"
-      }
-    }
-    this._ragKnowledgeBaseService.get_Doucment_chunks(body).subscribe((res:any)=>{
-      debugger
-          this.documentContent = res.chunks[0].content.replace(/\r\n/g, '<br>')
-          this.totalPages = res.chunks_count
-      })
-    }
 
-  filteredDocuments(): DocumentItem[] {
-    return this.documents.filter(doc => doc.title.includes(this.search))
-    // .map(x => {
-    //         x.select = false;
-    //         return x;
-    //     });
+  // filteredDocuments(): DocumentItem[] {
+  //   debugger
+  //   return this.documents.filter(doc => doc.title.toLowerCase().includes(this.search.toLowerCase())
+  //   &&( doc.type.toString() == this.plainTextType || doc.type.toString() == this.fileType || doc.type.toString() == this.urlType ))
+  // }
+  getDocumentsFilter(){
+    debugger
+    const selectedTypes: number[] = [];
+
+  if (this.plainTextType) selectedTypes.push(0);
+  if (this.fileType) selectedTypes.push(1);
+  if (this.urlType) selectedTypes.push(2);
+
+  this.filteredDocuments = this.documents.filter(doc =>
+    doc.title.toLowerCase().includes(this.search.toLowerCase()) &&
+    ( selectedTypes.includes(doc.type))
+  );
   }
 
   clearSelectedDocuments(){
-    var deletedDocuments =  this.filteredDocuments().filter(x=>x.select == true)
+    var deletedDocuments =  this.filteredDocuments.filter(x=>x.select == true)
     const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
           width: '300px',
           data: { message: 'Do you want to delete selected documents?' }
@@ -155,20 +134,8 @@ export class DocumentsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
     deletedDocuments.forEach(doc=>{
-      let body =
-    {
-    "uuid": doc.uuid,
-    "credentials": {
-        "deployment": "Local",
-        "key": "",
-        "url": "http://weaviate:8080",
-        "chatbotId": this.chatbotId,
-        "projectId":this.chatbotId,
-        "mode": "test"
-      }
-    }
-     this._ragKnowledgeBaseService.delete_document(body).subscribe((res:any)=>{
-     const docIndex = this.documents.findIndex(d => d.uuid === doc.uuid);
+     this._ragKnowledgeBaseService.delete_document(this.chatbotId,doc._id, doc.type, false).subscribe((res:any)=>{
+     const docIndex = this.documents.findIndex(d => d.doc_uuid === doc.doc_uuid);
       if (docIndex !== -1) {
         this.documents.splice(docIndex, 1);
       }
@@ -185,56 +152,30 @@ export class DocumentsComponent implements OnInit {
 
   }
   showClearButtom() : boolean{
-     if(this.filteredDocuments().find(x=>x.select == true))
+     if(this.filteredDocuments.find(x=>x.select == true))
       return true;
     return false
   }
   selectDocument(doc: DocumentItem): void {
-    this.selectedDocId = doc.uuid
+    this.selectedDoc_uuid = doc.doc_uuid
     this.title = doc.title
-    this.pageNumber =1
-    if(this.contentOrChunks){
-      if(this.contentOrChunks == 'content'){
-        this.get_Doucment_content()
-      }
-      else{
-        this.documentContent = ""
-        this.get_Doucment_chunks()
-      }
-    }
-    else{
-      this.contentOrChunks = 'content'
-       this.get_Doucment_content()
-    }
-  }
-
-  selectChunkOrContent(type:string){
-    this.contentOrChunks  = type
-    this.pageNumber = 1
+    this.docType = doc.type
+    this.chunked = doc.chunked
     this.paginator.firstPage()
-    if(this.contentOrChunks == 'content'){
-        this.get_Doucment_content()
-      }
-      else{
-        this.documentContent = ""
-        this.get_Doucment_chunks()
-      }
+    this.pageNumber = 1
+    this.get_Doucment_chunks()
   }
-  deleteDocument(doc: DocumentItem, index){
+  get_Doucment_chunks(){
+    let projectId = this.chatbotId
+  this._ragKnowledgeBaseService.get_Doucment_chunks(this.chatbotId,projectId,this.selectedDoc_uuid,this.docType,this.pageNumber).subscribe((res:any)=>{
     debugger
-    let body =
-    {
-    "uuid": doc.uuid,
-    "credentials": {
-        "deployment": "Local",
-        "key": "",
-        "url": "http://weaviate:8080",
-        "chatbotId": this.chatbotId,
-        "projectId":this.chatbotId,
-        "mode": "test"
-      }
-    }
+        this.documentContent = res.chunk.replace(/\r\n/g, '<br>')
+        this.totalPages = res.chunksCount
+        this.chunk_id = res.chunk_id
+    })
+  }
 
+  deletePlaintext(){
     const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
           width: '300px',
           data: { message: 'Do you want to delete this item?' }
@@ -242,12 +183,11 @@ export class DocumentsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-           this._ragKnowledgeBaseService.delete_document(body).subscribe((res:any)=>{
-            const docIndex = this.documents.findIndex(d => d.uuid === doc.uuid);
-      if (docIndex !== -1) {
-        this.documents.splice(docIndex, 1);
-      }
-      this.notify.openSuccessSnackBar("Successfully Deleted");
+           this._ragKnowledgeBaseService.delete_document(this.chatbotId,this.chunk_id, this.docType, true).subscribe((res:any)=>{
+          if(res.status == 1){
+            this.notify.openSuccessSnackBar("Successfully Deleted");
+            this.paginator.firstPage()
+          }
       },
        (err) => {
     this.notify.openFailureSnackBar("Failed to delete document");
@@ -260,7 +200,7 @@ export class DocumentsComponent implements OnInit {
 
   selectAll(){
     debugger
-    this.filteredDocuments().map(x => {
+    this.filteredDocuments.map(x => {
             x.select = this.selectAllDocuments;
             return x;
         })

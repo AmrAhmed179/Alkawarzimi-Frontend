@@ -31,7 +31,7 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
     // this.get_index_status()
     });
-    this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
+    //this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
     // this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
     //   this.indexStatus = res
     // })
