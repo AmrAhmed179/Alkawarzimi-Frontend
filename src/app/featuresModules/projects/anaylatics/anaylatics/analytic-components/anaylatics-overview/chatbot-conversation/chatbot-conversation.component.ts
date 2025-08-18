@@ -9,7 +9,7 @@ import { AnalyticServiceService } from 'src/app/Services/analytic-service.servic
 import { RequestFilter, SassProjects, filterAnalytical, formValueMapToForm } from 'src/app/core/models/filterAnaylic';
 import { DialogChatBotConversationComponent } from '../dialog-chat-bot-conversation/dialog-chat-bot-conversation.component';
 import moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 
 export class StepsReponseCreation{
   message:string[] =[]
@@ -28,6 +28,7 @@ export class StepsReponseCreation{
 export class ChatbotConversationComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject();
   filter:filterAnalytical =  new filterAnalytical();
+  filterObserve:filterAnalytical =  new filterAnalytical();
   formValue:formValueMapToForm =  new formValueMapToForm();
   range:any
   datetimeNow:Date = new Date()
@@ -100,18 +101,22 @@ export class ChatbotConversationComponent implements OnInit {
     this._analyticalService.filterAnylatic$.pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
 
       debugger
-      this._analyticalService.formValue$.subscribe((result:formValueMapToForm)=>{
+      this._analyticalService.formValue$.pipe(takeUntil(this.onDestroy$)).subscribe((result:formValueMapToForm)=>{
         if(result){
            //debugger
                    this.formValue = result
-
         }
       })
 
 
-    this.filter = res
+    this.filter.endDate = res.endDate
+    this.filter.startDate = res.startDate
+    this.filter.chatBotId = res.chatBotId
+    this.filter.searchFromParent = res.searchFromParent
     this.filter.start = 0
+
     this.filter.modeAgent = false
+
     if(this.servicesName.length <1){
       this.getServices()
     }
@@ -135,12 +140,14 @@ export class ChatbotConversationComponent implements OnInit {
     //this.formvalue() let y = window.location.href.split("/").pop()
     let y = window.location.href.split("/").pop()
       if(y==='Chatbotconversation' ){
-        this.getChatbotConversation()
+        debugger
+        if(this.filter.searchFromParent){
+          this.getChatbotConversation()
+                this.getMessangerUser()
+
+        }
       }
 
-    if(!this.filter.userId){
-      this.getMessangerUser()
-    }
     this.paginator.firstPage()
     this.paginatorConversation.firstPage()
     console.log("filterxx",this.filter);
@@ -169,7 +176,8 @@ export class ChatbotConversationComponent implements OnInit {
 
     this.servicesResponseList = res.services
     console.log(res.services)
-    res.services.forEach(element => {
+    this.servicesResponseList.forEach(element => {
+      element.selected = false
       this.servicesName.push(element.name)
     });
     console.log("services", this.servicesName)
@@ -239,7 +247,7 @@ export class ChatbotConversationComponent implements OnInit {
       this.messangerCount = res.recordsTotal
     })
   }
-  formvalue(){
+  formvalue(value:number){
 
     debugger
     this.requestFilter = []
@@ -255,15 +263,25 @@ export class ChatbotConversationComponent implements OnInit {
     this.filter.search = this.form.value['search']
     this.filter.filter = this.requestFilter
     this.filter.projectId = this.form.value['projectId']
+    this.filter.searchFromParent = false
+
+
     this.formValue.entities = this.form.value['entities']
     this.formValue.services = this.form.value['services']
     this.formValue.intents = this.form.value['intents']
     this.formValue.userId = this.form.value['userId']
     this.formValue.search = this.form.value['search']
     this.formValue.projectId = this.form.value['projectId']
+    this.formValue.searchFromParent = false
 
     this._analyticalService.formValue$.next(this.formValue)
     this._analyticalService.filterAnylatic$.next(this.filter)
+    if(value == 1){
+      this.getChatbotConversation()
+      this.getMessangerUser()
+
+    }
+
     console.log("FORMVALUE", this.filter)
 
     console.log("requestFilter", this.requestFilter)
@@ -441,6 +459,40 @@ export class ChatbotConversationComponent implements OnInit {
     this.filter.start = 0
     this._analyticalService.filterAnylatic$.next(this.filter);
    }
+////////////////////////////////////////////////////////
 
+ searchServiceText = '';
+ ServiceDropdownOpen = false;
+  services = [
+    { name: '@Login', selected: true },
+    { name: '@TriggerOtp', selected: true },
+    { name: '@LeaveBalanceInquiry', selected: true },
+    { name: '@LeaveRequest', selected: false },
+    { name: '@CreateCompliant', selected: false },
+    { name: '@ProfileUpdate', selected: false },
+  ];
+
+  get filteredServices() {
+    if (!this.searchServiceText) return this.servicesResponseList;
+    return this.servicesResponseList.filter(s =>
+      s.name.toLowerCase().includes(this.searchServiceText.toLowerCase())
+    );
+  }
+
+  get selectedServices() {
+    return this.servicesResponseList.filter(s => s.selected);
+  }
+
+  toggleService(service: any) {
+    service.selected = !service.selected;
+  }
+
+  removeService(service: any) {
+    service.selected = false;
+  }
+
+  clearAllServices() {
+    this.servicesResponseList.forEach(s => s.selected = false);
+  }
 
 }

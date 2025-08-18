@@ -15,6 +15,8 @@ import { NotifyService } from 'src/app/core/services/notify.service';
 })
 export class DiagramflowIframComponent implements OnInit {
 
+
+
   settingForm:FormGroup
   intentSettings:IntentSettings
   lang:string

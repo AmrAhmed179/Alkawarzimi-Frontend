@@ -11,6 +11,7 @@ export class filterAnalytical{
   userId:string
   projectId:string = ""
   modeAgent:boolean = false
+  searchFromParent:boolean = true
 }
 export class RequestFilter{
   id:string;
@@ -25,6 +26,7 @@ export class formValueMapToForm{
   search:String   = ''
   userId:String   = ''
   projectId:string = ""
+  searchFromParent:boolean = true
 }
 
 export class SurveyFilter{

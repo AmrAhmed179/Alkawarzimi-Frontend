@@ -86,7 +86,7 @@
 
     <div class="col-span-6 maxHeight border  p-2 px-3 relative">
         <!-- <div class="flex justify-between gap-2 mb-3 absolute top-2 right-3 left-3 " *ngIf="uploadedFiles.length > 0"> -->
-        <div class="flex items-center justify-between gap-2 mb-3  " *ngIf="uploadedFiles.length > 0 && !addPlainText">
+        <div class="flex items-center justify-between gap-2 mb-3  " *ngIf="uploadedFiles.length > 0 && !addPlainText && !addUrl">
             <p class="font-medium text-base">Import Config</p>
             <button *ngIf="uploadedFiles.length > 0" mat-raised-button (click)="applySettingsToAll()" class="title rounded-sm">Apply To All</button>
 

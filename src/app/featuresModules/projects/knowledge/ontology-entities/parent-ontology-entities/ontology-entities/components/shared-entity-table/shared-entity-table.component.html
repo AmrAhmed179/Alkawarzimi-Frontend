@@ -65,7 +65,7 @@
                 </div>
                 <div class="flex w-64">
                     <P class="bg-[#999999] rounded-lg text-white px-1 mx-2 h-5">{{entity._id}}</P>
-                    <p *ngIf="entity.templateId == 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class=" textColor font-semibold">{{entity.entityInfo[0].entityText}}</p>
+                    <p *ngIf="entity.templateId == 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class="  font-semibold">{{entity.entityInfo[0].entityText}}</p>
                     <p *ngIf="entity.templateId > 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class=" font-semibold text-[#ff0000]">{{entity.entityInfo[0].entityText}}</p>
                 </div>
 

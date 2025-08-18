@@ -352,7 +352,7 @@ export class ProjectsComponent implements OnInit {
   }
   filterProjects() {
   this.filteredProjects = this.projectS.filter((project: any) =>
-    project.name?.toLowerCase().includes(this.searchText.toLowerCase())
+    project.name?.toLowerCase().includes(this.searchText.toLowerCase()) || project._id.toLowerCase().includes(this.searchText.toLowerCase())
   );
 }
   projectDetails(item){

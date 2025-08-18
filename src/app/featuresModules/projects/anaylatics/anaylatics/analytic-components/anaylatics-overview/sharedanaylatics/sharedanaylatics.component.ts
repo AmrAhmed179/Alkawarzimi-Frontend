@@ -118,7 +118,7 @@ export class SharedanaylaticsComponent implements OnInit {
     filter.chatBotId = this.chatBotId;
     filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
     filter.endDate = (moment(this.range.get('endDate').value)).format('MM/DD/YYYY')
-
+    filter.searchFromParent = true
     this._analyticalService.filterAnylatic$.next(filter);
 
    console.log("startDate",this.startDate)

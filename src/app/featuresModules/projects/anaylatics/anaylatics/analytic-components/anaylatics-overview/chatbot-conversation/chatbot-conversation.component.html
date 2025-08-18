@@ -1,47 +1,76 @@
 <div class="mx-6">
-    <form [formGroup]="form" class="grid grid-cols-3 gap-x-4">
-        <mat-form-field appearance="fill">
+    <form [formGroup]="form" class="flex items-center gap-3">
+        <mat-form-field appearance="fill" class="w-full">
             <mat-label>Intents</mat-label>
-            <mat-select formControlName="intents" (ngModelChange)="formvalue()" multiple>
+            <mat-select formControlName="intents" (ngModelChange)="formvalue(0)" multiple>
                 <mat-option *ngFor="let intent of intentsName" [value]="intent">#{{intent}}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="w-full">
             <mat-label>Services</mat-label>
-            <mat-select formControlName="services" (ngModelChange)="formvalue()" multiple>
+            <mat-select formControlName="services" (ngModelChange)="formvalue(0)" multiple>
                 <mat-option *ngFor="let service of  servicesName" [value]="service">{{service}}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="w-full">
             <mat-label>Entities</mat-label>
-            <mat-select formControlName="entities" (ngModelChange)="formvalue()" multiple>
+            <mat-select formControlName="entities" (ngModelChange)="formvalue(0)" multiple>
                 <mat-option *ngFor="let entity of entitiesName" [value]="entity">@{{entity}}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" *ngIf="showSassProjectsFilter">
+        <mat-form-field appearance="fill" *ngIf="showSassProjectsFilter" class="w-full">
             <mat-label>projects</mat-label>
-            <mat-select formControlName="projectId" (ngModelChange)="formvalue()">
+            <mat-select formControlName="projectId" (ngModelChange)="formvalue(0)" class="w-full">
                 <mat-option *ngFor="let project of sassProjects" [value]="project._id">{{project?.brandInfo?.name}}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="w-full">
             <mat-label>Utterance</mat-label>
-            <input (change)="formvalue()" formControlName="search" matInput>
+            <input (change)="formvalue(0)" (keydown.enter)="formvalue(1)" formControlName="search" matInput>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="w-full">
             <mat-label>UserId</mat-label>
             <div class="flex items-center">
-                <input (change)="formvalue()" class="w-[70%]" formControlName="userId" matInput><button type="button" *ngIf="form?.controls['userId']?.value" mat-raised-button class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm max-w-xs text-base"
+                <input (change)="formvalue(0)" (keydown.enter)="formvalue(1)" class="w-[70%]" formControlName="userId" matInput><button type="button" *ngIf="form?.controls['userId']?.value" mat-raised-button class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm max-w-xs text-base"
                     (click)="removeUserId();$event.stopPropagation() ">{{form.controls['userId'].value}}</button>
             </div>
         </mat-form-field>
         <!-- <button (click)="formvalue()" (click)="getIntents();  getEntityies() ;getServices()">clicck</button> -->
     </form>
+
+    <div (clickOutside)="ServiceDropdownOpen = false" class="p-2 border rounded-md w-96 ">
+        <!-- Selected Chips -->
+        <div *ngIf="selectedServices.length > 0" class="flex flex-wrap gap-2 mb-2 h-8 overflow-auto">
+            <span *ngFor="let s of selectedServices" class="px-2 py-1 bg-orange-400 text-white rounded flex items-center">
+      {{ s.name.replace('@', '') }}
+      <button class="ml-2 text-white font-bold" (click)="removeService(s)">×</button>
+    </span>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="border rounded shadow relative">
+            <div (click)="ServiceDropdownOpen = true" class="flex justify-center items-center bg-gray-100 p-2 font-bold">
+                <span class="">Services</span>
+                <button *ngIf="selectedServices.length > 0" class="px-2 py-1 text-sm bg-gray-600 text-white rounded  ml-auto" (click)="clearAllServices()">Clear</button>
+            </div>
+
+            <div class="p-2 absolute z-50 bg-white w-full" *ngIf="ServiceDropdownOpen">
+                <input type="text" [(ngModel)]="searchServiceText" placeholder="Search services" class="w-full border rounded p-1 mb-2" />
+                <div class="max-h-40 overflow-y-auto">
+                    <div *ngFor="let service of filteredServices" class="flex items-center mb-1">
+                        <input type="checkbox" [(ngModel)]="service.selected" class="mr-2" />
+                        <label>{{ service.name }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <mat-tab-group>
         <mat-tab label="Conversations -{{conversationCount}}-">
