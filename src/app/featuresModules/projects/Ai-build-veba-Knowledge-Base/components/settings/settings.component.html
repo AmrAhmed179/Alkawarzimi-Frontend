@@ -1,28 +1,43 @@
-<div *ngIf="configForm" class="rounded-sm border  mx-6 p-4 maxHeight">
+<div *ngIf="configForm" class="rounded-sm border  mx-6 px-4 py-2 maxHeight">
     <div class="flex justify-end">
-        <button [disabled]="!configForm.valid" class="mb-4 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
+        <button [disabled]="!configForm.valid" class="mb-2 rounded-sm" mat-raised-button color="primary" (click)="saveConfigs()">
           Save Configs
         </button>
     </div>
-    <form [formGroup]="configForm" class="grid grid-cols-2 gap-4">
-        <mat-form-field appearance="fill" class="w-full mb-4">
+    <form [formGroup]="configForm" class="grid grid-cols-2 gap-4 maxFormHeight">
+        <mat-form-field appearance="fill" class="w-full mb-4 mt-2">
             <mat-label>Prompt</mat-label>
             <textarea matInput rows="24" formControlName="prompt" class="font-mono"></textarea>
         </mat-form-field>
         <div>
             <div class="">
-                <div formGroupName="reader">
-                    <mat-form-field appearance="fill" class="w-1/2 mb-4">
-                        <mat-label>Reader Name</mat-label>
-                        <mat-select formControlName="name">
-                            <mat-option value="Default">Default</mat-option>
+                <fieldset class="flex gap-4 w-full border px-4 pt-2  rounded-sm">
+                    <legend class="mx-2">Reader & Indexing Types</legend>
+
+                    <!-- Reader -->
+                    <div formGroupName="reader" class="w-full">
+                        <mat-form-field appearance="fill" class="w-full">
+                            <mat-label>Reader Name</mat-label>
+                            <mat-select formControlName="name">
+                                <mat-option value="Default">Default</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+                    <!-- INDEXING -->
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Select Indexing Types</mat-label>
+                        <mat-select formControlName="indexing" multiple>
+                            <mat-option *ngFor="let opt of indexingOptions" [value]="opt">{{ opt }}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-                <mat-divider class="mb-4"></mat-divider>
+                </fieldset>
 
+                <!-- Chunker -->
 
-                <div class="flex gap-4" formGroupName="chunker">
+                <fieldset class="flex gap-4 items-center border px-4 pt-2 rounded-sm" formGroupName="chunker">
+                    <legend class="mx-2">Chunker</legend>
+
                     <mat-form-field appearance="fill" class="w-full">
                         <mat-label>Chunker Name</mat-label>
                         <mat-select formControlName="name">
@@ -40,40 +55,74 @@
                         <mat-label>Overlap</mat-label>
                         <input matInput type="number" formControlName="overlap" />
                     </mat-form-field>
-                </div>
+                </fieldset>
+
+                <!-- Reranker -->
+                <fieldset class="flex gap-4 items-center border px-4 pt-2 mt-2 rounded-sm" formGroupName="reranker">
+                    <legend class="mx-2">Reranker</legend>
 
 
-                <mat-divider class="mb-4"></mat-divider>
+                    <mat-form-field appearance="fill" class="w-full ">
+                        <mat-label>docs_limit</mat-label>
+                        <input matInput type="number" formControlName="docs_limit" />
+                    </mat-form-field>
 
-                <!-- INDEXING -->
-                <mat-form-field appearance="fill" class="w-1/2 ">
-                    <mat-label>Select Indexing Types</mat-label>
-                    <mat-select formControlName="indexing" multiple>
-                        <mat-option *ngFor="let opt of indexingOptions" [value]="opt">{{ opt }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Threshold</mat-label>
+                        <input matInput type="number" formControlName="threshold" />
+                    </mat-form-field>
+                    <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
 
-                <mat-divider class="mb-4"></mat-divider>
+                </fieldset>
+
                 <!-- RETRIEVER -->
-                <!-- RETRIEVER Multi-select -->
-                <mat-form-field appearance="fill" class="w-1/2 mb-4">
-                    <mat-label>Select Retriever Types</mat-label>
-                    <mat-select formControlName="retrieverSelection" multiple>
-                        <mat-option *ngFor="let opt of retrieverOptions" [value]="opt">{{ opt }}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <fieldset class="border rounded-sm px-4 py-2 mt-2">
+                    <legend class="mx-2">Retriever</legend>
 
-                <!-- Docs Count Inputs for Selected Retrievers -->
-                <div [formGroup]="retrieverDocsGroup" class="grid grid-cols-3 gap-4 ">
+                    <div class="flex gap-4">
+
+                        <!-- RETRIEVER Multi-select -->
+                        <mat-form-field appearance="fill" class="w-1/2">
+                            <mat-label>Select Retriever Types</mat-label>
+                            <mat-select formControlName="retrieverSelection" multiple>
+                                <mat-option *ngFor="let opt of retrieverOptions" [value]="opt">{{ opt }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+
+
+
+                    <!-- Docs Count Inputs for Selected Retrievers -->
+                    <!-- <div [formGroup]="retrieverDocsGroup" class="grid grid-cols-3 gap-4 ">
                     <div class="w-full" *ngFor="let name of configForm.get('retrieverSelection')?.value">
                         <mat-form-field appearance="fill" class="w-full">
                             <mat-label>{{ name }} Docs Count</mat-label>
                             <input matInput type="number" [formControlName]="name" />
                         </mat-form-field>
                     </div>
-                </div>
+                </div> -->
 
-                <mat-divider class=""></mat-divider>
+                    <div [formGroup]="retrieverDocsGroup" class="grid grid-cols-3 gap-4">
+                        <fieldset class="w-full border rounded-sm px-2 pt-2" *ngFor="let name of configForm.get('retrieverSelection')?.value">
+                            <legend class="mx-2">{{name}}</legend>
+                            <!-- Docs Count -->
+                            <mat-form-field appearance="fill" class="w-full">
+                                <mat-label>{{ name }} Docs Count</mat-label>
+                                <input matInput type="number" [formControlName]="name + '_docs'" />
+                            </mat-form-field>
+
+                            <!-- Threshold (only if control exists) -->
+                            <mat-form-field *ngIf="retrieverDocsGroup.get(name + '_threshold') &&name != 'Entity'" appearance="fill" class="w-full">
+                                <mat-label>{{ name }} Threshold</mat-label>
+                                <input [ngClass]="{'bg-gray-200':name == 'Entity'}" [readonly]="name == 'Entity'" matInput type="number" step="0.01" min="0" max="1" [formControlName]="name + '_threshold'" />
+                            </mat-form-field>
+
+                        </fieldset>
+                    </div>
+                </fieldset>
+
+
             </div>
 
 

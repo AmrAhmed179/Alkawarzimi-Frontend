@@ -24,7 +24,7 @@ import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.ser
 class RetrieverConfig {
   name: string;
   docs_count: number;
-  extraConfigs: Record<string, any>;
+  threshold?: number;
 }
 
 class ReaderConfig {
@@ -36,6 +36,11 @@ class ChunkerConfig {
   tokens: number;
   overlap: number;
 }
+class Reranker {
+  enabled: boolean = false
+  docs_limit: number = 0
+  threshold: number = 0
+}
 
 class Config {
   _id: string;
@@ -43,6 +48,7 @@ class Config {
   projectId: string;
   mode: string;
   prompt: string;
+  reranker:Reranker = new Reranker()
   reader: ReaderConfig = new ReaderConfig()
   chunker: ChunkerConfig = new ChunkerConfig()
   indexing: string[] = []
@@ -91,6 +97,12 @@ export class SettingsComponent implements OnInit {
   }
 
   initForm() {
+    debugger
+      const rerankerConfig = this.configs.reranker || {
+    enabled: false,
+    docs_limit: 0,
+    threshold: 0
+  };
     this.configForm = this.fb.group({
       chatbotId: [this.configs.chatbotId],
       projectId: [this.configs.projectId],
@@ -103,13 +115,21 @@ export class SettingsComponent implements OnInit {
         tokens: [this.configs.chunker.tokens],
         overlap: [this.configs.chunker.overlap]
       }),
+       reranker: this.fb.group({
+        enabled: [rerankerConfig.enabled],
+        docs_limit: [rerankerConfig.docs_limit],
+        threshold: [rerankerConfig.threshold]
+      }),
           indexing: [this.configs.indexing || []], // multi-select
           retrieverSelection: [this.configs.retriever.map((r: any) => r.name)], // multi-select for names
-          retrieverDocs: this.fb.group(
-      this.configs.retriever.reduce((acc: any, r: any) => {
-        acc[r.name] = [r.docs_count, [Validators.required, Validators.min(1)]];
-        return acc;
-      }, {})
+  retrieverDocs: this.fb.group(
+    this.configs.retriever.reduce((acc: any, r: any) => {
+      acc[`${r.name}_docs`] = [r.docs_count, [Validators.required, Validators.min(1)]];
+      if (r.threshold !== undefined) {
+        acc[`${r.name}_threshold`] = [r.threshold, [Validators.required, Validators.min(0), Validators.max(1)]];
+      }
+      return acc;
+    }, {})
     )
     });
 
@@ -125,26 +145,69 @@ export class SettingsComponent implements OnInit {
   return this.configForm.get('retrieverDocs') as FormGroup;
   }
 
+// handleRetrieverSelectionChanges() {
+//   debugger
+//   const retrieverSelectionControl = this.configForm.get('retrieverSelection');
+//   const retrieverDocsGroup = this.configForm.get('retrieverDocs') as FormGroup;
+
+//   retrieverSelectionControl?.valueChanges.subscribe((selected: string[]) => {
+//     debugger
+//     const currentKeys = Object.keys(retrieverDocsGroup.controls);
+
+//     // Add new selections
+//     selected.forEach(name => {
+//       if (!retrieverDocsGroup.contains(name)) {
+//         retrieverDocsGroup.addControl(name, this.fb.control(1, [Validators.required, Validators.min(1)]));
+//       }
+//     });
+
+//     // Remove unselected
+//     currentKeys.forEach(name => {
+//       if (!selected.includes(name)) {
+//         retrieverDocsGroup.removeControl(name);
+//       }
+//     });
+//   });
+// }
+defaultRetrievers: RetrieverConfig[] = [
+  { name: "Similarity", docs_count: 3, threshold: 0.75 },
+  { name: "Entity", docs_count: 3 , threshold: 0.75 },
+  { name: "KeyWords", docs_count: 3, threshold: 0.75 }
+];
+
 handleRetrieverSelectionChanges() {
-  debugger
   const retrieverSelectionControl = this.configForm.get('retrieverSelection');
   const retrieverDocsGroup = this.configForm.get('retrieverDocs') as FormGroup;
 
   retrieverSelectionControl?.valueChanges.subscribe((selected: string[]) => {
-    debugger
     const currentKeys = Object.keys(retrieverDocsGroup.controls);
 
-    // Add new selections
     selected.forEach(name => {
-      if (!retrieverDocsGroup.contains(name)) {
-        retrieverDocsGroup.addControl(name, this.fb.control(1, [Validators.required, Validators.min(1)]));
+      // check if already exists
+      if (!retrieverDocsGroup.contains(`${name}_docs`)) {
+        // try to get from configs first
+        const retriever = this.configs.retriever.find((r: any) => r.name === name);
+        const base = retriever ?? this.defaultRetrievers.find(r => r.name === name);
+debugger
+        retrieverDocsGroup.addControl(
+          `${name}_docs`,
+          this.fb.control(base?.docs_count ?? 1, [Validators.required, Validators.min(1)])
+        );
+
+        if (base?.threshold !== undefined) {
+          retrieverDocsGroup.addControl(
+            `${name}_threshold`,
+            this.fb.control(base.threshold, [Validators.required, Validators.min(0), Validators.max(1)])
+          );
+        }
       }
     });
 
-    // Remove unselected
-    currentKeys.forEach(name => {
-      if (!selected.includes(name)) {
-        retrieverDocsGroup.removeControl(name);
+    // remove unselected
+    currentKeys.forEach(key => {
+      const baseName = key.replace(/_(docs|threshold)$/, '');
+      if (!selected.includes(baseName)) {
+        retrieverDocsGroup.removeControl(key);
       }
     });
   });
@@ -156,10 +219,23 @@ handleRetrieverSelectionChanges() {
     const retrieverSelection = this.configForm.value.retrieverSelection;
     const retrieverDocs = this.configForm.value.retrieverDocs;
 
-    const retrieverArray = retrieverSelection.map((name: string) => ({
-      name,
-      docs_count: retrieverDocs[name]
-    }));
+    const retriever: any[] = [];
+   Object.keys(retrieverDocs).forEach(key => {
+   const [name, field] = key.split("_"); // e.g. "KeyWords_docs" -> ["KeyWords", "docs"]
+
+  let obj = retriever.find(r => r.name === name);
+  if (!obj) {
+    obj = { name };
+    retriever.push(obj);
+  }
+
+  if (field === "docs") {
+    obj.docs_count = retrieverDocs[key];
+  } else if (field === "threshold") {
+    obj.threshold = retrieverDocs[key];
+  }
+});
+
 
     const payload = {
       chatbotId: this.configForm.value.chatbotId,
@@ -167,8 +243,9 @@ handleRetrieverSelectionChanges() {
       prompt: this.configForm.value.prompt,
       reader: this.configForm.value.reader,
       chunker: this.configForm.value.chunker,
+      reranker: this.configForm.value.reranker,
       indexing,
-      retriever: retrieverArray
+      retriever: retriever
     };
 
     this._ragKnowledgeBaseService.save_configs(payload).subscribe({

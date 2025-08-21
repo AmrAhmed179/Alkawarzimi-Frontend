@@ -281,7 +281,7 @@ export const environment = {
     get_configs: `${RagBaseUrl}get_configs`,
     save_configs: `${RagBaseUrl}save_configs`,
     UplaodRagDocument: `${RagResourceManagment}ResourceHandler/UploadRAGResource`,
-
+    RagAsk: `${RagBaseUrl}ask`,
     //#endregion
 
     ////////////Knowledge Graph////////////////

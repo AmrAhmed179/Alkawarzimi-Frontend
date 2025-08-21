@@ -85,7 +85,7 @@ export class IndexDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('API Error:', err);
-        const errorMsg = err?.error?.message || 'Failed to create index. Please try again.';
+        const errorMsg = err?.error?.message || 'Failed to Get index. Please try again.';
         this._notify.openFailureSnackBar(errorMsg);
       }
     });

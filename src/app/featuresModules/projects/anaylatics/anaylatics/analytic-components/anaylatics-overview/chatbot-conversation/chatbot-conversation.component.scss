@@ -33,3 +33,60 @@ td.mat-cell {
     max-height: 220px !important;
     overflow: auto !important;
 }
+
+/////////////////////////////////////
+.ButtonNotActive {
+    padding: 8px 16px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #3f3f3f;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+/* Hover style */
+
+.ButtonNotActive:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+.buttonActive {
+    border-bottom: 3px solid #F0903E;
+    background-color: transparent;
+}
+
+
+/* Optional: Hover style when already active */
+
+.buttonActive:hover {
+    border-bottom: 4px solid #F0903E;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.truncate-text {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.maxHeight {
+    min-height: 100px;
+    max-height: 200px;
+}
+
+.break-text {
+    /* ensures width applies */
+    word-wrap: break-word;
+    /* breaks long words */
+    white-space: normal;
+    /* allows wrapping */
+    overflow-wrap: break-word;
+    /* modern property */
+}

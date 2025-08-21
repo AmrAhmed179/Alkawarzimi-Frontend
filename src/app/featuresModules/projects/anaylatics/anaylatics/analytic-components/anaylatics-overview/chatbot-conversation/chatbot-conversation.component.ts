@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,6 +10,7 @@ import { RequestFilter, SassProjects, filterAnalytical, formValueMapToForm } fro
 import { DialogChatBotConversationComponent } from '../dialog-chat-bot-conversation/dialog-chat-bot-conversation.component';
 import moment from 'moment';
 import { Subject, take, takeUntil } from 'rxjs';
+import { get } from 'http';
 
 export class StepsReponseCreation{
   message:string[] =[]
@@ -26,6 +27,9 @@ export class StepsReponseCreation{
 
 
 export class ChatbotConversationComponent implements OnInit {
+  ActiveTap = 1
+  totalPagesArray: number[] = [];
+
   onDestroy$: Subject<void> = new Subject();
   filter:filterAnalytical =  new filterAnalytical();
   filterObserve:filterAnalytical =  new filterAnalytical();
@@ -60,38 +64,44 @@ export class ChatbotConversationComponent implements OnInit {
   pageNumber = 0
   totalItem:number;
   predictionIDs:any;
-  displayedColumns: string[] = ['ID', 'User'];
+  displayedColumns: string[] = ['ID'] //'User'];
   dataSource: MatTableDataSource<any>
   stepsResponse:any[] = []
   stepsListCreation:StepsReponseCreation[] = []
   undserstandingInentsList:any[] = []
   firstIntentList:any[] = []
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
+    @ViewChild('paginatorConversation') paginatorConversation: MatPaginator;
+
   date:Date = new Date()
 
   sassProjects:SassProjects[] = []
   displayedColumnsConversation: string[] = ['User Input', 'System Response', 'Conversation Steps','User Id', 'prediction', 'Time','SessionId'];
   dataSourceConversation: MatTableDataSource<any>
-  @ViewChild(MatPaginator) paginatorConversation: MatPaginator;
 
   constructor(private _analyticalService:AnalyticServiceService,private route: ActivatedRoute,
     private fb:FormBuilder,
     public dialog: MatDialog,
+        private renderer: Renderer2, private el: ElementRef,
+
     ) {
     }
 
     ngAfterViewInit() {
+      debugger
       this.paginator.page.asObservable().subscribe((pageEvent) => {
         this.pageNumber=pageEvent.pageIndex + 1,
         this.pageSize=pageEvent.pageSize,
         this.filter.start = (this.pageSize * this.pageNumber) -10
-
+debugger
         this.getMessangerUser()
       });
+      debugger
       this.paginatorConversation.page.asObservable().subscribe((pageEvent) => {
         this.pageNumber=pageEvent.pageIndex + 1,
         this.pageSize=pageEvent.pageSize,
         this.filter.start = (this.pageSize * this.pageNumber) -10
+        debugger
         this.getChatbotConversation()
       });
       }
@@ -143,7 +153,7 @@ export class ChatbotConversationComponent implements OnInit {
         debugger
         if(this.filter.searchFromParent){
           this.getChatbotConversation()
-                this.getMessangerUser()
+          this.getMessangerUser()
 
         }
       }
@@ -210,6 +220,7 @@ export class ChatbotConversationComponent implements OnInit {
       this.entityResponseList = res.entities
       this.entityResponseList.forEach(element=>{
         this.entitiesName.push(element.entity)
+        element.selected = false
       })
       console.log("Entites",this.entitiesName)
     })
@@ -221,12 +232,14 @@ export class ChatbotConversationComponent implements OnInit {
       this.intentResponseList = res.filter(x=>x.responseMode != 1 || x.eventTask == 1)
       this.intentResponseList.forEach(element=>{
          this.intentsName.push(element.intent)
+         element.selected = false
       })
       console.log("intents",this.intentsName)
     })
   }
 
   getChatbotConversation(){
+
     this.conversationResponseData = []
     this._analyticalService.chatbotConversationIndex(this.filter).subscribe((res:any)=>{
       if(res){
@@ -235,11 +248,35 @@ export class ChatbotConversationComponent implements OnInit {
         this.dataSourceConversation = new MatTableDataSource(this.conversationResponseData)
         this.conversationCount = res.recordsTotal
         console.log("consersationResponseData",this.conversationResponseData )
+
+        this.totalPagesArray = Array.from(
+        { length: Math.ceil(this.conversationCount / this.pageSize) },
+        (_, i) => i + 1
+      );
+      this.appendPageSelection()
       }
     })
   }
 
+  appendPageSelection() {
+  debugger
+  // Get the element by its class name
+  const childDiv = this.el.nativeElement.querySelector('.childDiv');
+  //const parentDiv = this.el.nativeElement.querySelector('.mat-paginator-outer-container');
+  const parentDiv = this.el.nativeElement.querySelector('.mat-paginator-range-actions');
+   const prevDiv = this.el.nativeElement.querySelector('.mat-paginator-navigation-next');
+  if (childDiv) {
+    this.renderer.appendChild(parentDiv, childDiv);
+  }
+}
+goToPage(page: number) {
+  this.pageNumber = page;
+  this.paginatorConversation.pageIndex = page - 1;
+  this.filter.start = (this.pageSize * this.pageNumber) - this.pageSize;
+  this.getChatbotConversation();
+}
   getMessangerUser(){
+    debugger
     this._analyticalService.getMessangerUsers(this.filter).subscribe((res:any)=>{
       this.dataSource = new MatTableDataSource(res.data)
         this.totalItem = res.recordsTotal
@@ -247,7 +284,7 @@ export class ChatbotConversationComponent implements OnInit {
       this.messangerCount = res.recordsTotal
     })
   }
-  formvalue(value:number){
+  formvalue2(value:number){
 
     debugger
     this.requestFilter = []
@@ -263,6 +300,7 @@ export class ChatbotConversationComponent implements OnInit {
     this.filter.search = this.form.value['search']
     this.filter.filter = this.requestFilter
     this.filter.projectId = this.form.value['projectId']
+
     this.filter.searchFromParent = false
 
 
@@ -287,8 +325,30 @@ export class ChatbotConversationComponent implements OnInit {
     console.log("requestFilter", this.requestFilter)
 
   }
+   formvalue(value:number){
 
-   setServiceRequestFilter(){
+    debugger
+    this.requestFilter  = []
+
+    this.setServiceRequestFilter();
+    this.setIntentRequestFilter();
+    this.setEntityRequestFilter();
+    this.filter.filter = this.requestFilter
+    this.filter.searchFromParent = false
+    this._analyticalService.filterAnylatic$.next(this.filter)
+    if(value == 1){
+      this.getChatbotConversation()
+      this.getMessangerUser()
+
+    }
+
+    console.log("FORMVALUE", this.filter)
+
+    console.log("requestFilter", this.requestFilter)
+
+  }
+
+   setServiceRequestFilter2(){
 
     const t = this.serviceFormvalue
     if(this.serviceFormvalue){
@@ -303,8 +363,21 @@ export class ChatbotConversationComponent implements OnInit {
     }
     console.log("serviceRequestFilter",this.requestFilter)
    }
+    setServiceRequestFilter(){
 
-   setIntentRequestFilter(){
+    if(this.selectedServices.length > 0){
+      this.selectedServices.forEach(e=>{
+        const serviceFilter = new RequestFilter()
+        serviceFilter.id =  e.servicesId;
+        serviceFilter.text = '@'+ e.name
+        serviceFilter.type = 3
+        this.requestFilter.push(serviceFilter)
+      })
+    }
+    console.log("serviceRequestFilter",this.requestFilter)
+   }
+
+   setIntentRequestFilter2(){
     if(this.intentFormValue){
       this.intentFormValue.forEach(e=>{
         const x = this.intentResponseList.filter(x=>x.intent == e )
@@ -317,13 +390,37 @@ export class ChatbotConversationComponent implements OnInit {
     }
     console.log("intentFilter",this.requestFilter)
    }
-   setEntityRequestFilter(){
+    setIntentRequestFilter(){
+    if(this.selectedIntents.length > 0){
+      this.selectedIntents.forEach(e=>{
+        const serviceFilter = new RequestFilter()
+        serviceFilter.id =  e.intentId;
+        serviceFilter.text = '#'+e.intent
+        serviceFilter.type = 0
+        this.requestFilter.push(serviceFilter)
+      })
+    }
+    console.log("intentFilter",this.requestFilter)
+   }
+   setEntityRequestFilter2(){
     if(this.entityFormvalue){
       this.entityFormvalue.forEach(e=>{
         const x = this.entityResponseList.filter(x=>x.entity == e )
         const serviceFilter = new RequestFilter()
         serviceFilter.id =  x[0].entityId;
         serviceFilter.text = x[0].entity
+        serviceFilter.type = 1
+        this.requestFilter.push(serviceFilter)
+      })
+    }
+    console.log("entity",this.requestFilter)
+   }
+   setEntityRequestFilter(){
+    if(this.selectedEntities.length > 0 ){
+      this.selectedEntities.forEach(e=>{
+        const serviceFilter = new RequestFilter()
+        serviceFilter.id =  e.entityId;
+        serviceFilter.text =e.entity
         serviceFilter.type = 1
         this.requestFilter.push(serviceFilter)
       })
@@ -364,7 +461,7 @@ export class ChatbotConversationComponent implements OnInit {
    }
 
    getTextResponse(response){
-
+    return response.message;
     let start1 = response.message.indexOf('<')
     let start2 = response.message.indexOf('>')
 
@@ -431,13 +528,7 @@ export class ChatbotConversationComponent implements OnInit {
    }
    getUserIdData(userId){
     this.filter.userId = userId
-    this.formValue.userId = userId
     this._analyticalService.filterAnylatic$.next(this.filter)
-    this.intiateForm()
-    debugger
-    // this.dataSource = new MatTableDataSource([{_id:userId}])
-    // this.totalItem = 1
-    // this.messangerCount = 1
    }
    removeUserId(){
     this.filter.userId = ''
@@ -463,14 +554,6 @@ export class ChatbotConversationComponent implements OnInit {
 
  searchServiceText = '';
  ServiceDropdownOpen = false;
-  services = [
-    { name: '@Login', selected: true },
-    { name: '@TriggerOtp', selected: true },
-    { name: '@LeaveBalanceInquiry', selected: true },
-    { name: '@LeaveRequest', selected: false },
-    { name: '@CreateCompliant', selected: false },
-    { name: '@ProfileUpdate', selected: false },
-  ];
 
   get filteredServices() {
     if (!this.searchServiceText) return this.servicesResponseList;
@@ -493,6 +576,62 @@ export class ChatbotConversationComponent implements OnInit {
 
   clearAllServices() {
     this.servicesResponseList.forEach(s => s.selected = false);
+    this.formvalue(0)
+  }
+  ////////////////////////////////////////////////////////////////
+   searchIntentsText = '';
+   IntentsDropdownOpen = false;
+
+  get filteredIntents() {
+    if (!this.searchServiceText) return this.intentResponseList;
+    return this.intentResponseList.filter(s =>
+      s.intent.toLowerCase().includes(this.searchIntentsText.toLowerCase())
+    );
+  }
+
+  get selectedIntents() {
+    return this.intentResponseList.filter(s => s.selected);
+  }
+
+  toggleIntents(intent: any) {
+    intent.selected = !intent.selected;
+  }
+
+  removeIntents(intent: any) {
+    intent.selected = false;
+  }
+
+  clearAllIntents() {
+    this.intentResponseList.forEach(s => s.selected = false);
+    this.formvalue(0)
+  }
+
+  ////////////////////////////////////////////////////////////////
+   searchEntitiesText = '';
+   EntitiesDropdownOpen = false;
+
+  get filteredEntities() {
+    if (!this.searchServiceText) return this.entityResponseList;
+    return this.entityResponseList.filter(s =>
+      s.entity.toLowerCase().includes(this.searchEntitiesText.toLowerCase())
+    );
+  }
+
+  get selectedEntities() {
+    return this.entityResponseList.filter(s => s.selected);
+  }
+
+  toggleEntities(intent: any) {
+    intent.selected = !intent.selected;
+  }
+
+  removeEntities(intent: any) {
+    intent.selected = false;
+  }
+
+  clearAllEntities() {
+    this.entityResponseList.forEach(s => s.selected = false);
+    this.formvalue(0)
   }
 
 }

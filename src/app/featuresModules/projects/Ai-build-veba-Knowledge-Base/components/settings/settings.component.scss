@@ -1,4 +1,9 @@
 .maxHeight {
     height: calc(100vh - 200px);
+    overflow: none;
+}
+
+.maxFormHeight {
+    height: calc(100vh - 260px);
     overflow: auto;
 }

@@ -1,5 +1,5 @@
 <div class="mx-6">
-    <form [formGroup]="form" class="flex items-center gap-3">
+    <!-- <form [formGroup]="form" class="flex items-center gap-3">
         <mat-form-field appearance="fill" class="w-full">
             <mat-label>Intents</mat-label>
             <mat-select formControlName="intents" (ngModelChange)="formvalue(0)" multiple>
@@ -40,196 +40,268 @@
                     (click)="removeUserId();$event.stopPropagation() ">{{form.controls['userId'].value}}</button>
             </div>
         </mat-form-field>
-        <!-- <button (click)="formvalue()" (click)="getIntents();  getEntityies() ;getServices()">clicck</button> -->
-    </form>
+    </form> -->
+    <div class="flex gap-3 w-full relative">
 
-    <div (clickOutside)="ServiceDropdownOpen = false" class="p-2 border rounded-md w-96 ">
-        <!-- Selected Chips -->
-        <div *ngIf="selectedServices.length > 0" class="flex flex-wrap gap-2 mb-2 h-8 overflow-auto">
-            <span *ngFor="let s of selectedServices" class="px-2 py-1 bg-orange-400 text-white rounded flex items-center">
-      {{ s.name.replace('@', '') }}
-      <button class="ml-2 text-white font-bold" (click)="removeService(s)">×</button>
-    </span>
-        </div>
+        <!-- /////////////////// Intents///////////////////////////////// -->
+        <div (clickOutside)="IntentsDropdownOpen = false" class="py-2 w-full ">
+            <!-- Dropdown -->
+            <div class="border rounded shadow relative py-1">
+                <div (click)="IntentsDropdownOpen = true" class="flex justify-center items-center bg-gray-100 p-2 font-bold">
+                    <span class="flex-1 text-center">Intents</span>
+                    <button *ngIf="selectedIntents.length > 0" class="px-2  text-sm bg-gray-600 text-white rounded" (click)="clearAllIntents()">Clear</button>
 
-        <!-- Dropdown -->
-        <div class="border rounded shadow relative">
-            <div (click)="ServiceDropdownOpen = true" class="flex justify-center items-center bg-gray-100 p-2 font-bold">
-                <span class="">Services</span>
-                <button *ngIf="selectedServices.length > 0" class="px-2 py-1 text-sm bg-gray-600 text-white rounded  ml-auto" (click)="clearAllServices()">Clear</button>
-            </div>
+                </div>
 
-            <div class="p-2 absolute z-50 bg-white w-full" *ngIf="ServiceDropdownOpen">
-                <input type="text" [(ngModel)]="searchServiceText" placeholder="Search services" class="w-full border rounded p-1 mb-2" />
-                <div class="max-h-40 overflow-y-auto">
-                    <div *ngFor="let service of filteredServices" class="flex items-center mb-1">
-                        <input type="checkbox" [(ngModel)]="service.selected" class="mr-2" />
-                        <label>{{ service.name }}</label>
+                <div class="p-2 absolute z-50 bg-white w-full" *ngIf="IntentsDropdownOpen">
+                    <input type="text" [(ngModel)]="searchIntentsText" placeholder="Search Intents" class="w-[98%] border  rounded p-1 mb-2" />
+                    <div class="max-h-40 overflow-y-auto">
+                        <div *ngFor="let intent of filteredIntents" class="flex items-center mb-1">
+                            <input (change)="formvalue(0)" (keydown.enter)="formvalue(1)" type="checkbox" [(ngModel)]="intent.selected" class="mr-2" />
+                            <label>#{{ intent.intent}}</label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- ////////////////// services//////////////////// -->
+
+        <div (clickOutside)="ServiceDropdownOpen = false" class="py-2 w-full">
+            <!-- Dropdown -->
+            <div class="border rounded shadow relative py-1">
+                <div (click)="ServiceDropdownOpen = true" class="flex justify-center items-center bg-gray-100 p-2 font-bold">
+                    <span class="flex-1 text-center">Services</span>
+                    <button *ngIf="selectedServices.length > 0" class="px-2  text-sm bg-gray-600 text-white rounded" (click)="clearAllServices()">Clear</button>
+
+                </div>
+
+                <div class="p-2 absolute z-50 bg-white w-full" *ngIf="ServiceDropdownOpen">
+                    <input type="text" [(ngModel)]="searchServiceText" placeholder="Search services" class=" w-[98%] border rounded p-1 mb-2" />
+                    <div class="max-h-40 overflow-y-auto">
+                        <div *ngFor="let service of filteredServices" class="flex items-center mb-1">
+                            <input (change)="formvalue(0)" (keydown.enter)="formvalue(1)" type="checkbox" [(ngModel)]="service.selected" class="mr-2 " />
+                            <label>{{ service.name }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ////////////////// Entities//////////////////// -->
+
+        <div (clickOutside)="EntitiesDropdownOpen = false" class="py-2 w-full">
+            <!-- Dropdown -->
+            <div class="border rounded shadow relative py-1">
+                <div (click)="EntitiesDropdownOpen = true" class="flex justify-center items-center bg-gray-100 p-2 font-bold">
+                    <span class="flex-1 text-center">Entities</span>
+                    <button *ngIf="selectedEntities.length > 0" class="px-2 text-sm bg-gray-600 text-white rounded" (click)="clearAllEntities()">Clear</button>
+
+                </div>
+
+                <div class="p-2 absolute z-50 bg-white w-full" *ngIf="EntitiesDropdownOpen">
+                    <input type="text" [(ngModel)]="searchEntitiesText" placeholder="Search Entities" class=" w-[98%] border rounded p-1 mb-2" />
+                    <div class="max-h-40 overflow-y-auto">
+                        <div *ngFor="let entity of filteredEntities" class="flex items-center mb-1">
+                            <input (change)="formvalue(0)" (keydown.enter)="formvalue(1)" type="checkbox" [(ngModel)]="entity.selected" class="mr-2" />
+                            <label>{{ entity.entity }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- //////////////////////////////////////////////////// -->
+        <div *ngIf="showSassProjectsFilter" class="w-full py-2 relative">
+            <div class="relative">
+                <label class="absolute -top-2 left-2 px-1 mx-1 text-xs font-medium text-gray-600 bg-[#f3f4f6]">
+                  Projects
+                </label>
+                <select [(ngModel)]="filter.projectId" class="h-[47px] border rounded shadow w-full px-2 bg-[#f3f4f6]" (ngModelChange)="formvalue(0)">
+                  <option [value]="''">All</option>
+                  <option *ngFor="let project of sassProjects" [value]="project._id">
+                    {{project?.brandInfo?.name}}
+                  </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="py-2 w-full ">
+            <input [(ngModel)]="filter.search" (change)="formvalue(0)" (keydown.enter)="formvalue(1)" class=" h-[47px] border rounded shadow w-[94%] px-2  focus:border-indigo-500 focus:ring-indigo-500 bg-[#f3f4f6]" placeholder="Enter Utterance.." type="text" (change)="formvalue(0)"
+                (keydown.enter)="formvalue(1)">
+        </div>
+
+        <button class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm max-w-xs text-base absolute right-0" type="button" *ngIf="filter.userId" mat-raised-button (click)="removeUserId();$event.stopPropagation() ">{{filter.userId}}</button>
+        <div class="py-2 w-full">
+            <input [(ngModel)]="filter.userId" (change)="formvalue(0)" (keydown.enter)="formvalue(1)" class=" h-[47px] border rounded shadow  w-[94%] px-2  focus:border-indigo-500 focus:ring-indigo-500 bg-[#f3f4f6]" placeholder="Enter UserId..." type="text" (change)="formvalue(0)"
+                (keydown.enter)="formvalue(1)">
+        </div>
+
+
     </div>
 
 
-    <mat-tab-group>
-        <mat-tab label="Conversations -{{conversationCount}}-">
-            <table mat-table [dataSource]="dataSourceConversation">
 
-                <!-- User Input Column -->
-                <ng-container matColumnDef="User Input">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> User Input </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="w-44 maxHeight  overflow-auto mt-10 mb-4 mx-3 whitespace-pre-line">
-                            <p class="font-bold">{{row.userInput}}</p>
+    <div class="flex gap-4">
+        <button [ngClass]="{'buttonActive':ActiveTap == 1}" (click)="ActiveTap = 1" class="ButtonNotActive">Conversations-{{conversationCount}}-</button>
+        <button [ngClass]="{'buttonActive':ActiveTap == 2}" (click)="ActiveTap = 2" class="ButtonNotActive">Users-{{messangerCount}}-</button>
+    </div>
+    <table mat-table [dataSource]="dataSourceConversation" [ngClass]="{'displayNone':ActiveTap == 2}">
+
+        <!-- User Input Column -->
+        <ng-container matColumnDef="User Input">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> User Input </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="max-w-44  maxHeight  overflow-auto mt-10 mb-4 mx-3 whitespace-pre-line">
+                    <p class="font-bold">{{row.userInput}}</p>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- System Response Column -->
+        <ng-container matColumnDef="System Response">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> System Response </th>
+            <td mat-cell *matCellDef="let row" class="w-1/3">
+                <div class="maxCellHeight overflow-auto whitespace-pre-line  ---max-w-[370px]">
+                    <div class="" dir="rtl" *ngFor="let response of responses(row)">
+                        <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" *ngIf="response.type === 'text'">
+                            <p class="mt-3 text-base font-medium" [innerHtml]="getTextResponse(response)"></p>
                         </div>
-                    </td>
-                </ng-container>
-
-                <!-- System Response Column -->
-                <ng-container matColumnDef="System Response">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> System Response </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="maxCellHeight overflow-auto whitespace-pre-line" style="width:370px;">
-                            <div class="" dir="rtl" *ngFor="let response of responses(row)">
-                                <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" *ngIf="response.type === 'text'">
-                                    <p class="mt-3 text-base font-medium" [innerHtml]="getTextResponse(response)"></p>
-                                </div>
-                                <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" *ngIf="response.type === 'yesno'">
-                                    <p class="mt-3 text-base font-medium" [innerHtml]="getTextResponse(response)"></p>
-                                </div>
-
-                                <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="response.type === 'options'">
-                                    <p class="text-base font-medium">{{response.title}}</p>
-                                    <p *ngFor="let responseOptions of response.rOptions" class="border border-blue-900 rounded bg-white p-1 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white">{{responseOptions.title}}</p>
-                                </div>
-
-                                <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="response.type === 'list'">
-                                    <p class="text-base font-medium" [innerHtml]="response.title"></p>
-                                    <p *ngFor="let responseOptions of response.rOptions" class="border border-blue-900 rounded bg-white p-1 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white" [innerHtml]="responseOptions.title"></p>
-                                </div>
-                            </div>
+                        <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" *ngIf="response.type === 'yesno'">
+                            <p class="mt-3 text-base font-medium" [innerHtml]="getTextResponse(response)"></p>
                         </div>
-                    </td>
-                </ng-container>
 
-                <!-- System Response Column -->
-                <!-- <ng-container matColumnDef="System Response">
-                    <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> System Response </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="h-72 w-96 overflow-auto whitespace-pre-line ">
-                            <div class="mx-5 mt-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="row.stepsResponseList.message">
-                                <p *ngFor="let item of row.stepsResponseList.message" class="mt-3" [innerHtml]="item"></p>
-                            </div>
-
-                            <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="row.stepsResponseList.rOptionList.length>0">
-                                <p>{{row.stepsResponseList.rOptionTitle}}</p>
-                                <p *ngFor="let item of row.stepsResponseList.rOptionList" class="border border-blue-900 rounded bg-white p-2 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white">{{item}}</p>
-                            </div>
-
+                        <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="response.type === 'options'">
+                            <p class="text-base font-medium">{{response.title}}</p>
+                            <p *ngFor="let responseOptions of response.rOptions" class="border border-blue-900 rounded bg-white p-1 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white">{{responseOptions.title}}</p>
                         </div>
-                    </td>
-                </ng-container> -->
+
+                        <div class="mx-5 my-4 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="response.type === 'list'">
+                            <p class="text-base font-medium" [innerHtml]="response.title"></p>
+                            <p *ngFor="let responseOptions of response.rOptions" class="border border-blue-900 rounded bg-white p-1 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white" [innerHtml]="responseOptions.title"></p>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
 
 
-                <!-- Conversation Steps Column -->
-                <ng-container matColumnDef="User Id">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> User Id </th>
-                    <td mat-cell *matCellDef="let row">
-                        <a class="w-44 text-amber-600 cursor-pointer" (click)="getUserIdData(row.userId)">
+        <!-- Conversation Steps Column -->
+        <ng-container matColumnDef="User Id">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> User Id </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="break-all whitespace-normal text-sm">
+                    <a class=" text-amber-600 cursor-pointer" (click)="getUserIdData(row.userId)">
                             {{row.userId}}
                         </a>
-                        <p *ngIf="filter.userId"></p>
+                    <p *ngIf="filter.userId"></p>
+                </div>
 
-                    </td>
-                </ng-container>
 
-                <!-- Conversation Steps Column -->
-                <ng-container matColumnDef="Conversation Steps">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50 "> Conversation Steps </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="py-2 ">
-                            <button mat-raised-button *ngIf="row.steps?.length > 1" (click)="openConversationDialog(row.steps,row.userId)" class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm w-44 text-lg">Conversation Steps
+            </td>
+        </ng-container>
+
+        <!-- Conversation Steps Column -->
+        <ng-container matColumnDef="Conversation Steps">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50 "> Conversation Steps </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="py-2">
+                    <button *ngIf="row.steps?.length > 1" (click)="openConversationDialog(row.steps,row.userId)" class="bg-zinc-900 text-gray-100  hover:bg-orange-500 rounded-sm p-1  text-sm">Conversation Steps
                         </button>
-                            <div class="mt-3" *ngIf="row.steps?.length > 1">
-                                <p class="text-sm font-medium ">NodeId: <span class="mx-1">{{row.steps[0].nodeId}}</span> </p>
-                                <p class="break-words text-sm font-medium whitespace-normal"> Created At:&nbsp; {{changeDateFormate(row.steps[0].createdTime)}}</p>
-                            </div>
-                        </div>
-                    </td>
-                </ng-container>
+                    <div class="mt-3 w-full break-text" *ngIf="row.steps">
+                        <p class="text-sm ">NodeId: <span class="mx-1">{{row.steps[0].nodeId}}</span> </p>
+                        <p class=" text-sm  "> Created At:&nbsp; {{changeDateFormate(row.steps[0].createdTime)}}</p>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
 
-                <!-- prediction Column -->
-                <ng-container matColumnDef="prediction">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> prediction </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="maxHeight overflow-auto">
-                            <div class="whitespace-pre-line" *ngFor="let item of row.predictions">
-                                <p class="bg-orange-500 rounded-sm w-40 px-2 py-1  mt-2"> {{getPredictionName(item.predictionId)}}</p>
-                            </div>
-                        </div>
+        <!-- prediction Column -->
+        <ng-container matColumnDef="prediction">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> prediction </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="maxHeight max-w-36 overflow-auto ">
+                    <div class="whitespace-pre-line " *ngFor="let item of row.predictions">
+                        <p class="bg-orange-500 rounded-sm px-2 py-1  mt-2 truncate-text"> {{getPredictionName(item.predictionId)}}</p>
+                    </div>
+                </div>
 
-                    </td>
-                </ng-container>
-
-
-                <!-- Time Column -->
-                <ng-container matColumnDef="Time">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> Time(KSA +3) </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="w-40">
-                            <p>
-                                {{addDate(row.created_time)}}
-                                <!-- {{row.created_time}} -->
-                            </p>
-                        </div>
-
-                    </td>
-                </ng-container>
+            </td>
+        </ng-container>
 
 
-                <!-- SessionId Column -->
-                <ng-container matColumnDef="SessionId">
-                    <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> SessionId </th>
-                    <td mat-cell *matCellDef="let row">
-                        <div class="break-all whitespace-normal w-36">
-                            <p>{{row.sessionId}}</p>
-                        </div>
-                    </td>
-                </ng-container>
+        <!-- Time Column -->
+        <ng-container matColumnDef="Time">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> Time(KSA +3) </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="max-w-36 break-all whitespace-normal">
+                    <p class="text-xs">
+                        {{addDate(row.created_time)}}
+                        <!-- {{row.created_time}} -->
+                    </p>
+                </div>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumnsConversation"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumnsConversation;"></tr>
+            </td>
+        </ng-container>
 
-            </table>
-            <!-- <div *ngIf="dataSource.length === 0">No data</div> -->
-            <mat-paginator [pageSize]="pageSize" [length]="conversationCount" [showFirstLastButtons]="true" class="sticky left-0">
-            </mat-paginator>
-        </mat-tab>
 
-        <mat-tab label="Users  -{{messangerCount}}-">
-            <table mat-table [dataSource]="dataSource">
+        <!-- SessionId Column -->
+        <ng-container matColumnDef="SessionId">
+            <th mat-header-cell *matHeaderCellDef class="bg-[#4CAF50] text-slate-50"> SessionId </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="break-all whitespace-normal max-w-36">
+                    <p>{{row.sessionId}}</p>
+                </div>
+            </td>
+        </ng-container>
 
-                <!-- _id Column -->
-                <ng-container matColumnDef="ID" sticky>
-                    <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> ID </th>
-                    <td mat-cell *matCellDef="let row">
-                        <a class="w-44 text-amber-600 cursor-pointer" (click)="getUserIdData(row._id)">{{row._id}}</a>
-                    </td>
-                </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsConversation"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsConversation;"></tr>
 
-                <!-- User Column -->
-                <ng-container matColumnDef="User" sticky>
-                    <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> User </th>
-                    <td mat-cell *matCellDef="let row"> </td>
-                </ng-container>
+    </table>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <!-- <div *ngIf="dataSource.length === 0">No data</div> -->
+    <mat-paginator #paginatorConversation [pageSize]="pageSize" [length]="conversationCount" [showFirstLastButtons]="true" class="sticky left-0" [ngClass]="{'displayNone': ActiveTap == 2}">
 
-            </table>
-            <mat-paginator [pageSize]="pageSize" [length]="totalItem" class="sticky left-0">
-            </mat-paginator>
-        </mat-tab>
-    </mat-tab-group>
+        <!-- ✅ Custom Dropdown inside paginator -->
+
+
+    </mat-paginator>
+
+    <div class=" flex items-center mb-2 page-number-container childDiv">
+        <ng-container>
+            <div class="flex items-center ml-4 mt-2" *ngIf="totalPagesArray.length" mat-paginator-range-actions>
+                <mat-form-field appearance="legacy" class="w-28">
+                    <mat-label>Page</mat-label>
+                    <mat-select [(value)]="pageNumber" (selectionChange)="goToPage($event.value)">
+                        <mat-option *ngFor="let page of totalPagesArray" [value]="page">
+                            {{page}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </ng-container>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" [ngClass]="{'displayNone':ActiveTap == 1}">
+
+        <!-- _id Column -->
+        <ng-container matColumnDef="ID" sticky>
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> ID </th>
+            <td mat-cell *matCellDef="let row">
+                <a class="w-44 text-amber-600 cursor-pointer" (click)="getUserIdData(row._id)">{{row._id}}</a>
+            </td>
+        </ng-container>
+
+        <!-- User Column -->
+        <!-- <ng-container matColumnDef="User" sticky>
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-50"> User </th>
+            <td mat-cell *matCellDef="let row"> </td>
+        </ng-container> -->
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator #paginator [pageSize]="pageSize" [length]="totalItem" class="sticky left-0" [ngClass]="{'displayNone':ActiveTap == 1}">
+    </mat-paginator>
 </div>

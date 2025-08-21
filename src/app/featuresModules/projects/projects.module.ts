@@ -178,6 +178,8 @@ import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components
 import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/chat.component";
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { ConfirmationForAgentTemplteSearchComponent } from './ai-conversation/AI-Agent/agents/confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
+import { AppInitializer } from "./Ai-build-veba-Knowledge-Base/configes/app.init";
+import { ConfigService } from "./Ai-build-veba-Knowledge-Base/configes/config.service";
 
 @NgModule({
   declarations: [
@@ -371,5 +373,6 @@ import { ConfirmationForAgentTemplteSearchComponent } from './ai-conversation/AI
     })
 
   ],
+
 })
 export class ProjectsModule { }

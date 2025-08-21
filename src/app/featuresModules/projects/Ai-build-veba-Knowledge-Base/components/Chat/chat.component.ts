@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'vex-chat',
@@ -30,22 +31,20 @@ export class ChatComponent implements OnInit {
     this.messages.push({ text: q, type: 'user' });
 
     const payload = {
-      mode: 'test',
-      modelName: 'gpt',
-      embeddingType: 'no_embeddingType',
       chatbotId: this.chatbotId,
       projectId:this.chatbotId,
       query: q
     };
 
     this.question = '';
-
-    this.http.post<any>('https://alkhwarizmi.online/webhook/Verba/Ask', payload).subscribe({
+    debugger
+    const dd = environment.URLS.RagAsk
+    this.http.post<any>(environment.URLS.RagAsk, payload).subscribe({
       next: (res) => {
         const reply =
           res?.response?.state === 'known'
             ? res.response.response
-            : 'غير معروف'; // "unknown" in Arabic
+            : 'غير معروف'; // "unknown" in Arabicc
         this.messages.push({ text: reply, type: 'bot' });
         setTimeout(() => this.scrollToBottom(), 100);
       },

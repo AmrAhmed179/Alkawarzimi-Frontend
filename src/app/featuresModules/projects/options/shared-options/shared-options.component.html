@@ -1,53 +1,51 @@
-<nav mat-tab-nav-bar class="mb-4">
-    <div class="flex items-center">
+<nav class="mb-4 flex justify-between">
+    <div class=" px-4 py-3 flex gap-5 items-center overflow-auto">
         <div>
-            <a mat-tab-link routerLink="General" routerLinkActive="active">General</a>
+            <a routerLink="General" routerLinkActive="active">General</a>
         </div>
         <div>
-            <a mat-tab-link routerLink="LLMsettings" routerLinkActive="active">LLM Settings</a>
+            <a routerLink="LLMsettings" routerLinkActive="active">LLM Settings</a>
         </div>
         <div>
-            <a mat-tab-link routerLink="Language" routerLinkActive="active">Languages
+            <a routerLink="Language" routerLinkActive="active">Languages
 </a>
         </div>
         <div>
-            <a mat-tab-link routerLink="Services" routerLinkActive="active">Services
-</a>
-        </div>
-
-        <div>
-            <a mat-tab-link routerLink="Login" routerLinkActive="active">Login
+            <a routerLink="Services" routerLinkActive="active">Services
 </a>
         </div>
 
         <div>
-            <a mat-tab-link routerLink="liveChatEscalation" routerLinkActive="active">Live Chat Escalation
-</a>
-        </div>
-        <div>
-            <a mat-tab-link routerLink="StaticResponse" routerLinkActive="active">Static Response
-</a>
-        </div>
-        <div>
-            <a mat-tab-link routerLink="ResponseFooter" routerLinkActive="active">Response Footer
-</a>
-        </div>
-        <div>
-            <a mat-tab-link routerLink="mediaBaseURL" routerLinkActive="active">Media Base URL
-</a>
-        </div>
-        <div>
-            <a mat-tab-link routerLink="FactCategories" routerLinkActive="active">Fact Categories
+            <a routerLink="Login" routerLinkActive="active">Login
 </a>
         </div>
 
-    </div>
-    <div>
+        <div>
+            <a routerLink="liveChatEscalation" routerLinkActive="active">Live Chat Escalation
+</a>
+        </div>
+        <div>
+            <a routerLink="StaticResponse" routerLinkActive="active">Static Response
+</a>
+        </div>
+        <div>
+            <a routerLink="ResponseFooter" routerLinkActive="active">Response Footer
+</a>
+        </div>
+        <div>
+            <a routerLink="mediaBaseURL" routerLinkActive="active">Media Base URL
+</a>
+        </div>
+        <div>
+            <a routerLink="FactCategories" routerLinkActive="active">Fact Categories
+</a>
+        </div>
 
     </div>
     <div>
         <button mat-raised-button class="bg-orange-500 text-gray-100 rounded-sm hover:bg-orange-400 mt-1 mx-6" (click)="SaveProjectOptions()">Save </button>
     </div>
+
 </nav>
 
 <router-outlet></router-outlet>
