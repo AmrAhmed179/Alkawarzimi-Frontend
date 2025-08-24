@@ -48,6 +48,11 @@ export class BrandInfo {
   name: string
   description: string
   image: string
+  nameLang:nameLang[] = []
   brandNameAlternatives: string[]
   categories: any
+}
+export class nameLang {
+  value: string
+  lang: string
 }

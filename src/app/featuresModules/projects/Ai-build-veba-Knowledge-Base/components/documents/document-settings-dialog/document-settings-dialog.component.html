@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Update Document Settings</h2>
+
+<mat-dialog-content dir="ltr" [formGroup]="settingsForm" class="flex flex-col gap-4">
+
+    <!-- Reader -->
+    <div formGroupName="reader">
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Reader Name</mat-label>
+            <mat-select formControlName="name">
+                <mat-option value="Default">Default</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- Chunker -->
+    <div formGroupName="chunker" class="flex flex-col gap-4">
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Chunker Name</mat-label>
+            <mat-select formControlName="name">
+                <mat-option value="Token">Token</mat-option>
+                <mat-option value="Semantic">Semantic</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full ">
+            <mat-label>Tokens</mat-label>
+            <input matInput type="number" formControlName="tokens" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Overlap</mat-label>
+            <input matInput type="number" formControlName="overlap" />
+        </mat-form-field>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

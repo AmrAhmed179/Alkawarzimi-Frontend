@@ -54,6 +54,7 @@
             <div class="flex items-center gap-4">
 
                 <button *ngIf="docType == 0" (click)="deletePlaintext()"><mat-icon matTooltip="Delete Plaintext" class="icon-lg text-gray-600" svgIcon="mat:delete"></mat-icon></button>
+                <button *ngIf="docType == 1" (click)="openSettingsDialog()"><mat-icon matTooltip="Documents Settings" class="icon-lg text-gray-600" svgIcon="mat:settings"></mat-icon></button>
                 <button [ngClass]="{'active':contentOrChunks =='chunk'}" class="contentChunkButton">Chunks</button>
             </div>
 

@@ -69,6 +69,8 @@ export const environment = {
     DeleteType: `${BaseUrl}Intents/DeleteIntentsByType`,
     SetPreBuiltBot: `${BaseUrl}Intents/SetPreBuiltBot`,
     GetPreBuiltBots: `${BaseUrl}Intents/GetPreBuiltBots`,
+    ExportTasksAsHtml: `${BaseUrl}Intents/ExportTasksAsHTML`,
+    ExportTasksAsHtmlTable: `${BaseUrl}Intents/ExportTasks`,
     MatchPattern: `${BaseUrl}NLUService/MatchPattern`,
     GetExportedTasks: `${BaseUrl}TasksBank/GetAllExportedTasks`,
     ImportTask: `${BaseUrl}TasksBank/ImportTask`,

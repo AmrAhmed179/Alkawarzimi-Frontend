@@ -31,13 +31,13 @@
                 <h3 class="title ">Import Files</h3>
             </button>
 
-            <button *ngIf="addPlainText" mat-raised-button (click)="uplaodTextFile()" class=" flex items-center rounded-sm ">
+            <button [disabled]="plainTextModel?.invalid" *ngIf="addPlainText" mat-raised-button (click)="uplaodTextFile()" class=" flex items-center rounded-sm ">
                 <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
                 <h3 class="title ">Add Plain Text</h3>
                 <div *ngIf=" uploadedFiles.length > 0 && uploadedFiles[0].importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
                 <div *ngIf=" uploadedFiles.length > 0" [class]="uploadedFiles[0].importStatus" class=" mx-1 rounded-sm"><p class="font-light text-xs p-1"> {{uploadedFiles[0].importStatus}}</p></div>
             </button>
-            <button *ngIf="addUrl" mat-raised-button (click)="uplaodUrl()" class=" flex items-center rounded-sm ">
+            <button [disabled]="urlModel?.invalid" *ngIf="addUrl" mat-raised-button (click)="uplaodUrl()" class=" flex items-center rounded-sm ">
                 <mat-icon  svgIcon="mat:upload_file" class=" text-[#6BC30F] "></mat-icon>
                 <h3 class="title ">Add Url</h3>
                 <div *ngIf=" uploadedFiles.length > 0 && uploadedFiles[0].importStatus === 'STARTING'" class="w-4 h-4 border-2 mx-2 border-black border-t-transparent rounded-full animate-spin"></div>
@@ -66,19 +66,53 @@
                 </div>
             </div>
 
-            <div *ngIf="addPlainText">
+            <div *ngIf="addPlainText" class="relative">
                 <mat-form-field appearance="fill" class="w-full">
                     <mat-label>Enter plain text</mat-label>
-                    <textarea matInput [(ngModel)]="plainText" rows="23"></textarea>
+                    <textarea matInput [(ngModel)]="plainText" rows="20" #plainTextModel="ngModel" minlength="20" maxlength="1024" rows="23"></textarea>
+                    <!-- Character counter -->
+                    <mat-hint align="end">{{ plainText?.length || 0 }}/1024</mat-hint>
+
                 </mat-form-field>
+                <div class="absolute bottom-0">
+                    <div class="text-red-600 text-sm mt-1" *ngIf="plainTextModel.errors?.['minlength']">
+                        Minmum 20 characters allowed
+                    </div>
+
+                    <div class="text-red-600 text-sm mt-1" *ngIf="plainText?.length === 1024">
+                        Maximum 1024 characters reached
+                    </div>
+                </div>
+
 
             </div>
 
-            <div class="mt-4" *ngIf="addUrl">
+
+            <div class="mt-4 relative" *ngIf="addUrl">
                 <mat-form-field appearance="fill" class="w-full">
                     <mat-label>Enter Url</mat-label>
-                    <textarea matInput [(ngModel)]="url" rows="2"></textarea>
+
+                    <textarea matInput [(ngModel)]="url" name="url" #urlModel="ngModel" rows="2" minlength="20" maxlength="200" pattern="https?://.+">
+    </textarea>
+
+                    <!-- Character counter -->
+                    <mat-hint align="end">{{ url?.length || 0 }}/200</mat-hint>
                 </mat-form-field>
+
+                <!-- Custom validation messages -->
+                <div class="absolute bottom-0">
+                    <div class="text-red-600 text-sm mt-1" *ngIf="urlModel.errors?.['pattern']">
+                        Please enter a valid URL (must start with http:// or https://)
+                    </div>
+                    <div class="text-red-600 text-sm mt-1" *ngIf="urlModel.errors?.['minlength']">
+                        Minmum 20 characters allowed
+                    </div>
+
+                    <div class="text-red-600 text-sm mt-1" *ngIf="url?.length === 200">
+                        Maximum 200 characters reached
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -113,14 +147,14 @@
                 </mat-form-field>
             </div>
             <div class="relative w-full border mt-5 px-2 py-4 rounded-sm">
+                <span class="absolute -top-3 left-3  px-2 text-base ">Settings</span>
+
                 <mat-form-field appearance="fill" class="w-full">
                     <mat-label>Select Reader</mat-label>
                     <mat-select (selectionChange)="changeChunker($event)" [(ngModel)]="uploadedFiles[selectedFileIndex].reader.name">
                         <mat-option value="Default">Default</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <span *ngIf="uploadedFiles[selectedFileIndex].chunker.name == 'Token'" class="absolute -top-3 left-3  px-2 text-base ">Token Settings</span>
-                <span *ngIf="uploadedFiles[selectedFileIndex].chunker.name  == 'Semantic'" class="absolute -top-3 left-3  px-2 text-base ">Semantic Settings</span>
                 <mat-form-field appearance="fill" class="w-full">
                     <mat-label>Select Chunker</mat-label>
                     <mat-select (selectionChange)="changeChunker($event)" [(ngModel)]="uploadedFiles[selectedFileIndex].chunker.name">

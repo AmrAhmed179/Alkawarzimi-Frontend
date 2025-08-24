@@ -7,6 +7,7 @@ import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
+import { DocumentSettingsDialogComponent } from './document-settings-dialog/document-settings-dialog.component';
 export class DocumentItem {
   title: string;
   type: number;
@@ -105,11 +106,38 @@ export class DocumentsComponent implements OnInit {
       })
     }
 
-  // filteredDocuments(): DocumentItem[] {
-  //   debugger
-  //   return this.documents.filter(doc => doc.title.toLowerCase().includes(this.search.toLowerCase())
-  //   &&( doc.type.toString() == this.plainTextType || doc.type.toString() == this.fileType || doc.type.toString() == this.urlType ))
-  // }
+ openSettingsDialog() {
+    let document = this.filteredDocuments.find(x => x.doc_uuid == this.selectedDoc_uuid);
+    let documentIndex = this.filteredDocuments.findIndex(x => x.doc_uuid == this.selectedDoc_uuid);
+    const dialogRef = this.dialog.open(DocumentSettingsDialogComponent, {
+      width: '500px',
+      data: { ...document }  // pass current doc data
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+   this._ragKnowledgeBaseService.UpdateDocumentSettings(result).subscribe((res:any)=>{
+      if(res.status == 1){
+        this.notify.openSuccessSnackBar("Settings Successfully Updated")
+        this.filteredDocuments[documentIndex] = result
+      }
+      else{
+        this.notify.openSuccessSnackBar("Settings Faild to Update")
+      }
+   })
+      }
+    });
+  }
+
+    selectDocument(doc: DocumentItem): void {
+    this.selectedDoc_uuid = doc.doc_uuid
+    this.title = doc.title
+    this.docType = doc.type
+    this.chunked = doc.chunked
+    this.paginator.firstPage()
+    this.pageNumber = 1
+    this.get_Doucment_chunks()
+  }
   getDocumentsFilter(){
     debugger
     const selectedTypes: number[] = [];
@@ -156,15 +184,7 @@ export class DocumentsComponent implements OnInit {
       return true;
     return false
   }
-  selectDocument(doc: DocumentItem): void {
-    this.selectedDoc_uuid = doc.doc_uuid
-    this.title = doc.title
-    this.docType = doc.type
-    this.chunked = doc.chunked
-    this.paginator.firstPage()
-    this.pageNumber = 1
-    this.get_Doucment_chunks()
-  }
+
   get_Doucment_chunks(){
     let projectId = this.chatbotId
   this._ragKnowledgeBaseService.get_Doucment_chunks(this.chatbotId,projectId,this.selectedDoc_uuid,this.docType,this.pageNumber).subscribe((res:any)=>{

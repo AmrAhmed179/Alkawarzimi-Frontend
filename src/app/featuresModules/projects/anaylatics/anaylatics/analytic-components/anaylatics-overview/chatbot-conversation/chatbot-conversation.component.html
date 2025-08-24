@@ -119,7 +119,7 @@
                 <select [(ngModel)]="filter.projectId" class="h-[47px] border rounded shadow w-full px-2 bg-[#f3f4f6]" (ngModelChange)="formvalue(0)">
                   <option [value]="''">All</option>
                   <option *ngFor="let project of sassProjects" [value]="project._id">
-                    {{project?.brandInfo?.name}}
+                    {{project?.brandInfo?.nameLang[0].value ? project?.brandInfo?.nameLang[0].value : project?.brandInfo?.name}}
                   </option>
                 </select>
             </div>
@@ -142,8 +142,8 @@
 
 
     <div class="flex gap-4">
-        <button [ngClass]="{'buttonActive':ActiveTap == 1}" (click)="ActiveTap = 1" class="ButtonNotActive">Conversations-{{conversationCount}}-</button>
-        <button [ngClass]="{'buttonActive':ActiveTap == 2}" (click)="ActiveTap = 2" class="ButtonNotActive">Users-{{messangerCount}}-</button>
+        <button [ngClass]="{'buttonActive':ActiveTap == 1}" (click)="ActiveTap = 1; getChatbotConversation()" class="ButtonNotActive">Conversations-{{conversationCount}}-</button>
+        <button [ngClass]="{'buttonActive':ActiveTap == 2}" (click)="ActiveTap = 2; getMessangerUser()" class="ButtonNotActive">Users-{{messangerCount}}-</button>
     </div>
     <table mat-table [dataSource]="dataSourceConversation" [ngClass]="{'displayNone':ActiveTap == 2}">
 

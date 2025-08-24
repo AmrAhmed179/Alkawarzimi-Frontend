@@ -108,6 +108,31 @@ export class MainTaskParentComponent implements OnInit {
     })
   }
 
+  exportTasksAsHTML(){
+      this._tasksService.ExportTasksAsHtml(this.chatBotId, this.projectName, '').subscribe((response: Blob)=>{
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `HtmlTasks_${this.projectName}`; // Specify the file name
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url); // Free up memory
+    })
+  }
+
+  exportTasksAsHTMLTable(){
+      this._tasksService.ExportTasksAsHtmlTable(this.chatBotId, this.projectName, '').subscribe((response: Blob)=>{
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Tasks_${this.projectName}`; // Specify the file name
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url); // Free up memory
+    })
+  }
   iniateFoem(){
     this.form = this.fb.group({
       'Text':['']

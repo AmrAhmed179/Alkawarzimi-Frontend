@@ -180,6 +180,7 @@ import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/set
 import { ConfirmationForAgentTemplteSearchComponent } from './ai-conversation/AI-Agent/agents/confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
 import { AppInitializer } from "./Ai-build-veba-Knowledge-Base/configes/app.init";
 import { ConfigService } from "./Ai-build-veba-Knowledge-Base/configes/config.service";
+import { DocumentSettingsDialogComponent } from './Ai-build-veba-Knowledge-Base/components/documents/document-settings-dialog/document-settings-dialog.component';
 
 @NgModule({
   declarations: [
@@ -345,7 +346,8 @@ import { ConfigService } from "./Ai-build-veba-Knowledge-Base/configes/config.se
     ChatComponent,
     IndexDetailsComponent,
     SettingsComponent,
-    ConfirmationForAgentTemplteSearchComponent
+    ConfirmationForAgentTemplteSearchComponent,
+    DocumentSettingsDialogComponent
   ],
   imports: [
     TreeModule,

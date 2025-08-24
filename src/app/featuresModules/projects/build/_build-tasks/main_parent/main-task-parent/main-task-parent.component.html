@@ -17,9 +17,9 @@
                 <mat-icon svgIcon="mat:keyboard_arrow_down"></mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML
+                <button (click)="exportTasksAsHTML()" mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML
                 </button>
-                <button mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML Table
+                <button (click)="exportTasksAsHTMLTable()" mat-menu-item> <mat-icon svgIcon="mat:get_app"></mat-icon> As HTML Table
                 </button>
             </mat-menu>
         </div>

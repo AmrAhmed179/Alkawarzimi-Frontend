@@ -42,7 +42,7 @@ class Reranker {
   threshold: number = 0
 }
 
-class Config {
+export class Config {
   _id: string;
   chatbotId: string;
   projectId: string;

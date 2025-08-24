@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PlainTextDialogComponent } from '../../../ai-conversation/build-knowlege-base/dialogs/plain-text-dialog/plain-text-dialog.component';
 import { UploadDialogComponent } from '../../../ai-conversation/build-knowlege-base/dialogs/upload-dialog/upload-dialog.component';
@@ -10,6 +10,8 @@ import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
 import { environment } from 'src/environments/environment';
 import { bufferTime, Subject, takeUntil } from 'rxjs';
+import { Config } from '../settings/settings.component';
+import { NgModel } from '@angular/forms';
 
 
 @Component({
@@ -18,6 +20,7 @@ import { bufferTime, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./import-data.component.scss']
 })
 export class ImportDataComponent implements OnInit {
+  configs:Config = new Config()
   addPlainText:boolean = false
   addUrl:boolean = false
    plainText: string = ''
@@ -32,6 +35,9 @@ export class ImportDataComponent implements OnInit {
   importStatus: {[key: string]: string} = {};
   chatbotId
   onDestroy$: Subject<void> = new Subject();
+    @ViewChild('urlModel', { static: false }) urlModel?: NgModel;
+    @ViewChild('plainTextModel', { static: false }) plainTextModel?: NgModel;
+
   constructor(private wsService: WebSocketService,
     private dialog:MatDialog,
     private route: ActivatedRoute,
@@ -43,21 +49,9 @@ export class ImportDataComponent implements OnInit {
     this.route.parent?.parent?.paramMap.subscribe(params => {
     this.chatbotId = params.get('projectid');
     console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    //this.get_index_status()
+    this.getConfigs()
     });
-    //this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
 
-    // this.wsService.onMessage().subscribe({
-    //   next: (message) => this.handleServerMessage(message),
-    //   error: (err) => console.error('WebSocket error:', err)
-    // });
-      this.wsService.onMessage()
-      // .pipe(takeUntil(this.onDestroy$))
-      .pipe(
-          bufferTime(3000) // Group messages within 100ms
-        ).subscribe(messages => {
-          messages.forEach(message => this.handleServerMessage(message));
-     });
   }
 
   ngOnDestroy(): void {
@@ -66,60 +60,20 @@ export class ImportDataComponent implements OnInit {
      this.onDestroy$.complete();
   }
 
-  // async importFiles(): Promise<void> {
-  //   if (this.isImporting || this.uploadedFiles.length === 0) return;
-
-  //   this.isImporting = true;
-
-  //   try {
-  //     const credentials = {
-  //       deployment: 'Local',
-  //       key: '',
-  //       url: 'http://weaviate:8080',
-  //       chatbotId: this.chatbotId,
-  //       projectId:this.chatbotId,
-  //       mode: 'test'
-  //     };
-
-  //     for (let i = 0; i < this.uploadedFiles.length; i++) {
-  //       const file = this.uploadedFiles[i];
-  //       this.importStatus[file.name] = 'STARTING';
-  //       this.importProgress[file.name] = 0;
-
-  //       try {
-  //         await this.wsService.uploadFile(
-  //           file,
-  //           credentials,
-  //           i === this.uploadedFiles.length - 1
-  //         );
-  //         this.importStatus[file.name] = 'UPLOAD_COMPLETE';
-  //       } catch (error) {
-  //         this.importStatus[file.name] = 'ERROR';
-  //         console.error(`Error uploading ${file.name}:`, error);
-  //       }
-  //     }
-  //     var data = {
-  //       "chunk":"",
-  //       "isLastChunk":false,
-  //       "total":0,
-  //       "order":0,
-  //       "fileID":"",
-  //       "credentials":{
-  //         "deployment":"Local",
-  //         "key":"",
-  //         "url":"http://weaviate:8080",
-  //         "chatbotId":this.chatbotId,
-  //         "projectId":this.chatbotId,
-  //         "mode":"test"},
-  //       "isLastDocument":true
-  //     }
-
-  //     this.wsService.send(data)
-  //   } finally {
-  //     this.isImporting = false;
-  //   }
-  // }
-
+    getConfigs() {
+    let body = {
+      chatbotId: this.chatbotId,
+      projectId: this.chatbotId,
+    };
+    this._ragKnowledgeBaseService.getConfigs(body).subscribe({
+      next: (res: any) => {
+        this.configs = res;
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+      }
+    });
+  }
   private handleServerMessage(message: any): void {
     if(message.type != "ping")
        debugger
@@ -178,26 +132,6 @@ export class ImportDataComponent implements OnInit {
         }
     }
   }
-  // openUploadDialog() {
-  //     const dialogRef = this.dialog.open(UploadDialogComponent, {
-  //       width: '400px',
-  //       disableClose: true
-  //     });
-
-  //     dialogRef.afterClosed().subscribe(result => {
-  //       if (result) {
-  //        const filesWithConfig = result.map((file: any) => {
-  //         file.rag_config = this.wsService.getDefaultRAGConfig();
-  //         file.importStatus = "Not_Imported"
-  //         return file;
-  //       });
-
-
-  //     this.uploadedFiles.push(...filesWithConfig);
-  //     console.log("files", this.uploadedFiles)
-  //       }
-  //   });
-  // }
 
     openUploadDialog() {
       this.uploadedFiles = []
@@ -210,8 +144,8 @@ export class ImportDataComponent implements OnInit {
         if (result) {
           debugger
          const filesWithConfig = result.map((file: any) => {
-          file.reader = this._ragKnowledgeBaseService.getDefaultReader();
-          file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
+          file.reader = this.configs.reader
+          file.chunker = this.configs.chunker
           file.importStatus = "Not_Imported"
           file.projectId = this.chatbotId
           file.fileContent = ""
@@ -252,8 +186,8 @@ export class ImportDataComponent implements OnInit {
     const blob = new Blob([this.plainText], { type: 'text/plain' });
     const file = new File([blob], 'plain-text.txt', { type: 'text/plain' }) as any;
 
-    file.reader = this._ragKnowledgeBaseService.getDefaultReader();
-    file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
+    file.reader = this.configs.reader
+    file.chunker = this.configs.chunker
     file.importStatus = "Not_Imported"
     file.projectId = this.chatbotId
     file.chatBotId = this.chatbotId
@@ -270,8 +204,8 @@ export class ImportDataComponent implements OnInit {
     const blob = new Blob([this.url], { type: 'text/plain' });
     const file = new File([blob], this.url, { type: 'text/plain' }) as any;
 
-    file.reader = this._ragKnowledgeBaseService.getDefaultReader();
-    file.chunker = this._ragKnowledgeBaseService.getDefaultchunker();
+    file.reader = this.configs.reader
+    file.chunker = this.configs.chunker
     file.importStatus = "Not_Imported"
     file.projectId = this.chatbotId
     file.chatBotId = this.chatbotId
@@ -290,64 +224,24 @@ export class ImportDataComponent implements OnInit {
   selectedFile(index){
     this.selectedFileIndex = index
     this.selectedFileData = this.uploadedFiles[index]
-
-  }
-  CreateIndex(){
-   let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
-    "chatbotId": this.chatbotId,
-    "projectId":this.chatbotId,
-    "mode": "test"
-    }
-    this._ragKnowledgeBaseService.createIndex(body).subscribe({
-      next: (res: any) => {
-        this._notify.openSuccessSnackBar("Index created successfully");
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-        const errorMsg = err?.error?.message || 'Failed to create index. Please try again.';
-        this._notify.openFailureSnackBar(errorMsg);
-      }
-    });
-  }
-  get_index_status(){
-   let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
-    "chatbotId": this.chatbotId,
-    "projectId":this.chatbotId,
-    "mode": "test"
-    }
-    this._ragKnowledgeBaseService.get_index_status(body).subscribe({
-      next: (res: any) => {
-        this.indexStatus = res.status
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-        const errorMsg = err?.error?.message || 'Failed to create index. Please try again.';
-        this._notify.openFailureSnackBar(errorMsg);
-      }
-    });
   }
 
-    removeFile(index){
+
+  removeFile(index){
     this.uploadedFiles.splice(index,1)
   }
   changeChunker(event){
     console.log( this.uploadedFiles[this.selectedFileIndex])
   }
   applySettingsToAll() {
-  const chunkerRagConfig = structuredClone(this.uploadedFiles[this.selectedFileIndex].rag_config.Chunker);
+  const chunkerRagConfig = structuredClone(this.uploadedFiles[this.selectedFileIndex].chunker);
+  const readerRagConfig = structuredClone(this.uploadedFiles[this.selectedFileIndex].reader);
   this.uploadedFiles.forEach((file, index) => {
     if (index !== this.selectedFileIndex) {
-      file.rag_config.Chunker = structuredClone(chunkerRagConfig);
+      file.chunker = structuredClone(chunkerRagConfig);
+      file.reader = structuredClone(readerRagConfig);
     }
   });
 }
-
-  ///////////////////////////////////
 
 }

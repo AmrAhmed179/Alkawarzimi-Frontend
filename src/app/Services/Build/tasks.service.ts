@@ -53,6 +53,23 @@ export class TasksService {
     }
     return this.http.get(environment.URLS.GetPreBuiltBots, { params: parm })
   }
+   ExportTasksAsHtml(projectId: any,name, bot) {
+    let parm = {
+      projectId: projectId,
+      name: projectId,
+      bot:bot ,
+    }
+    return this.http.get(environment.URLS.ExportTasksAsHtml, {params: parm , responseType: 'blob' as 'json'})
+  }
+
+  ExportTasksAsHtmlTable(projectId: any,name, bot) {
+    let parm = {
+      projectId: projectId,
+      name: projectId,
+      bot:bot ,
+    }
+    return this.http.get(environment.URLS.ExportTasksAsHtmlTable, {params: parm , responseType: 'blob' as 'json'})
+  }
   getExportedTasks() {
 
     return this.http.get(environment.URLS.GetExportedTasks)

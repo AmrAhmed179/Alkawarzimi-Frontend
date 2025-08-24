@@ -23,6 +23,11 @@ export class RagKnowledgeBaseService {
     }
     return this.http.get( `${this.resorceUrl}ResourceHandler/GetDocuments` , {params:params})
   }
+
+  UpdateDocumentSettings(document){
+
+    return this.http.post( `${this.resorceUrl}ResourceHandler/UpdateDocumentSettings` , document)
+  }
   get_Doucment_content(body){
     return this.http.post(`${this.ragUrl}api/get_content`,body)
   }
