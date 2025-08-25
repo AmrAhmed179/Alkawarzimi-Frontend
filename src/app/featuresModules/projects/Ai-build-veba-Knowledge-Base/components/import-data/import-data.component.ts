@@ -164,9 +164,15 @@ export class ImportDataComponent implements OnInit {
    importFiles(): Promise<void> {
     if (this.isImporting || this.uploadedFiles.length === 0) return;
     this.uploadedFiles.forEach((e:any)=>{
+      debugger
       if(e.importStatus == "IMPORTED" || e.importStatus == "FAILD" ||e.importStatus == "STARTING"){
         return
       }
+      if(e.size > 1024*1024*20){
+        e.importStatus = "Exceed_max_Size"
+        return
+      }
+
       e.importStatus = "STARTING"
       this._ragKnowledgeBaseService.uploadRagResource(e).subscribe((res:any)=>{
         if(res.status == 1){

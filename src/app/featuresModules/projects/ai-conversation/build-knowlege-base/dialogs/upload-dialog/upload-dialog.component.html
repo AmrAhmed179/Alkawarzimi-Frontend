@@ -6,6 +6,9 @@
                 <p>Drag your files here or</p>
                 <button mat-stroked-button color="primary" (click)="fileInput.click()">Browse</button>
                 <input multiple #fileInput type="file" hidden (change)="onFileSelected($event)" accept=".pdf,.docx,.md" />
+                <p class="text-xs text-gray-500 italic">
+                    Maximum file size: 20MB per file. Larger files will be rejected
+                </p>
             </div>
         </div>
     </div>
