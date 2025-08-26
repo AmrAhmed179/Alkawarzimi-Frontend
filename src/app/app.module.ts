@@ -81,9 +81,6 @@ import { AnaylaticsModule } from "./featuresModules/projects/anaylatics/anaylati
 import { AppConfigService } from "./Services/app-config.service";
 import { ClickOutsideModule } from 'ng-click-outside';
 import { NotificationComponent } from "./shared/notification/notification.component";
-import { AppInitializer } from "./featuresModules/projects/Ai-build-veba-Knowledge-Base/configes/app.init";
-import { ConfigService } from "./featuresModules/projects/Ai-build-veba-Knowledge-Base/configes/config.service";
-
 
 export function initializeApp(appConfig: AppConfigService) {
   return () => appConfig.load();
@@ -161,8 +158,6 @@ export function initializeApp(appConfig: AppConfigService) {
     AnaylaticsModule
   ],
   providers: [
-    AppInitializer,
-    ConfigService,
     ProjectService,
     DataService,
    // NotifyService,

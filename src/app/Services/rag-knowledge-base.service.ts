@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ConfigService } from '../featuresModules/projects/Ai-build-veba-Knowledge-Base/configes/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +11,8 @@ export class RagKnowledgeBaseService {
   resorceUrl
   ragUrl
   indexStaus$ = new BehaviorSubject<any>(null)
-  constructor(private http:HttpClient, private configService: ConfigService) {
-     this.resorceUrl = configService.resourceMangmentUrl
-     this.ragUrl = configService.RageUrl
+  constructor(private http:HttpClient) {
+    this.loadConfig()
    }
   getAllDocuments(chatbotId,projectId){
     const params = {
@@ -24,6 +22,14 @@ export class RagKnowledgeBaseService {
     return this.http.get( `${this.resorceUrl}ResourceHandler/GetDocuments` , {params:params})
   }
 
+    loadConfig(){
+      debugger
+    this.http.get(`${environment.URLS.BaseUrl}AiAgent/GetConfig`)
+    .subscribe((config:any) => {
+       this.resorceUrl = config.resorceUrl;
+       this.ragUrl = config.ragUrl
+    })
+  }
   UpdateDocumentSettings(document){
 
     return this.http.post( `${this.resorceUrl}ResourceHandler/UpdateDocumentSettings` , document)
