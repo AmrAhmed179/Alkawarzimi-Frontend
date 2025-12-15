@@ -41,13 +41,21 @@
                             <mat-option value="outOfConversation">Out Of Conversation</mat-option>
                         </mat-select>
                     </fieldset>
-                    <fieldset class=" px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
+                    <!-- <fieldset class=" px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
                         <legend class="px-2 font-medium text-xs text-[#ec843f]">*Select Agent</legend>
                         <mat-select formControlName="agentId" class="w-48 ustom-width">
 
                             <mat-option *ngFor="let agent of agents" [value]="agent._id">
                                 {{ agent.name }}
                             </mat-option>
+                        </mat-select>
+                    </fieldset> -->
+                    <fieldset class="px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
+                        <legend class="px-2 font-medium text-xs text-[#ec843f]">*Select Category </legend>
+                        <mat-select formControlName="category" class="w-48 ustom-width">
+                            <mat-option value="Restaurant">Restaurant</mat-option>
+                            <mat-option value="Educational">Educational</mat-option>
+                            <mat-option value="Healthcare">Healthcare</mat-option>
                         </mat-select>
                     </fieldset>
 

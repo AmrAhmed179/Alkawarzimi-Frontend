@@ -7,7 +7,10 @@
     <div class=" h-[95px] w-[45%] ">
         <div class="flex">
             <p class="text-lg font-medium ">Verb Base &nbsp;:&nbsp; </p>
-            <p *ngFor="let synonym of sense?.synonyms" class="text-orange-600 font-medium text-base"> {{synonym}}, &nbsp;</p>
+            <p *ngIf=" sense?.synonyms && sense?.synonyms?.length == 0" class="text-lg font-medium ">{{Verb}} &nbsp;</p>
+            <div *ngIf="sense?.synonyms && sense?.synonyms?.length > 0" class="flex">
+                <p *ngFor="let synonym of sense?.synonyms" class="text-orange-600 font-medium text-base"> {{synonym}}, &nbsp;</p>
+            </div>
         </div>
         <mat-form-field appearance="legacy" class="w-full -mt-3">
             <input matInput [value]="sense?.description" class="">
@@ -64,7 +67,7 @@
                             <mat-icon (click)="deleteAderb(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
                             <!-- {{ad.s}} -->
                             <p *ngIf="ad.s != null" >{{ad.s}}</p>
-                            <p *ngIf="ad.s == null">{{getText(ad.i)}}</p> 
+                            <p *ngIf="ad.s == null">{{getText(ad.i)}}</p>
                           </div>
                           </button>
                     </div>
@@ -89,7 +92,7 @@
                               <mat-icon (click)="deleteComplement(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
                               <!-- {{cm.s}} -->
                               <p *ngIf="cm.s != null" >{{cm.s}}</p>
-                              <p *ngIf="cm.s == null">{{getText(cm.i)}}</p> 
+                              <p *ngIf="cm.s == null">{{getText(cm.i)}}</p>
                             </div>
                             </button>
                         </div>
@@ -127,7 +130,7 @@
                             <div class="flex items-center">
                               <mat-icon (click)="deleteObject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
                               <p *ngIf="ob.s != null" >{{ob.s}}</p>
-                              <p *ngIf="ob.s == null">{{getText(ob.i)}}</p> 
+                              <p *ngIf="ob.s == null">{{getText(ob.i)}}</p>
                             </div>
                             </button>
                         </div>
@@ -165,7 +168,7 @@
                               <mat-icon (click)="deleteSubject(i)"  svgIcon="mat:close" class="icon-sm"></mat-icon>
                               <!-- {{getText(sb.i)}} -->
                               <p *ngIf="sb.s != null" >{{sb.s}}</p>
-                              <p *ngIf="sb.s == null">{{getText(sb.i)}}</p> 
+                              <p *ngIf="sb.s == null">{{getText(sb.i)}}</p>
                               <p class="text-white font-medium bg-[#FF9336] rounded-md ml-2 px-2 mt-[3px]">Cat</p>
                             </div>
                             </button>
@@ -309,7 +312,7 @@
 <mat-divider class="border-2"></mat-divider>
 <div class="bg-[#F7F7F7] px-4">
     <div class="flex justify-center pt-2">
-        <button *ngIf="verbs.length > 0" class="px-3 py-1 text-white font-medium bg-[#F0AD4E] rounded-sm border border-[#EEA236] hover:bg-[#ED9C28]" (click)="saveFrame()">Save Frame</button>
+        <button *ngIf="verbs?.length > 0" class="px-3 py-1 text-white font-medium bg-[#F0AD4E] rounded-sm border border-[#EEA236] hover:bg-[#ED9C28]" (click)="saveFrame()">Save Frame</button>
         <button class="px-3 py-1 text-white font-medium bg-[#1F2F3C] rounded-sm hover:bg-[#FF9336] mx-3" (click)="close()">Close</button>
     </div>
 </div>

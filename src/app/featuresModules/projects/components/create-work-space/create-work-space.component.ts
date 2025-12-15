@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { error } from 'console';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 
@@ -12,6 +14,7 @@ export class CreateWorkSpaceComponent implements OnInit {
 
   form:FormGroup
   constructor(private fb:FormBuilder,
+     private dialogRef: MatDialogRef<CreateWorkSpaceComponent>,
     private _optionsService:OptionsServiceService,
     private notify:NotifyService) { }
 
@@ -42,11 +45,14 @@ export class CreateWorkSpaceComponent implements OnInit {
     }
     this._optionsService.CreateWorkSpace(respons).subscribe((res:any)=>{
       if(res.status == 1){
-        this.notify.openSuccessSnackBar(res.Message)
+        this.notify.openSuccessSnackBar('Project Successfully Created')
+        this.dialogRef.close(res.project);
       }
       else{
         this.notify.openFailureSnackBar(res.Message)
       }
+    }, error=>{
+      this.notify.openFailureSnackBar('Project Faild to Create ')
     })
   }
 }

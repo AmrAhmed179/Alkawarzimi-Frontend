@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NodeResponse } from 'src/app/featuresModules/projects/build/build-dataTypes/menus/menus-info/menus-info.component';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

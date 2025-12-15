@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { EntityCatogeryModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
+import { EntityCatogeryModel, EntityModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
 import { OntologyEntitiesService } from 'src/app/Services/Knowlege/ontology-entities.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
@@ -73,6 +73,8 @@ export class OntologyEntitiesComponent implements OnInit {
        this._ontologyEntitiesService.ReloadEntitesInCreation$.next('reload')
     })
   }
+
+
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

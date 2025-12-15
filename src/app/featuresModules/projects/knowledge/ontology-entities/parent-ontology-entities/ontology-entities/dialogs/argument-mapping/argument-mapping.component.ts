@@ -50,11 +50,12 @@ export class ArgumentMappingComponent implements OnInit {
     this.form = this.fb.group({
       'sbj':[this.data?.sbj],
       'obj':[this.data?.obj],
-      'cmp':[this.data?.cmp],
+      'cmp':[this.data?.cmp ? this.data?.cmp : "" ],
       'features':[this.data.features?.IdStr]
     })
   }
   saveArgu(){
+      debugger
     var sbj = this.form.controls['sbj'].value
     var obj = this.form.controls['obj'].value
     var cmp = this.form.controls['cmp'].value
@@ -67,7 +68,7 @@ export class ArgumentMappingComponent implements OnInit {
       features = null
     }
 
-    this._ontologyEntitiesService.setArgumentMapping(this.data.cmp,obj,sbj,features,this.data.entityId,this.data.projectId).subscribe((res:any)=>{
+    this._ontologyEntitiesService.setArgumentMapping(cmp,obj,sbj,features,this.data.entityId,this.data.projectId).subscribe((res:any)=>{
       if(res.status == 1){
         this.notify.openSuccessSnackBar("Argment Map is Saved")
         this.dialogRef.close("success")

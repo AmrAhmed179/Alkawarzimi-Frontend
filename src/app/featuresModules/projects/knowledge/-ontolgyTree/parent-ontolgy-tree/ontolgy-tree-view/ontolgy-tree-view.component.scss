@@ -40,7 +40,7 @@
     padding: 12px;
 }
 
-::ng-deep {
+ :host ::ng-deep {
     .toggle-children {
         height: 50px;
     }

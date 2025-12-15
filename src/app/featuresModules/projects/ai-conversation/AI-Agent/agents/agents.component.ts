@@ -3,12 +3,18 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
-import { AIModels, AIToolInfo, Agents, Models, Routing } from 'src/app/Models/Ai-Agent/toolInfo';
+import { AIModels, AIToolInfo, Agents, Models, Routing, SubAgent, SubAgentSelected } from 'src/app/Models/Ai-Agent/toolInfo';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { ObjectId } from 'bson';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
 import { ConfirmationForAgentTemplteSearchComponent } from './confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
+import { SubAgentDialogComponent } from './sub-agent-dialog/sub-agent-dialog.component';
+import { ToolDialogComponent } from './tool-dialog/tool-dialog.component';
+import { ViewFullPropmptDialogComponent } from './view-full-propmpt-dialog/view-full-propmpt-dialog.component';
+import { ContextVariableService } from 'src/app/Services/Build/context-variable.service';
+import { ContextVariableModel } from 'src/app/core/models/contextVariable';
+import { StateComponent } from './state/state.component';
 
 @Component({
   selector: 'vex-agents',
@@ -17,6 +23,7 @@ import { ConfirmationForAgentTemplteSearchComponent } from './confirmation-for-a
 })
 export class AgentsComponent implements OnInit {
 
+  variables: ContextVariableModel[] = []
    form:FormGroup
    ismain:boolean
     onDestroy$: Subject<void> = new Subject();
@@ -39,7 +46,8 @@ export class AgentsComponent implements OnInit {
     constructor(private _aiConversationService:AiConversationService, private _dataService: DataService,
      private fb: FormBuilder,
          private notify: NotifyService,
-         private dialog: MatDialog
+         private dialog: MatDialog,
+         private _contextVariableService: ContextVariableService,
 
     ) { }
 
@@ -48,12 +56,21 @@ export class AgentsComponent implements OnInit {
             if (project) {
               this.projectId = project._id;}
               this.GetAgents()
+              this.GetTools()
               this.GetAgentsTasks()
               this.GetAIModelsProvider()
+              this.ContextVariable()
             }
             )
     }
 
+  ContextVariable() {
+        this._contextVariableService.GetContextVariable(this.projectId).subscribe((response: ContextVariableModel[]) => {
+          if (response) {
+            this.variables = response;
+          }
+        })
+      }
   intiateForm(SelectedAgent:Agents){
     if(SelectedAgent.provider)
      this.ProviderModels =   this.aIModelsProvider.find(x=>x.provider == SelectedAgent.provider).models
@@ -61,12 +78,20 @@ export class AgentsComponent implements OnInit {
     this.form = this.fb.group({
       _id: [SelectedAgent._id? SelectedAgent._id :new ObjectId().toHexString()],
       name: [SelectedAgent.name, Validators.required],
+      globalInstruction: [SelectedAgent.globalInstruction],
+      startWithoutHistory: [SelectedAgent.startWithoutHistory],
+      parentAgentId: [SelectedAgent.parentAgentId],
+      subAgents: [SelectedAgent.subAgents],
+      description: [SelectedAgent.description],
+      tools: [SelectedAgent.tools],
+      state: [SelectedAgent.state],
       chatbotId: [SelectedAgent.chatbotId? SelectedAgent.chatbotId : this.projectId, Validators.required],
       model: [SelectedAgent.model, Validators.required],
       prompt: [SelectedAgent.prompt],
       provider: [SelectedAgent.provider],
       apiKey: [SelectedAgent.apiKey],
       mainAgent: [SelectedAgent.mainAgent],
+      agentHandoffMode: [SelectedAgent.agentHandoffMode],
       maxMemoryLength: [SelectedAgent.maxMemoryLength],
       routing: this.fb.array(SelectedAgent.routing?.map(route => this.createRoutingGroup(route)) || []),
             // / 👇 Now promptSections is a nested FormGroup
@@ -77,7 +102,8 @@ export class AgentsComponent implements OnInit {
     conversationFlow: [SelectedAgent.promptSections?.conversationFlow],
     crtitcalNote: [SelectedAgent.promptSections?.crtitcalNote],
     fewShotExamples: [SelectedAgent.promptSections?.fewShotExamples]
-  })
+  }),
+
     });
 
     this.form.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe((formValue) => {
@@ -109,12 +135,18 @@ export class AgentsComponent implements OnInit {
     this.routingControls.removeAt(index);
   }
 
-    GetAgentsTasks(){
+  GetTools(){
+     this._aiConversationService.GetTools(this.selectedAgentId).subscribe((res:any)=>{
+       this.aIToolsInfo = res
+     })
+   }
+  GetAgentsTasks(){
       this._aiConversationService.GetAgentsTasks(this.projectId,"intent_1").subscribe((res:any)=>{
         this.tasks = res.tasks
       })
-    }
+  }
    selectedAgent(index){
+    debugger
      this.SelectedAgent = this.agents[index]
      this.selectedIndex = index
      this.intiateForm(this.SelectedAgent);
@@ -148,8 +180,118 @@ export class AgentsComponent implements OnInit {
       }
     });
   }
+openSubAgentsDialog() {
+  debugger
+  const dialogRef = this.dialog.open(SubAgentDialogComponent, {
+    width: '1000px',
+    data: { allAgents: this.agents.filter(x=>x._id != this.SelectedAgent._id ), parent: this.form.value , chatbotId:this.projectId}
+  });
 
+  dialogRef.afterClosed().subscribe((result: any) => {
+    if (result) {
+      this.SelectedAgent.subAgents = result.subAgents;
+      this.SelectedAgent.globalInstruction = result.globalInstruction;
+      let body = {
+        subAgents:result.subAgents,
+        globalInstruction: result.globalInstruction,
+        agentHandoffMode: result.agentHandoffMode,
+        description: result.description,
+        chatbotId:this.projectId,
+        parentId:this.SelectedAgent._id
+      }
+      this._aiConversationService.saveSubAgents(body).subscribe((res:any)=>{
+         this.notify.openSuccessSnackBar("Subagent Saved successfuly")
+          // this.GetAgents()
+          // this.intiateForm(this.SelectedAgent)
+          var selectedSubAgent = result.subAgents.filter(sa => sa.selected)
+              .map(sa => <SubAgent>{ agentId: sa.agentId, name: sa.name, description: sa.description, });
+        this.form.patchValue({
+          globalInstruction: result.globalInstruction ,
+          subAgents: selectedSubAgent,
+          description: result.description,
+          agentHandoffMode: result.agentHandoffMode
+      })
+      this.SelectedAgent.subAgents = selectedSubAgent;
+      this.SelectedAgent.globalInstruction = result.globalInstruction;
+      this.SelectedAgent.agentHandoffMode = result.agentHandoffMode;
+      this.SelectedAgent.description = result.description;
+      this.updateAgentWhenSetSubAgents(result.subAgents,result.agentHandoffMode);
+     })
+    }
+  });
+}
 
+  updateAgentWhenSetSubAgents(subAgents:SubAgentSelected[],agentHandoffMode:number){
+    subAgents.forEach(el=>{
+      let agentIndex = this.agents.findIndex(x=>x._id == el.agentId)
+      if(!el.selected){
+        this.agents[agentIndex].parentAgentId = null
+        return
+      }
+      if(el.selected == true && agentHandoffMode == 0){
+        this.agents[agentIndex].parentAgentId = this.SelectedAgent._id
+        this.agents[agentIndex].subAgents = []
+      }
+
+      if(el.selected == true && agentHandoffMode == 1){
+        if(el.subAgentParentId == this.SelectedAgent._id)
+          this.agents[agentIndex].parentAgentId = null
+      }
+
+      // if(el.selected == true && agentHandoffMode == 0)
+      //   this.agents[agentIndex].parentAgentId = this.SelectedAgent._id
+      // else
+      //   this.agents[agentIndex].parentAgentId = null
+    })
+  }
+
+openToolDialog() {
+  const dialogRef = this.dialog.open(ToolDialogComponent, {
+    width: '1000px',
+    data: { tools: this.aIToolsInfo, parent: this.form.value }
+  });
+
+  dialogRef.afterClosed().subscribe((result:any) => {
+    if (result) {
+      debugger
+      this.form.patchValue({
+        tools:result
+      })
+      this.SelectedAgent.tools = result;
+         this._aiConversationService.saveAgent(this.form.value).subscribe((res:any)=>{
+         this.notify.openSuccessSnackBar("Tools Updated successfuly")
+     })
+    }
+  });
+}
+openStateDialog() {
+  const dialogRef = this.dialog.open(StateComponent, {
+    width: '1300px',
+    data: { variables:this.variables, selectedAgent: this.form.value }
+  });
+
+  dialogRef.afterClosed().subscribe((result:any) => {
+    if (result) {
+      this.form.patchValue({
+        state:result
+      })
+      this.SelectedAgent.state = result;
+          this._aiConversationService.saveAgent(this.form.value).subscribe((res:any)=>{
+         this.notify.openSuccessSnackBar("State Updated successfuly")
+     })
+    }
+  });
+}
+viewFullPropmpt() {
+  this.buildPromptFromSections()
+  const dialogRef = this.dialog.open(ViewFullPropmptDialogComponent, {
+    width: '1300px',
+    data: { prompt: this.form.controls['prompt'].value }
+  });
+
+  dialogRef.afterClosed().subscribe((result:any) => {
+  });
+}
   scrollToElement(id){
     debugger
     this.isExpand = false
@@ -220,6 +362,8 @@ export class AgentsComponent implements OnInit {
                 if (result) {
                   const agentTemplt:Agents =  res
                   agentTemplt._id = res.agent_id
+                  this.SelectedAgent.startWithoutHistory = res.startWithoutHistory
+                  this.SelectedAgent.mainAgent = res.mainAgent
                   this.intiateForm(res)
                 }
               });
@@ -248,6 +392,9 @@ export class AgentsComponent implements OnInit {
     // Update the prompt control value
     this.form.patchValue({
       prompt: combinedPrompt
+    });
+    this.form.patchValue({
+      startWithoutHistory: this.SelectedAgent.startWithoutHistory
     });
  }
 

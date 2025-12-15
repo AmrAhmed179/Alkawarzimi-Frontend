@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MenuNode } from '../menus-info/menus-info.component';
 
 @Component({
   selector: 'vex-menu-edit',
@@ -9,34 +10,25 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class MenuEditComponent {
 
-  form: FormGroup;
-  node: any;
+  node: MenuNode;
 
   constructor(
     private dialogRef: MatDialogRef<MenuEditComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any,
+      @Inject(MAT_DIALOG_DATA) public data: {node:MenuNode,lang:string},
     private fb: FormBuilder
   ) {
-    this.node = data.node;
-
-    this.form = this.fb.group({
-      entityText: [this.node.nodeLangInfo[0].entityText, Validators.required],
-      stemmedEntity: [this.node.nodeLangInfo[0].stemmedEntity],
-      iconSrc: [this.node.iconSrc],
-    });
+    debugger
+    this.node = structuredClone(data.node)
+    if(data.lang == 'en' && !this.node.nodeLangInfo.some(x=>x.language == 'en')){
+      this.node.nodeLangInfo.push({ entityText: '', stemmedEntity: '', language: 'en'})
+    }
+     if(data.lang == 'ar' && !this.node.nodeLangInfo.some(x=>x.language == 'ar')){
+      this.node.nodeLangInfo.push({ entityText: '', stemmedEntity: '', language: 'ar'})
+    }
   }
 
   save(): void {
-    const updatedNode = {
-      ...this.node,
-      nodeLangInfo: [
-        { ...this.node.nodeLangInfo[0], entityText: this.form.value.entityText },
-      ],
-      stemmedEntity: this.form.value.stemmedEntity,
-      iconSrc: this.form.value.iconSrc,
-    };
-
-    this.dialogRef.close(updatedNode);
+    this.dialogRef.close(this.node);
   }
 
   cancel(): void {

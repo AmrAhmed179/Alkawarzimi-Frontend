@@ -84,6 +84,10 @@ export class AiConversationService {
 
       return this.http.post(environment.URLS.saveAgents,  agent)
     }
+
+  saveSubAgents(body:any){
+      return this.http.post(environment.URLS.saveSubAgents,  body)
+  }
   SetMainAgent(agentId:string, isMain:boolean){
     let parm = {
     agentId:agentId,
@@ -93,6 +97,10 @@ export class AiConversationService {
   }
   EditTools(tool){
       return this.http.post(environment.URLS.EditTool,tool)
+    }
+
+    ChangeSubAgent(body){
+      return this.http.post(environment.URLS.ChangeSubAgent,body)
     }
 
 

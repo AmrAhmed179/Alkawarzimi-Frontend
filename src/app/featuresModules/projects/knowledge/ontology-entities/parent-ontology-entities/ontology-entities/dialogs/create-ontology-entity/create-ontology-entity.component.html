@@ -14,7 +14,7 @@
                 <form [formGroup]="form" class="w-full">
                     <mat-form-field appearance="fill" class="h-10 w-full text-[10px]">
                         <mat-label>Original Entity</mat-label>
-                        <input cdkFocusInitial matInput formControlName="entityText">
+                        <input [readonly]="data.mode =='edit' && data.Type !=='action' && this.data.translationFlag !=1 && this.data.translationFlag !=2" cdkFocusInitial matInput formControlName="entityText">
                     </mat-form-field>
                     <button (click)="getStem()" class="rounded-sm bg-slate-200 text-slate-950 hover:text-slate-900 hover:bg-slate-50 p-2 mt-2" type="button">get stem</button>
                     <mat-form-field appearance="fill" class="h-10 w-full text-[10px] mt-6">

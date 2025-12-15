@@ -8,6 +8,7 @@ export class FactProperties {
   predicateType: string
   linkedClass: number
   linkedClassText: string
+  linkedClassTextEn: string
   propSubClasses: any[] = []
   linkedFrames: number[] = []
   linkedFramesEntity: EntityModel[] = []
@@ -30,6 +31,7 @@ export class FactProperties {
   ignoreTellAbout: boolean
   stopPostResponse: boolean
   paraPhraseFact: boolean
+  allawReturnToPreviousFlow: boolean
   tellAboutOnly: boolean
   dialog_nodes: any
   flowDiagram: any
@@ -39,6 +41,7 @@ export class FactProperties {
   entity?:EntityModel
   nodes:FactProperties[] = []
   treeText:string
+  treeTextEn:string
   propertyIndex:PropertiesIndex = new PropertiesIndex()
   subClassEntityArray?:EntityModel[] = []
 }

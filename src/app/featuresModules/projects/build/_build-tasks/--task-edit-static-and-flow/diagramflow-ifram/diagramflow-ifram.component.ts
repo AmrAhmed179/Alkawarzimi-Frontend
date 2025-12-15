@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2, HostListener  } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -7,13 +7,14 @@ import { IntentSettings } from 'src/app/Models/build-model/intent-model';
 import { TasksService } from 'src/app/Services/Build/tasks.service';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
+import { CanComponentDeactivate } from './guards/unsaved-changes.guard';
 
 @Component({
   selector: 'vex-diagramflow-ifram',
   templateUrl: './diagramflow-ifram.component.html',
   styleUrls: ['./diagramflow-ifram.component.scss']
 })
-export class DiagramflowIframComponent implements OnInit {
+export class DiagramflowIframComponent implements OnInit  {
 
 
 
@@ -23,6 +24,7 @@ export class DiagramflowIframComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject();
   projectName:string
   IframLink:SafeResourceUrl
+  flowDiagramChanged: boolean = false
 
   expand:boolean = false
   constructor(private _tasksService: TasksService,
@@ -40,14 +42,48 @@ export class DiagramflowIframComponent implements OnInit {
     @Input() propertyId
 
     ngOnInit(): void {
+        history.pushState(null, '', location.href);
       this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$)).subscribe((res)=>{
         if(res){
           this.lang = res
           this.getProjectInfo()
         }
       })
+
+      window.addEventListener('message', this.handleMessage);
   }
 
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification(event: BeforeUnloadEvent) {
+    if (this.flowDiagramChanged) {
+      event.preventDefault();
+      event.returnValue = 'You have unsaved changes in Diagram Flow. Are you sure you want to leave?';
+    }
+  }
+@HostListener('window:popstate', ['$event'])
+onPopState(event: PopStateEvent) {
+  if (this.flowDiagramChanged) {
+    const confirmLeave = confirm('You have unsaved changes in Diagram Flow. Do you really want to leave?');
+    if (!confirmLeave) {
+      // 👇 push state back to prevent leaving
+      history.pushState(null, '', location.href);
+    } else {
+      this.flowDiagramChanged = false; // allow leaving
+    }
+  }
+}
+   private handleMessage = (event: MessageEvent) => {
+    if (event.data === 'flowChanged') {
+      this.flowDiagramChanged = true;
+    } else if (event.data === 'flowSaved') {
+      this.flowDiagramChanged = false;
+    } else if (event.data === 'changeLang:ar') {
+      this.lang = 'ar';
+      // optional: trigger re-fetch or update
+    } else if (event.data === 'changeLang:en') {
+      this.lang = 'en';
+    }
+  };
   getProjectInfo(){
     this._optionsService.getProjectLangAndName(this.workspace_id).subscribe((res:any)=>{
       this.projectName = res.name
@@ -103,5 +139,6 @@ export class DiagramflowIframComponent implements OnInit {
   ngOnDestroy() {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+     window.removeEventListener('message', this.handleMessage);
   }
 }

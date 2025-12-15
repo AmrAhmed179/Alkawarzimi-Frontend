@@ -24,8 +24,8 @@ export class ContextVariableService {
       workspace_id:workspace_id,
     }
     return this.http_client.post(this.CreateContextVariableURL,variable, {params:parm})
-  } 
-  
+  }
+
   EditContextVariable(variable:ContextVariableModel,workspace_id:number){
 
     let parm={
@@ -38,14 +38,21 @@ export class ContextVariableService {
   EditContextVariableName(services_id,Newname,OldName,workspace_id:number){
     let parm={
       workspace_id:workspace_id,
-      services_id:services_id, 
+      services_id:services_id,
        Newname:Newname,
        OldName:OldName
     }
     return this.http_client.post(this.EditContextVariableNametUrl,{}, {params:parm})
   }
-  
+
   GetContextVariable(workspace_id:number){
+    let parm={
+      workspace_id:workspace_id,
+      sourceBot:"All"
+    }
+    return this.http_client.get<ContextVariableModel[]>(this.GetContextVariableURL, {params:parm})
+  }
+  getObjects(workspace_id:number){
     let parm={
       workspace_id:workspace_id,
       sourceBot:"All"
@@ -67,6 +74,6 @@ export class ContextVariableService {
       workspace_id:workspace_id,
     }
     return this.http_client.post(this.DeleteContextVariableURL,{},{params:parm})
-  }  
-  
+  }
+
 }

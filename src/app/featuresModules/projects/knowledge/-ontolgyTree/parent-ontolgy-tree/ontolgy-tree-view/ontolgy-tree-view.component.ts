@@ -100,13 +100,21 @@ export class OntolgyTreeViewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let isFirst = true;
+
     this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
       if (project) {
         this.workspace_id = project._id;
-    this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$)).subscribe((response) => {
+
+      this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$))
+        .subscribe((response) => {
           if (response) {
             this.lang = response;
-            this.getTreeNodes();
+
+            if (isFirst) {
+              this.getTreeNodes();
+              isFirst = false;
+            }
           }
         });
       }
@@ -297,6 +305,20 @@ export class OntolgyTreeViewComponent implements OnInit {
     })
   }
 
+  getTranslatedEntity(node:OntologyTreeNode){
+    let entity = this.classesAndProps.find(x=>x._id == node.entityId)
+    if(entity){
+      let englishEntityInfo = entity.entityInfo.find(x=>x.language == 'en')
+      let arabicEntityInfo = entity.entityInfo.find(x=>x.language == 'ar')
+      if(englishEntityInfo){
+        return englishEntityInfo.entityText
+      }
+      if(arabicEntityInfo){
+        return arabicEntityInfo.entityText
+      }
+    }else
+       return undefined
+  }
   getVerbs() {
     this._ontologyTreeService.getVerbs(this.workspace_id).subscribe((response: any) => {
       if (response) {
@@ -313,7 +335,7 @@ export class OntolgyTreeViewComponent implements OnInit {
       entities = this.classesAndProps
     }
     const dialogRef = this.dialog.open(AddSibblingAndChildComponent, {
-      data: { entities:entities, type:type, treeNodesEntityText:this.treeNodesEntityText},},
+      data: { entities:entities, type:type, treeNodesEntityText:this.treeNodesEntityText, lang:this.lang},},
     );
     dialogRef.afterClosed().subscribe((res:any) => {
       if(res){

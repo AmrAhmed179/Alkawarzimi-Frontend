@@ -3,13 +3,10 @@
 
         <div class="bg-app-bar px-6  border-b sticky left-0 flex flex-row h-16  items-center">
 
-            <a  (click)="!form.invalid && SaveEdit()"
-                [class.disabled]="form.invalid"
-                class="text-orange-600 cursor-pointer title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l border-black hidden sm:block flex-none">Save
+            <a (click)="!form.invalid && SaveEdit()" [class.disabled]="form.invalid" class="text-orange-600 cursor-pointer title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l border-black hidden sm:block flex-none">Save
             </a>
 
-            <a [routerLink]="['../']"
-                class="text-orange-600 cursor-pointer title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l border-black hidden sm:block flex-none">Cancel
+            <a [routerLink]="['../']" class="text-orange-600 cursor-pointer title my-0 ltr:pr-4 rtl:pl-4 ltr:mr-4 rtl:ml-4 ltr:border-r rtl:border-l border-black hidden sm:block flex-none">Cancel
             </a>
 
             <h2 class="title">Edit :{{service.name}}</h2>
@@ -38,7 +35,7 @@
                         <mat-form-field class="flex-auto">
                             <mat-label>User Name</mat-label>
                             <input formControlName="userName" matInput>
-                          
+
                         </mat-form-field>
                         <mat-form-field class="flex-auto">
                             <mat-label>Password</mat-label>
@@ -63,55 +60,50 @@
                         </ng-container>
                     </div>
                     <div class="grid grid-cols-2 gap-4 items-center">
-                            <div>
-                            <mat-slide-toggle color="primary" formControlName="login" labelPosition="before"
-                                class="text-xl font-normal">Login API:</mat-slide-toggle>
-                            <mat-slide-toggle color="primary" formControlName="mainApi" labelPosition="before"
-                                class="text-xl font-normal">Main API:</mat-slide-toggle>
-                            <mat-slide-toggle color="primary" formControlName="dynamicMenuLoader" labelPosition="before"
-                                class="text-xl font-normal">Menu Loader:</mat-slide-toggle>
-                            </div>
-                            <div class="flex flex-row">
-                                <mat-form-field class="flex-auto">
-                                    <mat-label>Uncompleted Objects Message</mat-label>
-                                    <input formControlName="uncompletedObjects" matInput>
-                                </mat-form-field>
-                            </div>
-                  
-                     
+                        <div>
+                            <mat-slide-toggle color="primary" formControlName="login" labelPosition="before" class="text-xl font-normal">Login API:</mat-slide-toggle>
+                            <mat-slide-toggle color="primary" formControlName="mainApi" labelPosition="before" class="text-xl font-normal">Main API:</mat-slide-toggle>
+                            <mat-slide-toggle color="primary" formControlName="dynamicMenuLoader" labelPosition="before" class="text-xl font-normal">Menu Loader:</mat-slide-toggle>
+                        </div>
+                        <div class="flex flex-row">
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Uncompleted Objects Message</mat-label>
+                                <input formControlName="uncompletedObjects" matInput>
+                            </mat-form-field>
+                        </div>
+
+
                     </div>
                     <div class="flex flex-row gap-4">
-                            <mat-form-field class="flex-auto">
-                                <mat-label>Select Object</mat-label>
-                                <input type="text"Enmity="Select Object" matInput [formControl]="selectedObject" [matAutocomplete]="autoO" >
-                                <mat-autocomplete #autoO="matAutocomplete">
-                                    <mat-option *ngFor="let v of filteredObjects | async" [value]="v.entityInfo[0].entityText">
-                                        {{ v.entityInfo[0].entityText }} (Knowledege)
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-error *ngIf="selectedObject.hasError('isMatching')">Selected Objects doesn't matched</mat-error>
-                            </mat-form-field>
-                            <div class="flex items-center justify-end">
-                                <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1"
-                                [disabled]="isObjectDisabled()"  (click)="addObject()">Add Object</button>
-                            </div>
-                      
-                            <mat-form-field class="flex-auto">
-                                <mat-label>Select Variable</mat-label>
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Select Object</mat-label>
+                            <input type="text" Enmity="Select Object" matInput [formControl]="selectedObject" [matAutocomplete]="autoO">
+                            <mat-autocomplete #autoO="matAutocomplete">
+                                <mat-option *ngFor="let v of filteredObjects | async" [value]="v.entityInfo[0].entityText">
+                                    {{ v.entityInfo[0].entityText }} (Knowledege)
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="selectedObject.hasError('isMatching')">Selected Objects doesn't matched</mat-error>
+                        </mat-form-field>
+                        <div class="flex items-center justify-end">
+                            <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1" [disabled]="isObjectDisabled()" (click)="addObject()">Add Object</button>
+                        </div>
 
-                                <input type="text"Enmity="Select Variable" matInput [formControl]="selectedVariable" [matAutocomplete]="auto" >
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let v of filteredOptions | async" [value]="v.key">
-                                        {{v.key}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <mat-error *ngIf="selectedVariable.hasError('isMatching')">Selected Variable doesn't matched</mat-error>
-                            </mat-form-field>
-                            <div class="flex items-center justify-end">
-                                <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1"
-                                [disabled]="isVariableDisabled()" (click)="addVariable()">Add Variable</button>
-                            </div>
-                       
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Select Variable</mat-label>
+
+                            <input type="text" Enmity="Select Variable" matInput [formControl]="selectedVariable" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let v of filteredOptions | async" [value]="v.key">
+                                    {{v.key}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="selectedVariable.hasError('isMatching')">Selected Variable doesn't matched</mat-error>
+                        </mat-form-field>
+                        <div class="flex items-center justify-end">
+                            <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1" [disabled]="isVariableDisabled()" (click)="addVariable()">Add Variable</button>
+                        </div>
+
                     </div>
                     <div class="flex flex-row gap-4" formArrayName="serviceData">
 
@@ -136,37 +128,41 @@
                                 <td></td>
                             </tr>
                             <ng-container *ngIf="this._serviceData">
-                            <tr *ngFor="let item of  serviceData.controls; let z = index">
-                                <ng-container [formGroupName]="z">
-                                    <td class="styleinput"><input matInput formControlName='ObjectID'
-                                            class="hidden">{{_serviceData[z].object}}</td>
-                                    <td class="styleinput" *ngIf="!_serviceData[z].Knowledege">Variable</td>
-                                    <td class="styleinput" *ngIf="_serviceData[z].Knowledege">Object</td>
-                                    <td>
-                                        <div class="flex items-center justify-center"><mat-slide-toggle color="primary"
-                                                formControlName="Required"></mat-slide-toggle></div>
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center justify-center"><mat-slide-toggle color="primary"
-                                                formControlName="dispaly"></mat-slide-toggle></div>
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center justify-center"><mat-slide-toggle color="primary"
-                                                formControlName="resetAfterUsage"></mat-slide-toggle></div>
-                                    </td>
-                                    <td>
-                                        <div class="flex items-center justify-center"><mat-checkbox formControlName='Knowledege'></mat-checkbox></div>
-                                    </td>
-                                </ng-container>
+                                <tr *ngFor="let item of  serviceData.controls; let z = index">
+                                    <ng-container [formGroupName]="z">
+                                        <td class="styleinput"><input matInput formControlName='ObjectID' class="hidden">{{_serviceData[z].object}}</td>
+                                        <td class="styleinput" *ngIf="!_serviceData[z].Knowledege">Variable</td>
+                                        <td class="styleinput" *ngIf="_serviceData[z].Knowledege">Object</td>
+                                        <td>
+                                            <div class="flex items-center justify-center">
+                                                <mat-slide-toggle color="primary" formControlName="Required"></mat-slide-toggle>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center justify-center">
+                                                <mat-slide-toggle color="primary" formControlName="dispaly"></mat-slide-toggle>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center justify-center">
+                                                <mat-slide-toggle color="primary" formControlName="resetAfterUsage"></mat-slide-toggle>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center justify-center">
+                                                <mat-checkbox formControlName='Knowledege'></mat-checkbox>
+                                            </div>
+                                        </td>
+                                    </ng-container>
 
-                                <td>
-                                    <div class="flex items-center justify-center cursor-pointer">
-                                        <mat-icon *ngIf="!_serviceData[z].Knowledege" class="icon-sm" color="warn"svgIcon="mat:delete_forever" (click)="deleteVariable(z)"></mat-icon>
-                                        <mat-icon *ngIf="_serviceData[z].Knowledege" class="icon-sm" color="warn"svgIcon="mat:delete_forever" (click)="deleteObject(z)"></mat-icon>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
+                                    <td>
+                                        <div class="flex items-center justify-center cursor-pointer">
+                                            <mat-icon *ngIf="!_serviceData[z].Knowledege" class="icon-sm" color="warn" svgIcon="mat:delete_forever" (click)="deleteVariable(z)"></mat-icon>
+                                            <mat-icon *ngIf="_serviceData[z].Knowledege" class="icon-sm" color="warn" svgIcon="mat:delete_forever" (click)="deleteObject(z)"></mat-icon>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
                         </table>
 
                     </div>
@@ -174,7 +170,7 @@
                     <div class="flex flex-row gap-4 mt-2">
                         <mat-form-field class="flex-auto">
                             <mat-label>Select Variable</mat-label>
-                            <input type="text"Enmity="Select Variable" matInput [formControl]="selectedMapping" [matAutocomplete]="autoM" >
+                            <input type="text" Enmity="Select Variable" matInput [formControl]="selectedMapping" [matAutocomplete]="autoM">
                             <mat-autocomplete #autoM="matAutocomplete">
                                 <mat-option *ngFor="let v of filteredMapping | async" [value]="v.key">
                                     {{ v.key }}
@@ -182,18 +178,17 @@
                             </mat-autocomplete>
                             <mat-error *ngIf="selectedMapping.hasError('isMatching')">Selected Variable doesn't matched</mat-error>
                         </mat-form-field>
-                                      
+
                         <mat-form-field class="flex-auto">
                             <mat-label>Add json name</mat-label>
 
-                            <input Enmity="Add json name" matInput [formControl]="jsonMapping" >
-                                              
+                            <input Enmity="Add json name" matInput [formControl]="jsonMapping">
+
                         </mat-form-field>
                         <div class="flex items-center justify-end">
-                            <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1"
-                            [disabled]="isMappingDisabled()" (click)="addMapping()">Add Mapping</button>
+                            <button mat-raised-button class="bg-[#1f2f3c] text-white text-lg mt-1" [disabled]="isMappingDisabled()" (click)="addMapping()">Add Mapping</button>
                         </div>
-                   
+
                     </div>
 
                     <div class="flex flex-row gap-4" formArrayName="outputMapping">
@@ -206,22 +201,22 @@
                             </tr>
 
                             <ng-container *ngIf="this._outputMapping">
-                            <tr *ngFor="let item of  outputMapping.controls; let h = index">
-                                <ng-container [formGroupName]="h">
+                                <tr *ngFor="let item of  outputMapping.controls; let h = index">
+                                    <ng-container [formGroupName]="h">
 
-                                    <td class="styleinput"><input matInput formControlName='variableId'class="hidden">{{_outputMapping[h].variable}}</td>
+                                        <td class="styleinput"><input matInput formControlName='variableId' class="hidden">{{_outputMapping[h].variable}}</td>
 
-                                    <td ><input class="styleinput" matInput formControlName='jsonField' ></td>
-                                    
-                                </ng-container>
+                                        <td><input class="styleinput" [readonly]="true" matInput formControlName='jsonField'></td>
 
-                                <td>
-                                    <div class="flex items-center justify-center cursor-pointer">
-                                        <mat-icon  class="icon-sm" color="warn"svgIcon="mat:delete_forever" (click)="deleteMapping(h)"></mat-icon>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-container>
+                                    </ng-container>
+
+                                    <td>
+                                        <div class="flex items-center justify-center cursor-pointer">
+                                            <mat-icon class="icon-sm" color="warn" svgIcon="mat:delete_forever" (click)="deleteMapping(h)"></mat-icon>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
                         </table>
 
                     </div>

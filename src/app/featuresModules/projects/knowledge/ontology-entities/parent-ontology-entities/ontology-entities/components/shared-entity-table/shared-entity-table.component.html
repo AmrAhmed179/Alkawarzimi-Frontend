@@ -29,7 +29,7 @@
         </form>
     </div>
     <div class="w-[45%] bg-white h-14 rounded-sm flex justify-center items-center">
-        <p class="text-lg font-semibold">{{entityTitle}}</p>
+        <p class="text-lg font-semibold" *ngIf="currentIndex == 0 || currentIndex ">{{getEntityTextBasedOnLang(false)}}</p>
     </div>
 </div>
 
@@ -65,8 +65,10 @@
                 </div>
                 <div class="flex w-64">
                     <P class="bg-[#999999] rounded-lg text-white px-1 mx-2 h-5">{{entity._id}}</P>
-                    <p *ngIf="entity.templateId == 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class="  font-semibold">{{entity.entityInfo[0].entityText}}</p>
-                    <p *ngIf="entity.templateId > 0" (click)="openModifyEntity()" [ngClass]="{'text-white': currentIndex == i}" class=" font-semibold text-[#ff0000]">{{entity.entityInfo[0].entityText}}</p>
+                    <span (click)="openModifyEntity(1)" class="text-[#358ede] font-semibold" *ngIf="getTranslation(entity) == 1 && (entity.entityType == 'class' ||entity.entityType == 'individual' ||entity.entityType == 'ques_tool')">Translate ar</span>
+                    <span (click)="openModifyEntity(2)" class="text-[#358ede] font-semibold" *ngIf="getTranslation(entity) == 2 && (entity.entityType == 'class' ||entity.entityType == 'individual' ||entity.entityType == 'ques_tool')">Translate en</span>
+                    <p (click)="!getTranslation(entity) ? openModifyEntity(): null" [ngClass]="{'text-white': currentIndex == i ,'text-[#ff0000]':entity.templateId > 0,'text-[#A7A7A7]':entity.entityType != 'action' && getTranslation(entity) }" class="  mx-1 font-semibold">
+                        {{getEntityTextBasedOnLang(true,entity)}}</p>
                 </div>
 
                 <div class="justify-end ml-auto">
@@ -79,7 +81,7 @@
                         <button *ngIf="type=='class'" matTooltip="Add Class Restrictions" (click)="openShowDeconstructClass(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:attachment"></mat-icon> </button>
                         <button (click)="openShowEntityBehavior(entity)" matTooltip="Show Entities Behaviour"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:widgets"></mat-icon> </button>
                         <button *ngIf="type=='action'" matTooltip="Edit Frame" (click)="editFrame(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:edit"></mat-icon> </button>
-                        <button *ngIf="type !=='prop'" matTooltip="Delete Entity" (click)="deleteEntity(entity._id)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
+                        <button *ngIf="type !=='prop'" matTooltip="Delete Entity" (click)="deleteEntity(entity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
                         <button *ngIf="entity?.children.length > 0" class="text-white text-xs font-semibold bg-orange-400 mx-1 px-1 rounded-lg  h-4"> <mat-icon class="" >Syn</mat-icon> </button>
                         <button *ngIf="entity?.children.length < 1" class="text-white  mx-1 px-1 rounded-lg pt-1"> <mat-icon class="" ></mat-icon> </button>
                     </div>
@@ -98,13 +100,18 @@
 
             <div class="flex ">
                 <P class="bg-[#999999] rounded-lg text-white px-1 mx-2">{{childEntity._id}}</P>
-                <p (click)="openModifySynEntity(childEntity)" class="text-black hover:text-white font-semibold">{{childEntity?.entityInfo[0]?.entityText}}</p>
+                <!-- <p (click)="openModifySynEntity(childEntity)" class="text-black hover:text-white font-semibold">{{getEntityTextBasedOnLang(true,childEntity)}} <span>{{getTranslation(childEntity)}}</span> </p> -->
+                <!-- /////// -->
+                <span (click)="openModifySynEntity(childEntity,1)" class="text-[#358ede] font-semibold" *ngIf="getTranslation(childEntity) == 1 && (childEntity.entityType == 'class' ||childEntity.entityType == 'individual' ||childEntity.entityType == 'ques_tool')">Translate ar</span>
+                <span (click)="openModifySynEntity(childEntity,2)" class="text-[#358ede] font-semibold" *ngIf="getTranslation(childEntity) == 2 && (childEntity.entityType == 'class' || childEntity.entityType == 'individual' ||childEntity.entityType == 'ques_tool')">Translate en</span>
+                <p (click)="!getTranslation(childEntity) ? openModifySynEntity(childEntity): null" [ngClass]="{'text-[#A7A7A7]':childEntity.entityType != 'action' && getTranslation(childEntity) }" class="  mx-1 font-semibold">
+                    {{getEntityTextBasedOnLang(true,childEntity)}}</p>
             </div>
             <div *ngIf="type=='gneratedFrames'">
                 <p class="bg-[#999999] rounded-lg text-white px-1 mx-2 font-medium">{{childEntity?.frame.GenReson}}</p>
             </div>
             <div>
-                <button (click)="deleteEntity(childEntity._id)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
+                <button (click)="deleteEntity(childEntity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:delete"></mat-icon> </button>
 
                 <button *ngIf="type=='action' || type=='gneratedFrames'" (click)="editFrame(childEntity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:edit"></mat-icon> </button>
                 <button *ngIf="type=='action' || type=='gneratedFrames'" (click)="setArgumentMapping(childEntity)"> <mat-icon class="mx-1 bg-white rounded-full p-[5px] icon-lg text-gray-800" svgIcon="mat:view_day"></mat-icon> </button>

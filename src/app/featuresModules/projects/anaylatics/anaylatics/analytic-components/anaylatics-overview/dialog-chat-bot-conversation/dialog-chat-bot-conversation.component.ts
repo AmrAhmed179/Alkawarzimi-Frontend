@@ -22,6 +22,7 @@ export class DialogChatBotConversationComponent implements OnInit {
   }
   getTextResponse(response){
 debugger
+ return response.message;
     let start1 = response.message.indexOf('<')
     let start2 = response.message.indexOf('>')
 

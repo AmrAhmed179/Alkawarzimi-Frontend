@@ -26,6 +26,7 @@ interface Value {
 
 interface Synonym {
   value: string;
+  language?: string;
 }
 
 @Component({
@@ -66,7 +67,7 @@ export class EntitiesInfoComponent implements OnInit {
   ngOnInit(): void {
     // Initialize Form
     this.form = this.fb.group({
-      entityName: ['' || '', Validators.required],
+      entityName: ['', Validators.required],
     });
 
     // Get Workspace ID
@@ -210,6 +211,13 @@ export class EntitiesInfoComponent implements OnInit {
     }
   }
 
+  checkIfThereisValueEnORAr(element){
+    let noOfSynInfo = element.synonymsInfo.find(x=>x.language == this.selectedLang)
+    if(noOfSynInfo)
+      return true
+    else
+      return false
+  }
   removeSynonym(valueIndex: number, synonymIndex: number): void {
     const synonymsArray = this.getSynonyms(this.valuesFormArray.at(valueIndex)) as FormArray;
     synonymsArray.removeAt(synonymIndex);
@@ -289,6 +297,7 @@ export class EntitiesInfoComponent implements OnInit {
   addNewValue(element: any): void {
     const newSynonym: Synonym = {
       value: '',
+      language:this.selectedLang
     };
 
     element.synonymsInfo.push({ ...newSynonym, editedValue: '' });
@@ -341,10 +350,10 @@ export class EntitiesInfoComponent implements OnInit {
         payload.Entity.values.push({
           type: value.type,
           value: value.value,
-          language: this.selectedLang,
+          language: value.language,
           synonymsInfo: nonEmptySynonymsInfo.map((synonym: any, index: number) => ({
             value: synonym.value.trim(),
-            language: this.selectedLang,
+            language: synonym.language,
             main: index === 0,
           })),
         });
@@ -355,6 +364,7 @@ export class EntitiesInfoComponent implements OnInit {
   }
 
   onSubmit(): void {
+    debugger
     const formData = this.entityForm.value;
     const newData = [];
 
@@ -366,6 +376,7 @@ export class EntitiesInfoComponent implements OnInit {
           value: trimmedValue,
           synonymsInfo: value.synonyms.map((synonym: any) => ({
             value: synonym.value.trim(),
+            language:this.selectedLang
           })),
         };
         newData.push(newDataRow);

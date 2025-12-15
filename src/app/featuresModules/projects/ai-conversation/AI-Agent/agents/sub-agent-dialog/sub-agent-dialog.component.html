@@ -1,0 +1,39 @@
+<div dir="ltr">
+    <div class="flex justify-center">
+        <h2 mat-dialog-title>Manage Sub Agents</h2>
+
+    </div>
+    <mat-dialog-content [formGroup]="form" class="max-h-[700px] overflow-auto">
+        <div class="flex items-center mx-4 gap-14 mb-4">
+            <p class="text-base font-semibold">Agent Mode :</p>
+            <mat-radio-group color="primary" formControlName="agentHandoffMode" (change)="changeAgentMode($event)" class="flex gap-4 justify-center my-4">
+                <mat-radio-button [value]="0"> <span class="mx-1">Parent</span></mat-radio-button>
+                <mat-radio-button [value]="1"> <span class="mx-1">Handoff</span> </mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <mat-form-field class="w-full ltr-textarea " appearance="fill">
+            <mat-label>Global Instruction</mat-label>
+            <input matInput formControlName="globalInstruction" />
+        </mat-form-field>
+        <mat-form-field class="w-full ltr-textarea " appearance="fill">
+            <mat-label> Description</mat-label>
+            <input matInput formControlName="description" />
+        </mat-form-field>
+        <div formArrayName="subAgents">
+            <div *ngFor="let ctrl of subAgentsArray.controls; let i = index" [formGroupName]="i" class="grid grid-cols-5 items-center gap-3 mb-3">
+                <!-- <mat-checkbox (change)="cahngeSubAgent(ctrl.get('selected')?.value, ctrl.get('agentId')?.value, ctrl.get('description')?.value)" color="primary" class="" formControlName="selected"> <span class="px-2"> {{ ctrl.get('name')?.value }}</span></mat-checkbox> -->
+                <mat-checkbox color="primary" class="" formControlName="selected"> <span class="px-2"> {{ ctrl.get('name')?.value }}</span></mat-checkbox>
+
+                <mat-form-field class="col-span-4 ltr-textarea " appearance="fill" *ngIf="ctrl.get('selected')?.value">
+                    <mat-label>Description</mat-label>
+                    <input matInput formControlName="description" />
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button class="mx-3" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="save()">Save</button>
+    </mat-dialog-actions>
+</div>

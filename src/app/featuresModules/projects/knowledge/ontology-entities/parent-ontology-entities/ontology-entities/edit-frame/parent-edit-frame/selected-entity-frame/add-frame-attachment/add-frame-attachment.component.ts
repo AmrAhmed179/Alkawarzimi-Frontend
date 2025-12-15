@@ -44,7 +44,7 @@ export class AddFrameAttachmentComponent implements OnInit {
     this.currentIndex = index
   }
   addCoreAttch(){
-    if(this.currentIndex){
+    if(this.currentIndex == 0 || this.currentIndex){
       let node = this.nodes[this.currentIndex]
       this.dialogRef.close(node.entityId)
     }

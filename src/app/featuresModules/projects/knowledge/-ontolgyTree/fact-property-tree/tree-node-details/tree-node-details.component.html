@@ -2,6 +2,7 @@
     <mat-checkbox [(ngModel)]="SeLectedNode.ignoreTellAbout" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Ignore TellAbout: </mat-checkbox>
     <mat-checkbox [(ngModel)]="SeLectedNode.tellAboutOnly" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">TellAbout Only: </mat-checkbox>
     <mat-checkbox [(ngModel)]="SeLectedNode.stopPostResponse" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Stop Post Response: </mat-checkbox>
+    <mat-checkbox [(ngModel)]="SeLectedNode.allawReturnToPreviousFlow" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">Return To Previous Flow: </mat-checkbox>
     <mat-checkbox [(ngModel)]="SeLectedNode.paraPhraseFact" labelPosition="before" class="text-orange-500 text-base custom-checkbox" color="primary">ParaPhrase Fact: </mat-checkbox>
     <div>
         <p class="text-sm text-orange-500">
@@ -81,12 +82,14 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div *ngIf="SeLectedNode.response.responseType == 1">
-                    <quill-editor [(ngModel)]="SeLectedNode?.response?.value[0].value" [styles]="{ flex: '1 1 auto' ,minHeight:'300px'}" [required]="true"></quill-editor>
+                    <quill-editor *ngIf="lang =='ar'" [(ngModel)]="SeLectedNode?.response?.value[0].value" [styles]="{ flex: '1 1 auto' ,minHeight:'300px'}" [required]="true"></quill-editor>
+                    <quill-editor *ngIf="lang =='en'" [(ngModel)]="SeLectedNode?.response?.value[1].value" [styles]="{ flex: '1 1 auto' ,minHeight:'300px'}" [required]="true"></quill-editor>
                 </div>
                 <div>
                     <mat-form-field *ngIf="SeLectedNode.response.responseType == 6 || SeLectedNode.response.responseType == 2" appearance="fill" class="mt-1 h-11 w-full text-[9.5px]">
                         <mat-label>text...</mat-label>
-                        <input cdkFocusInitial matInput [(ngModel)]="SeLectedNode.response.value[0].value">
+                        <input *ngIf="lang =='ar'" cdkFocusInitial matInput [(ngModel)]="SeLectedNode?.response?.value[0].value">
+                        <input *ngIf="lang =='en'" cdkFocusInitial matInput [(ngModel)]="SeLectedNode?.response?.value[1].value">
                     </mat-form-field>
                 </div>
                 <div class="my-2 border border-[#CCCCCC] p-2 " *ngIf="SeLectedNode.response.responseType == 1 || SeLectedNode.response.responseType == 2">
@@ -110,7 +113,7 @@
                         <div [ngClass]="{'clickOnList': currentIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
 
                             <div class="flex w-full px-3 justify-between">
-                                <p class="font-semibold">{{entity.value[0].value}}</p>
+                                <p class="font-semibold"> {{getEntitytext(entity?.entityId)}}</p>
                                 <div class="flex items-center gap-1">
                                     <mat-checkbox *ngIf="entity.entityType == 'frame'" labelPosition="before" [(ngModel)]="SeLectedNode.response.objectEntitiesValues[i].negative" class="text-orange-500 mb-2 text-base custom-checkbox" color="primary">Neg : </mat-checkbox>
 
@@ -140,13 +143,13 @@
                     </div>
 
                     <div class="overflow-auto h-[125px]">
-                        <div [ngClass]="{'clickOnList': currentItemIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList2(i)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
+                        <div [ngClass]="{'clickOnList': currentItemIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="clickOnList2(i,(lang == 'ar'?entity.value[0].value : entity.value[1].value) , entity)" *ngFor="let entity of SeLectedNode.response.objectEntitiesValues; let i =index">
 
                             <div class="flex w-full px-3 justify-between">
-                                <p class="font-semibold">{{entity.value[0].value}}</p>
-                                <div class="flex items-center gap-1">
-                                    <mat-checkbox *ngIf="entity.entityType == 'frame'" labelPosition="before" [(ngModel)]="SeLectedNode.response.objectEntitiesValues[i].negative" class="text-orange-500 mb-2 text-base custom-checkbox" color="primary">Neg : </mat-checkbox>
+                                <p *ngIf="lang == 'ar'" class="font-semibold">{{entity?.value[0].value}}</p>
+                                <p *ngIf="lang == 'en'" class="font-semibold">{{entity?.value[1].value}}</p>
 
+                                <div class="flex items-center gap-1">
                                     <button class=" font-semibold"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
                                     <button (click)="deteteFact(entity)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
                                 </div>
@@ -178,10 +181,13 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="flex flex-col gap-2 w-[90%]">
-                    <mat-form-field appearance="fill" class="mt-1 h-11 text-[11px]">
-                        <mat-label>Title...</mat-label>
-                        <input [(ngModel)]="SeLectedNode.response.mediaResponse.title[0].value" cdkFocusInitial matInput>
-                    </mat-form-field>
+                    <ng-container *ngFor="let t of SeLectedNode?.response?.mediaResponse?.title; trackBy: trackByLang">
+                        <mat-form-field *ngIf="t?.lang === lang && t" appearance="fill" class="mt-1 h-11 text-[11px]">
+                            <mat-label>Title...</mat-label>
+                            <input [(ngModel)]="t.value" matInput cdkFocusInitial>
+                        </mat-form-field>
+                    </ng-container>
+
                     <mat-form-field appearance="fill" class="mt-1 h-11  text-[11px]">
                         <mat-label>Src...</mat-label>
                         <input [(ngModel)]="SeLectedNode.response.mediaResponse.src" cdkFocusInitial matInput>
@@ -214,7 +220,7 @@
                 <div [ngClass]="{'bg-slate-200': currentexampleIndex == i}" class="flex  border-b-2 m-1 py-[2px] items-center" (click)="currentexampleIndex = i" *ngFor="let example of examples; let i =index">
 
                     <div class="flex w-full px-3 justify-between">
-                        <p class="font-semibold text-base">{{example.text}}</p>
+                        <p class="font-semibold text-base">{{example?.text}}</p>
                         <div class="flex items-center gap-1">
                             <button (click)="deteteExample(example)" class=" font-semibold"><mat-icon svgIcon="mat:delete"></mat-icon></button>
                         </div>
@@ -239,9 +245,9 @@
                         <div class="flex items-center gap-1">
                             <button (click)="linkIntent(example)" matTooltip="Link Intent" class=" font-semibold text-red"><mat-icon svgIcon="mat:add_circle_outline"></mat-icon></button>
                         </div>
-                        <p class="font-semibold text-sm text-red">{{example.confidence}}</p>
-                        <p class="font-semibold text-base ">{{example.intentId}}</p>
-                        <p class="font-semibold text-base justify-self-end	text-[#ebaf7b]">{{example.example}}</p>
+                        <p class="font-semibold text-sm text-red">{{example?.confidence}}</p>
+                        <p class="font-semibold text-base ">{{example?.intentId}}</p>
+                        <p class="font-semibold text-base justify-self-end	text-[#ebaf7b]">{{example?.example}}</p>
                         <p class="font-semibold text-base justify-self-end	text-sm text-red">{{i+1}}</p>
                     </div>
                 </div>

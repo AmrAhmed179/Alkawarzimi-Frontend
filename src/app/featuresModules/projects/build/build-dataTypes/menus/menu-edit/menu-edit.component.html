@@ -1,25 +1,29 @@
 <h1 mat-dialog-title>Edit Node</h1>
 <mat-dialog-content>
-    <form [formGroup]="form">
-        <mat-form-field class="w-full">
-            <mat-label>Entity Text</mat-label>
-            <input matInput formControlName="entityText" required>
-        </mat-form-field>
+    <div *ngIf="node">
+        <div class="w-full" *ngFor="let langInfo of node.nodeLangInfo">
+            <div class="w-full" *ngIf="langInfo.language == data.lang">
 
-        <mat-form-field class="w-full">
-            <mat-label>Stemmed Entity</mat-label>
-            <input matInput formControlName="stemmedEntity">
-        </mat-form-field>
+                <mat-form-field class="w-full">
+                    <mat-label>Entity Text</mat-label>
+                    <input [(ngModel)]="langInfo.entityText" matInput required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full">
+                    <mat-label>Stemmed Entity</mat-label>
+                    <input [(ngModel)]="langInfo.stemmedEntity" matInput>
+                </mat-form-field>
+            </div>
+        </div>
 
         <mat-form-field class="w-full">
             <mat-label>Icon Source</mat-label>
-            <input matInput formControlName="iconSrc">
+            <input [(ngModel)]="node.iconSrc" matInput>
         </mat-form-field>
-
-    </form>
+    </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-button color="primary" (click)="save()" [disabled]="form.invalid">Save</button>
+    <button mat-button color="primary" (click)="save()">Save</button>
     <button mat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

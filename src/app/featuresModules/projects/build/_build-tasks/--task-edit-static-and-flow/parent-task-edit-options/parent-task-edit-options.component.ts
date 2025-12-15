@@ -11,14 +11,17 @@ import { TasksService } from 'src/app/Services/Build/tasks.service';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { MagicWordWriteComponent } from 'src/app/shared/components/magic-word-write/magic-word-write.component';
+import { DiagramflowIframComponent } from '../diagramflow-ifram/diagramflow-ifram.component';
+import { CanComponentDeactivate } from '../diagramflow-ifram/guards/unsaved-changes.guard';
 
 @Component({
   selector: 'vex-parent-task-edit-options',
   templateUrl: './parent-task-edit-options.component.html',
   styleUrls: ['./parent-task-edit-options.component.scss']
 })
-export class ParentTaskEditOptionsComponent implements OnInit {
+export class ParentTaskEditOptionsComponent implements OnInit , CanComponentDeactivate {
 
+  @ViewChild(DiagramflowIframComponent) diagramChild!: DiagramflowIframComponent;
   addExampleForm:FormGroup
   showEditForm:boolean =false
   editExampleForm:FormGroup
@@ -60,6 +63,12 @@ export class ParentTaskEditOptionsComponent implements OnInit {
     ) {
     }
 
+      canDeactivate(): boolean {
+    if (this.diagramChild?.flowDiagramChanged) {
+      return confirm('Are you sure you want to navigate away from Diagram Flow without saving?');
+    }
+    return true;
+  }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.route.parent.params.subscribe((parmas: Params) => {
@@ -137,8 +146,16 @@ export class ParentTaskEditOptionsComponent implements OnInit {
     this.showCreateTask = true
 
   }
-  clickOnTapButton(tapeName:string){
-    this.tapeName = tapeName
+  clickOnTapButton(tabName:string){
+    // If current tab is Diagram Flow and unsaved changes exist
+  if (this.tapeName === 'Diagram Flow' && this.diagramChild?.flowDiagramChanged) {
+    const confirmLeave = confirm('Are you sure you want to navigate away from Diagram Flow without saving?');
+    if (!confirmLeave) {
+      return; // 🚫 block switching
+    }
+  }
+
+  this.tapeName = tabName; // ✅ safe to switch
   }
   showAndHideTaskTree(){
     this.showTaskTree =  !this.showTaskTree

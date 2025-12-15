@@ -1,0 +1,19 @@
+<div dir="ltr">
+    <div class="flex justify-center">
+        <h2 mat-dialog-title>View Full Prompt</h2>
+
+    </div>
+
+    <mat-dialog-content class="max-h-[1000px] overflow-auto">
+
+        <mat-form-field class="w-full ltr-textarea" appearance="fill">
+            <mat-label>Full Prompt</mat-label>
+            <textarea class="" rows="27" [readonly]="true" matInput [ngClass]="{ 'hover-block': isHovering }" (mouseenter)="isHovering = true" edi (mouseleave)="isHovering = false" [value]="data.prompt"></textarea>
+        </mat-form-field>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button class="mx-3" (click)="cancel()">Cancel</button>
+    </mat-dialog-actions>
+</div>

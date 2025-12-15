@@ -110,13 +110,17 @@ export class PropertyTreeViewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let firstTime = true
     this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
       if (project) {
         this.workspace_id = project._id;
     this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$)).subscribe((response) => {
           if (response) {
             this.lang = response;
-            this.getTreeNodes();
+            if(firstTime){
+              this.getTreeNodes();
+              firstTime = false
+            }
           }
         });
       }
@@ -172,8 +176,10 @@ export class PropertyTreeViewComponent implements OnInit {
     });
   }
   serach(){
-    debugger
-    let treeNodeFilter:PropertyNode[] = this.TreeNodes.filter(x=>x.entityText.trim().includes(this.searchNode.trim()))
+    let searchTerm = this.searchNode.trim().toLowerCase();
+    let treeNodeFilter: PropertyNode[] = this.TreeNodes.filter(node =>
+      this.getEntityTextBasedOnLang(node).trim().toLowerCase().includes(searchTerm)
+    );
     let treeNodes:PropertyNode[] = []
     treeNodeFilter.forEach((e:PropertyNode)=>{
       treeNodes = this.getSearchedNode(e, treeNodes)
@@ -254,10 +260,20 @@ export class PropertyTreeViewComponent implements OnInit {
         }
           else{
             var nextNode = n.children.find(x=>x.previous_sibling == childern[childern.length-1].node_id)
-            childern.push(nextNode)
+             if(nextNode)
+             childern.push(nextNode)
           }
         }
+       if(n.children.length == childern.length)
         n.children = childern
+        else{
+            const missingItems =  n.children.filter(primaryItem =>
+          !childern.some(secondaryItem =>
+          primaryItem.node_id === secondaryItem.node_id // or any other comparison logic
+          )
+          );
+        n.children = [...childern, ...missingItems]
+      }
       }
     })
     console.log(tree)
@@ -409,7 +425,10 @@ export class PropertyTreeViewComponent implements OnInit {
             let nextNodeindex = this.TreeNodes.findIndex(x=>x.previous_sibling == node.node_id)
             this.TreeNodes[nextNodeindex].previous_sibling = res.node.node_id
             this.constractAndViewTree(this.TreeNodes)
+             this.notify.openSuccessSnackBar("Property added successfully")
           }
+          if(res.status == 0)
+            this.notify.openFailureSnackBar(res.message)
         })
       }
     })
@@ -512,6 +531,7 @@ export class PropertyTreeViewComponent implements OnInit {
   }
   ////when click on node
   seLectedNode(node:PropertyNode){
+    debugger
     this.SelectedNode = node
     this.domains = node.domains
     this.Synonyms = node.synonmsSet?.filter(x=>x.lang == this.lang)
@@ -778,6 +798,47 @@ export class PropertyTreeViewComponent implements OnInit {
       }
     })
   }
+
+ getEntityTextBasedOnLang(propertyNode: PropertyNode): string {
+
+      if(propertyNode.type == 'class'){
+      let entity = this.classesOnly.find(x=>x._id == propertyNode.entityId)
+      if(entity){
+        let entityInfoForClass = entity.entityInfo
+        if(entityInfoForClass.length == 1)
+          return entity.entityInfo[0].entityText
+        if(entityInfoForClass.length == 2)
+          return entityInfoForClass.find(x=>x.language == this.lang)?.entityText
+
+      }
+    }
+  if (!propertyNode.properties || propertyNode.properties.length === 0) {
+    if(propertyNode.entityText)
+       return  propertyNode.entityText
+    let entity = this.classesAndProps.find(x=>x._id == propertyNode.entityId)
+    if(entity)
+      return entity.entityInfo[0].entityText
+    else{
+      let entityAction = this.entityAction.find(x=>x._id == propertyNode.entityId)
+      if(entityAction)
+        return entityAction.entityInfo[0].entityText
+    }
+  }
+
+  // If only one language available → return it
+  if (propertyNode.properties.length === 1) {
+    return propertyNode.properties[0].entityText;
+  }
+
+  // If multiple → try to match current lang
+  const match = propertyNode.properties.find(p => p.lang === this.lang);
+  if (match) {
+    return match.entityText;
+  }
+
+  // Fallback → return the first available
+  return propertyNode.properties[0].entityText;
+}
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

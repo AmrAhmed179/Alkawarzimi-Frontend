@@ -69,3 +69,18 @@
     background-color: #F0903E;
     color: white;
 }
+
+:host ::ng-deep .mat-paginator-page-size {
+    display: none !important;
+}
+
+.two-line-ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* number of lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    /* important for long IDs */
+}

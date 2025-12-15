@@ -179,6 +179,10 @@ import { ChatComponent } from "./Ai-build-veba-Knowledge-Base/components/Chat/ch
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { ConfirmationForAgentTemplteSearchComponent } from './ai-conversation/AI-Agent/agents/confirmation-for-agent-templte-search/confirmation-for-agent-templte-search.component';
 import { DocumentSettingsDialogComponent } from './Ai-build-veba-Knowledge-Base/components/documents/document-settings-dialog/document-settings-dialog.component';
+import { SubAgentDialogComponent } from './ai-conversation/AI-Agent/agents/sub-agent-dialog/sub-agent-dialog.component';
+import { ToolDialogComponent } from './ai-conversation/AI-Agent/agents/tool-dialog/tool-dialog.component';
+import { ViewFullPropmptDialogComponent } from './ai-conversation/AI-Agent/agents/view-full-propmpt-dialog/view-full-propmpt-dialog.component';
+import { StateComponent } from './ai-conversation/AI-Agent/agents/state/state.component';
 
 @NgModule({
   declarations: [
@@ -345,7 +349,11 @@ import { DocumentSettingsDialogComponent } from './Ai-build-veba-Knowledge-Base/
     IndexDetailsComponent,
     SettingsComponent,
     ConfirmationForAgentTemplteSearchComponent,
-    DocumentSettingsDialogComponent
+    DocumentSettingsDialogComponent,
+    SubAgentDialogComponent,
+    ToolDialogComponent,
+    ViewFullPropmptDialogComponent,
+    StateComponent
   ],
   imports: [
     TreeModule,

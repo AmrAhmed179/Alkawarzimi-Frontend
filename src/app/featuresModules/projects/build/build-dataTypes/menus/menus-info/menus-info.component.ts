@@ -12,55 +12,48 @@ import { MenuAddComponent } from '../menu-add/menu-add.component';
 import { MenuEditComponent } from '../menu-edit/menu-edit.component';
 import { MenuDeleteComponent } from '../menu-delete/menu-delete.component';
 import { stringify } from 'querystring';
-import { ITreeOptions } from '@circlon/angular-tree-component';
+import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
 import { OptionsServiceService } from 'src/app/Services/options-service.service';
 import { fi } from 'date-fns/locale';
+import { lang } from 'moment';
 
-export interface MenuNode {
-  nodeLangInfo: NodeLangInfo[];
-  entityId: number;
-  root: boolean;
-  action: NodeAction;
-  storyGroups: any[]; // Change to an array instead of null
-  menuItemId: string | null;
-  iconSrc: string | null;
-  node_id: string;
-  parent: string | null;
-  previous_sibling: string | null;
-  children?: MenuNode[]; // Change to an optional array
+export class Menu {
+  menuId!: number;
+  name!: string;
+  nodes!: MenuNode[]   // Reuse the StoryNode class we made earlier
+  problemMeun!: boolean;
+  serviceId!: number;
+  type!: number;
+}
+export class NodeLangInfo {
+  entityText?: string;
+  stemmedEntity?: string | null;
+  language?: string;
 }
 
-
-interface TreeNode {
-  node_id: string;
-  parent: string | null;
-  children: TreeNode[];
-  root: boolean;
-  isExpanded?: boolean;
-  // Add other properties as needed
+export class Response {
+  text?: string | null;
+  language?: string;
 }
 
-export interface NodeLangInfo {
-  entityText: string;
-  stemmedEntity?: any;
-  language: string;
+export class Action {
+  type?: string;
+  goToTaskId?: number | null;
+  responses?: Response[];
 }
 
-export interface NodeAction {
-  type: string;
-  goToTaskId?: any;
-  responses: NodeResponse[];
-}
-
-export interface NodeResponse {
-  text: string | null;
-  language: string;
-}
-
-interface FlatNode {
-  expandable: boolean;
-  entityText: string;
-  level: number;
+export class MenuNode {
+  nodeLangInfo?: NodeLangInfo[];
+  entityId?: number;
+  root?: boolean;
+  action?: Action;
+  storyGroups?: any[];
+  menuItemId?: number | null;
+  iconSrc?: string | null;
+  node_id?: string;
+  parent?: string | null;
+  previous_sibling?: string | null;
+  children?:MenuNode[]
 }
 
 @Component({
@@ -70,25 +63,38 @@ interface FlatNode {
 })
 
 export class MenusInfoComponent implements OnInit {
-  menu: any;
+  menu: Menu;
+  searchNode
   private projectSubscription: Subscription;
   projectId: number;
   menuId: number;
-  nodes: any[] = [];
+  nodes: MenuNode[] = [];
   currentNodeId
   selectedLang: string;
   private languageSubscription: Subscription;
-  selectedNode
+  selectedNode:MenuNode
   tasks
   menuName
   searchQuery: string = '';
   filteredNodes: any[] = [];
-
-  options: ITreeOptions = {
-    // rtl: true,
-    allowDrag: true,
-    allowDrop: true,
-  };
+ @ViewChild('tree') tree: TreeComponent;
+ hasChild = (_: number, node: MenuNode) => !!node.children && node.children.length > 0;
+   options: ITreeOptions = {
+    rtl: false,
+    displayField: 'name',
+    isExpandedField: 'expanded',
+    allowDrag: (node: any) => {
+      return true;
+    },
+    nodeHeight: 50,
+    allowDragoverStyling: true,
+    levelPadding: 20,
+    animateExpand: true,
+    animateSpeed: 30,
+    animateAcceleration: 1.2,
+    scrollOnActivate: true,
+    useVirtualScroll: true,
+  }
 
   constructor(
     private _menuService: MenusService,
@@ -101,15 +107,21 @@ export class MenusInfoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let firstEnter = true
     this.projectSubscription = this._dataService.$project_bs.subscribe((project) => {
       this.projectId = +project._id;
       this.route.paramMap.subscribe((params: Params) => {
         this.menuId = +params.get('menuId');
         this.languageSubscription = this._optionsService.selectedLang$.subscribe((response) => {
           if (response) {
-            this.selectedLang = response;
+            if(firstEnter){
             this.getSystemMenu();
             this.getTasks();
+            firstEnter = false
+            }
+           this.selectedLang = response;
+           this.handleNodeClick(this.selectedNode)
+
           }
         });
       });
@@ -120,12 +132,18 @@ export class MenusInfoComponent implements OnInit {
     this._menuService.GetMenus(this.projectId).subscribe((response: any) => {
       const result = response.menus;
       if (result) {
-        const filteredMenus = result.filter(x => x.menuId === this.menuId);
-        if (filteredMenus.length > 0) {
-          this.menu = filteredMenus[0];
+        const filteredMenus = result.find(x => x.menuId === this.menuId);
+        if (filteredMenus) {
+          this.menu = filteredMenus;
           this.menuName = this.menu.name;
-          this.nodes = [this.constructTree(this.menu.nodes, "node_0", this.selectedLang)];
-
+          if(!(this.menu.nodes && this.menu.nodes .length > 0)){
+            this.menu.nodes = []
+             this.menu.nodes.push(this.rootNode())
+          }
+          this.nodes = this.constructMenuTree(this.menu.nodes);
+          setTimeout(() => {
+            this.tree.treeModel.expandAll();
+          });
         }
       }
     });
@@ -146,6 +164,60 @@ export class MenusInfoComponent implements OnInit {
     return currentNode;
   }
 
+  constructMenuTree(TreeNodes): MenuNode[] {
+      const tree: MenuNode[] = [];
+      // Create a map to store intents by their intentId
+      const map: { [key: string]: MenuNode } = {};
+
+      // Initialize the map with intents
+      TreeNodes.forEach(intent => {
+        map[intent.node_id] = { ...intent, children: [] };
+      });
+
+      // Iterate over the data to construct the tree
+      TreeNodes.forEach(intent => {
+        if (intent.parent) {
+          // If the intent has a parentId, add it as a child to its parent
+          const parent = map[intent.parent];
+          if (parent) {
+            parent.children.push(map[intent.node_id]);
+          }
+        } else {
+          // If the intent does not have a parentId, it is a root node
+          tree.push(map[intent.node_id]);
+        }
+      });
+     Object.values(map).forEach(n=>{
+      let childern:MenuNode[] = []
+        if(n.children.length > 1){
+          for (let index = 0; index < n.children.length; index++) {
+            if(childern.length == 0){
+            let parent = n.children.find(x=>x.previous_sibling == null)
+            if(parent){
+              childern.push(parent)
+            }
+          }
+            else{
+              var nextNode = n.children.find(x=>x.previous_sibling == childern[childern.length-1].node_id)
+              if(nextNode)
+               childern.push(nextNode)
+            }
+          }
+          if(n.children.length == childern.length)
+          n.children = childern
+          else{
+              const missingItems =  n.children.filter(primaryItem =>
+            !childern.some(secondaryItem =>
+            primaryItem.node_id === secondaryItem.node_id // or any other comparison logic
+            )
+            );
+          n.children = [...childern, ...missingItems]
+        }
+        }
+      })
+      console.log('tree',tree)
+      return tree;
+    }
   hasLanguage(nodeLangInfo: NodeLangInfo[], language: string): boolean {
     return nodeLangInfo.some(langInfo => langInfo.language === language);
   }
@@ -180,31 +252,9 @@ export class MenusInfoComponent implements OnInit {
     return maxNodeId + 1;
   }
 
-  // add new node 
+  // add new node
 
-  addNode(parentId: string) {
-    const parentNode = this.findNodeById(this.nodes, parentId);
 
-    if (parentNode) {
-      const newNodeId = `node_${this.findMaxNodeId(this.nodes)}`;
-
-      const newNode = {
-        nodeLangInfo: [{ language: 'ar', entityText: 'New Node' }],
-        entityText: 'New Node',
-        node_id: newNodeId,
-        parent: parentId,
-        children: [],  // Initialize children array for the new node
-      };
-
-      if (!parentNode.children) {
-        parentNode.children = [];
-      }
-
-      parentNode.children.push(newNode);
-
-      this.nodes = [...this.nodes];
-    }
-  }
 
   findNodeById(nodes: any, nodeId: string): any {
     for (const node of nodes) {
@@ -227,7 +277,7 @@ export class MenusInfoComponent implements OnInit {
     const dialogRef = this.dialog.open(MenuAddComponent, {
       width: '400px',
       disableClose: true,
-      data: { parentId: parentId }
+      data: { lang: this.selectedLang }
     });
 
     dialogRef.afterClosed().subscribe(newNode => {
@@ -238,76 +288,86 @@ export class MenusInfoComponent implements OnInit {
   }
 
   addNodeToParent(newNodeData: any, parentId: string): void {
+    var lastChild = this.getLastChildNode(parentId)
+    var previous_sibling
+    if (lastChild) {
+      console.log("Last child:", lastChild);
+      // when adding new node:
+      previous_sibling = lastChild.node_id;
+    } else {
+      previous_sibling = null;
+    }
 
     const newNode = {
       nodeLangInfo: [
-        { entityText: newNodeData.entityText, stemmedEntity: null, language: 'en' },
-        { entityText: newNodeData.entityText, stemmedEntity: null, language: 'ar' }
+         { entityText: newNodeData.entityText, stemmedEntity: newNodeData.stemmedEntity, language: 'ar' },
       ],
       entityId: 0,
       root: false,
       action: { type: 'none', goToTaskId: null, responses: [{ text: null, language: 'ar' }] },
       storyGroups: [],
       menuItemId: null,
-      iconSrc: null,
-      node_id: '',
+      iconSrc: newNodeData.iconSrc,
+      node_id:`node_${this.findMaxNodeId(this.nodes)}`,
       parent: parentId,
-      previous_sibling: null,
+      previous_sibling: previous_sibling,
       children: []
     };
 
-    newNode.node_id = `node_${this.findMaxNodeId(this.nodes)}`;
-
-    const parentNode = this.findNodeById(this.nodes, parentId);
-    if (parentNode) {
-      if (!parentNode.children) {
-        parentNode.children = [];
-      }
-      parentNode.children.push(newNode);
-      this.nodes = [...this.nodes];
-    }
+    this.menu.nodes.push(newNode)
+    this.nodes = this.constructMenuTree(this.menu.nodes);
+          setTimeout(() => {
+            this.tree.treeModel.expandAll();
+          });
   }
 
+  getLastChildNode(parentId: string): MenuNode | undefined {
+  const children = this.menu.nodes.filter(x => x.parent === parentId);
+
+  if (!children.length) {
+    return undefined; // no children yet
+  }
+
+  // find the one that has no next sibling (i.e., no node points to it as previous_sibling)
+  return children.find(c =>
+    !children.some(other => other.previous_sibling === c.node_id)
+  );
+}
   // Dialog to edit new node
 
   openEditNodeDialog(node: any): void {
     const dialogRef = this.dialog.open(MenuEditComponent, {
-      data: { node },
+      data: { node:node,lang:this.selectedLang  },
       width: '400px'
     });
 
     dialogRef.afterClosed().subscribe(updatedNode => {
       if (updatedNode) {
-        this.updateNodeInTree(updatedNode);
+        this.menu.nodes[this.menu.nodes.findIndex(x=>x.node_id == node.node_id)] = updatedNode
+        this.nodes = this.constructMenuTree(this.menu.nodes);
+          setTimeout(() => {
+            this.tree.treeModel.expandAll();
+          });
       }
     });
   }
 
-  updateNodeInTree(updatedNode: any): void {
-    this.updateNodeRecursively(this.nodes, updatedNode);
-  }
+  getEntityTextByLang(node: MenuNode): string | null {
+    const infos = node.nodeLangInfo;
 
-  private updateNodeRecursively(nodes: any[], updatedNode: any): boolean {
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].node_id === updatedNode.node_id) {
-        Object.assign(nodes[i], updatedNode);
-        return true;
-      }
-      if (nodes[i].children && nodes[i].children.length > 0) {
-        const nodeUpdated = this.updateNodeRecursively(nodes[i].children, updatedNode);
-        if (nodeUpdated) {
-          return true;
-        }
-      }
+    // 1. Try preferred language
+    const match = infos.find(x => x.language === this.selectedLang);
+    if (match) {
+      return match.entityText;
     }
-    return false;
+
+    // 2. If not found, fallback to first available language
+    return infos.length > 0 ? infos[0].entityText : null;
   }
-
-
   // delete node
 
 
-  openDeleteNodeDialog(node) {
+  openDeleteNodeDialog(node:MenuNode) {
     const QuestionTitle = 'Are you sure you want to delete this Menu?';
     const pleasWriteMagic = 'Please write the **Magic** word to delete';
     const actionName = 'delete';
@@ -317,7 +377,7 @@ export class MenusInfoComponent implements OnInit {
         QuestionTitle: QuestionTitle,
         pleasWriteMagic: pleasWriteMagic,
         actionName: actionName,
-        item: node
+        item: node.node_id
       },
       maxHeight: '760px',
       width: '600px',
@@ -326,20 +386,30 @@ export class MenusInfoComponent implements OnInit {
       .afterClosed()
       .subscribe(response => {
         if (response === 'success') {
-
           this.deleteNode(node);
         }
       });
   }
 
-  deleteNode(nodeId: string) {
+  deleteNode(node: MenuNode) {
+    let currentNodeIndex = this.menu.nodes.findIndex(x=>x.node_id == node.node_id)
 
-    const parentNode = this.findParentNode(this.nodes, nodeId);
+    let previousNode = this.menu.nodes.find(x=>x.node_id == node.previous_sibling)
+    let previousNodeIndex = this.menu.nodes.findIndex(x=>x.node_id == node.previous_sibling)
 
-    if (parentNode) {
-      parentNode.children = parentNode.children.filter(child => child.node_id !== nodeId);
-      this.nodes = [...this.nodes];
+    let NextNode = this.menu.nodes.find(x=>x.previous_sibling == node.node_id)
+    let NextNodeIndex = this.menu.nodes.findIndex(x=>x.previous_sibling == node.node_id)
+    if(previousNode && NextNode){
+      this.menu.nodes[NextNodeIndex].previous_sibling = this.menu.nodes[previousNodeIndex].node_id
     }
+    if(!previousNode && NextNode){
+      this.menu.nodes[NextNodeIndex].previous_sibling = this.menu.nodes[currentNodeIndex].node_id
+    }
+    this.menu.nodes.splice(currentNodeIndex, 1)
+    this.nodes = this.constructMenuTree(this.menu.nodes);
+        setTimeout(() => {
+          this.tree.treeModel.expandAll();
+     });
   }
 
   findParentNode(nodes: any[], nodeId: string): any {
@@ -360,25 +430,7 @@ export class MenusInfoComponent implements OnInit {
   }
 
 
-  drop(event: CdkDragDrop<any[]>) {
 
-    const droppedNode = event.item.data.node;
-    const destinationIndex = event.currentIndex;
-
-    const destParentNode = this.findParentNodeTwo(this.nodes, destinationIndex);
-
-    if (destParentNode) {
-
-      this.removeNodeFromParent(droppedNode);
-
-      droppedNode.parent = destParentNode.node_id;
-
-      destParentNode.children.push(droppedNode);
-
-      this.nodes = [...this.nodes];
-
-    }
-  }
 
   findParentNodeTwo(nodes: any[], destinationIndex: number): any {
     for (const node of nodes) {
@@ -434,8 +486,6 @@ export class MenusInfoComponent implements OnInit {
     return null;
   }
 
-  @ViewChild('tree') tree: any;
-
   expandAllNodes(): void {
     if (this.tree) {
       this.tree.treeModel.expandAll();
@@ -453,9 +503,25 @@ export class MenusInfoComponent implements OnInit {
     this.router.navigate([`/projects/${this.projectId}/dataTypes/menus`]);
   }
 
-  handleNodeClick(node: any): void {
+  handleNodeClick(node: MenuNode): void {
+    if(!node)
+      return
     this.selectedNode = node;
+      if(this.selectedNode.action.type == 'text'){
+        if(!this.selectedNode.action.responses)
+          this.selectedNode.action.responses = []
+        if(this.selectedNode.action.responses.length == 0){
+          this.selectedNode.action.responses.push({text:'', language:'ar'})
+        }
+        if(this.selectedLang == 'en' && !this.selectedNode.action.responses.some(x=>x.language == 'en')){
+        this.selectedNode.action.responses.push({ text: '', language: 'en'})
+          }
+      if(this.selectedLang == 'ar' && !this.selectedNode.action.responses.some(x=>x.language == 'ar')){
+        this.selectedNode.action.responses.push({ text: '', language: 'ar'})
+    }
+    }
   }
+
 
   updateActionType(actionType: string): void {
     if (this.selectedNode) {
@@ -492,7 +558,7 @@ export class MenusInfoComponent implements OnInit {
         problemMeun: this.menu.problemMeun,
         type: this.menu.type,
         serviceId: this.menu.serviceId,
-        nodes: this.flattenNodes(this.nodes, this.selectedLang)
+        nodes: this.menu.nodes
       }
     };
 
@@ -551,7 +617,7 @@ export class MenusInfoComponent implements OnInit {
 
   searchTree(nodes: any[], query: string): any[] {
     let result: any[] = [];
-    let visitedNodeIds = new Set(); 
+    let visitedNodeIds = new Set();
 
     function search(node, visitedNodeIds) {
       if (!visitedNodeIds.has(node.node_id)) {
@@ -574,12 +640,150 @@ export class MenusInfoComponent implements OnInit {
 
     return this.getUniqueNodes(result);
   }
-
-
   clearSearch(): void {
     this.searchQuery = '';
     this.filteredNodes = [];
   }
+
+
+onMoveNode(event: any) {
+  debugger;
+  const movedNode = event.node;              // node being moved
+  const fromParent = event.from.parent;      // old parent
+  const toParent = event.to.parent;          // new parent
+  const toIndex = event.to.index;            // new index position
+
+  if (!movedNode || !toParent) return;
+
+  // --- 1. Update parent in flat list ---
+  movedNode.parent = toParent.node_id;
+
+  // --- 2. Get all children of new parent from flat list ---
+  const newSiblings = this.menu.nodes
+    .filter(n => n.parent === toParent.node_id && n.node_id !== movedNode.node_id)
+    .sort((a, b) => {
+      // sort siblings according to previous_sibling chain
+      if (a.previous_sibling === b.node_id) return 1;
+      if (b.previous_sibling === a.node_id) return -1;
+      return 0;
+    });
+
+  // insert moved node into the correct position
+  newSiblings.splice(toIndex, 0, movedNode);
+
+  // --- 3. Recalculate previous_sibling for new siblings ---
+  newSiblings.forEach((sibling, idx) => {
+    sibling.previous_sibling = idx === 0 ? null : newSiblings[idx - 1].node_id;
+    this.updateNodeInMenu(sibling);
+  });
+
+  // --- 4. If moved from a different parent: fix old siblings ---
+  if (fromParent && fromParent.node_id !== toParent.node_id) {
+    const oldSiblings = this.menu.nodes
+      .filter(n => n.parent === fromParent.node_id && n.node_id !== movedNode.node_id)
+      .sort((a, b) => {
+        if (a.previous_sibling === b.node_id) return 1;
+        if (b.previous_sibling === a.node_id) return -1;
+        return 0;
+      });
+
+    oldSiblings.forEach((sibling, idx) => {
+      sibling.previous_sibling = idx === 0 ? null : oldSiblings[idx - 1].node_id;
+      this.updateNodeInMenu(sibling);
+    });
+  }
+
+  // --- 5. Save moved node ---
+  this.updateNodeInMenu(movedNode);
+
+  // --- 6. Reconstruct tree from flat list ---
+  this.nodes = this.constructMenuTree(this.menu.nodes);
+  setTimeout(() => this.tree.treeModel.expandAll());
+}
+
+private updateNodeInMenu(node: any) {
+  const index = this.menu.nodes.findIndex(n => n.node_id === node.node_id);
+  if (index > -1) {
+    this.menu.nodes[index] = { ...node };
+  }
+}
+    serach(){
+      debugger
+      let treeNodeFilter:MenuNode[] = this.menu.nodes.filter(x=>x.nodeLangInfo.some(s=>s.entityText.trim().includes(this.searchNode.trim())))
+      let treeNodes:MenuNode[] = []
+      treeNodeFilter.forEach((e:MenuNode)=>{
+        treeNodes = this.getSearchedNode(e, treeNodes)
+      })
+      let uniquetreeNodes = Array.from(new Set(treeNodes.map(obj => JSON.stringify(obj))))
+      .map(str => JSON.parse(str));
+
+        this.nodes = this.constructMenuTree(uniquetreeNodes);
+        setTimeout(() => {
+          this.tree.treeModel.expandAll();
+        });
+    }
+    getSearchedNode(treeNode:MenuNode, treeNodes:MenuNode[]){
+      debugger
+      treeNodes.push(treeNode)
+      if(treeNode.parent == null){
+        return treeNodes
+      }
+      else{
+        let parentNode =  this.nodes.find(x=>x.node_id == treeNode.parent)
+        if(parentNode)
+          this.getSearchedNode(parentNode,treeNodes)
+      }
+      return treeNodes
+    }
+
+    reset(){
+      debugger
+      this.searchNode =''
+      this.nodes = this.constructMenuTree(this.menu.nodes);
+      setTimeout(() => {
+        this.tree.treeModel.expandAll();
+      });
+    }
+
+
+
+  rootNode(){
+          return {
+        "nodeLangInfo": [
+        {
+            "entityText": "Root",
+            "language": "en"
+        },
+        {
+            "entityText": "Root",
+            "language": "ar"
+        }
+          ],
+          "menuId": 0,
+          "node_id": "node_0",
+          "parent": null,
+          "previous_sibling": null,
+          "root": true,
+          "action": {
+        "type": "none",
+        "response": "",
+        "responses": [
+            {
+                "text": "",
+                "language": "ar"
+            }
+        ]
+          },
+        "nodes": null,
+        "languageIndex": 1,
+        "responseLangIndex": 0,
+        "entityText": "Root",
+        "templateObj": null,
+        "type": "item",
+        "selected": false
+          }
+   }
+
 }
 
 

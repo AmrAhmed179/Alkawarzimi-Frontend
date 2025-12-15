@@ -6,7 +6,7 @@ import { trackByValue } from "../../utils/track-by";
   template: `
     <div class="flex items-center">
       <vex-breadcrumb>
-        <a [routerLink]="['/']">
+        <a [routerLink]="['/projects']">
           <mat-icon svgIcon="mat:home" class="icon-sm"></mat-icon>
         </a>
       </vex-breadcrumb>

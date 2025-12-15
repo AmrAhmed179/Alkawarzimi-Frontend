@@ -6,12 +6,11 @@
     background-color: #FFFFFF;
 }
 
-.maXHeight {
-    height: 42rem;
-}
-
+// .maXHeight {
+//     height: calc(100vh - 250px)
+// }
 .mat-row {
-    height: 56px;
+    height: 56.75px;
 }
 
 th {
@@ -63,7 +62,7 @@ th {
     background-image: linear-gradient(to left bottom, #358ede, #0f518b) !important;
 }
 
- ::ng-deep input.mat-input-element::placeholder {
+ :host ::ng-deep input.mat-input-element::placeholder {
     font-size: 13px;
     /* Or any size you prefer */
     color: #999;

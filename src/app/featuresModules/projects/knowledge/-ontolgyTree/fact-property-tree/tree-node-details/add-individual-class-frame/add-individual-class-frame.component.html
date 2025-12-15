@@ -9,7 +9,7 @@
     <ng-container>
         <mat-dialog-content class="w-[700px] ">
             <div class="">
-                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group  grid grid-flow-col" (change)="formChang()" [(ngModel)]="entityTypeValue">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group  grid grid-flow-col" [disabled]="true" (change)="formChang()" [(ngModel)]="entityTypeValue">
                     <mat-radio-button class="example-radio-button" color="primary" [value]="'all'">All</mat-radio-button>
                     <mat-radio-button class="example-radio-button" color="primary" [value]="'class'">Classes</mat-radio-button>
                     <mat-radio-button class="example-radio-button" color="primary" [value]="'prop'">Restricted Classes</mat-radio-button>

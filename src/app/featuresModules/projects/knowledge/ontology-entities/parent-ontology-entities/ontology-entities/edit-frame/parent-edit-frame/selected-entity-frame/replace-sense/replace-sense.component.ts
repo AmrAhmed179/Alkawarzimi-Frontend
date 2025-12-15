@@ -34,6 +34,7 @@ export class ReplaceSenseComponent implements OnInit {
     this.currentIndex = index
   }
   replaceSense(){
+    debugger
     let sense = this.senses[this.currentIndex]
 
     this._ontologyEntitiesService.replaceSense(this.data.projectId, sense.senseId,this.data.sense, sense.description).subscribe((res:any)=>{

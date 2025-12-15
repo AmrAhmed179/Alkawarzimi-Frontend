@@ -28,6 +28,7 @@ interface Menu {
 export class ClassInfoComponent implements OnInit, OnDestroy {
 
   editMode = -1
+  dataTypesValue:SystemEntity
   operator: string[] = ['', '==', '!=', '>', '<'];
   PredicateId: string = '';
   VOperator: string = '';
@@ -40,7 +41,7 @@ export class ClassInfoComponent implements OnInit, OnDestroy {
   propertyList: ClassProp[] = [];
   newPropertyKey: string = '';
   selectedItem: ClassProp | null = null;
-  dataTypes: SystemEntity[] = [];
+  dataTypes: SystemEntity[] =[{ sysEntity:false, entityId: "string", entity: "String" }];
   menus: Menu[] = [];
   dataTypeSelected: DataTypes[] = [{ dataType: "sys", type: "string", id: "0" }];
   filteredDataTypes: Observable<DataTypes[]>;
@@ -145,6 +146,7 @@ export class ClassInfoComponent implements OnInit, OnDestroy {
   }
 
   getTypeClasses() {
+    debugger
     this._classServices.GetTypeClasses(this.workspace_id).subscribe(response => {
       if (response) {
         this.classes = response['classes'];
@@ -159,7 +161,7 @@ export class ClassInfoComponent implements OnInit, OnDestroy {
         }
         this.firstOpen = false
         this.initializeClassForm(null);
-        this.initializeFilter();
+        // this.initializeFilter();
       }
     });
   }
@@ -167,33 +169,16 @@ export class ClassInfoComponent implements OnInit, OnDestroy {
   GetDataTypes() {
     this._systemEntitiesService.GetDataTypes(+this.workspace_id).subscribe(response => {
       if (response && response["status"] == 1) {
-        let data: DataTypes
-        this.dataTypes = response["DataTypes"];
-        this.dataTypes.forEach(dataType => {
-          data = {
-            type: dataType.entity,
-            dataType: dataType.sysEntity == true ? "sys" : "entity",
-            id: dataType.sysEntity == true ? "0" : dataType.entityId
-          }
-
-          this.dataTypeSelected.push(data)
-        })
-        this.dataTypeSelected.sort((a, b) => b.dataType.localeCompare(a.dataType))
-        this.menus = response["Menus"][0];
-        this.menus.forEach(m => {
-          data = {
-            type: m.entity,
-            dataType: "menu",
-            id: m.entityId.toString()
-          }
-          this.dataTypeSelected.push(data)
-        })
+        debugger
+        this.dataTypes.push(...response["DataTypes"])
+        this.dataTypes.push(...response["Menus"][0])
+        console.log('dataTypes', this.dataTypes)
       }
     })
   }
 
   initializeClassForm(Prop: ClassProp) {
-
+    debugger
     this.displayForm = false;
     if (!Prop) {
       Prop = new ClassProp();
@@ -272,20 +257,24 @@ export class ClassInfoComponent implements OnInit, OnDestroy {
     }, []);
 
     this.displayForm = true;
+    let dataTypeId =  this.classForm.get('properties').value.dataTypeId
+     this.dataTypesValue= this.dataTypes.find(x=>x.entityId == dataTypeId)
+    console.log('dataTypesValues',this.dataTypesValue)
   }
 
-  initializeFilter() {
-    const ListDataTypes = this.dataTypeSelected.map(x => x.type)
+  // initializeFilter() {
+  //   debugger
+  //   const ListDataTypes = this.dataTypeSelected.map(x => x.type)
 
-    this.filteredDataTypes = this.classForm.get('properties').valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        this.contextVariableType = this.classForm.get('properties').value;
-        this.classForm.get('properties').addValidators(AutocompleteSelectValidator.compareMatching(ListDataTypes));
-        return this._filter(value || '')
-      }),
-    );
-  }
+  //   this.filteredDataTypes = this.classForm.get('properties').valueChanges.pipe(
+  //     startWith(''),
+  //     map(value => {
+  //       this.contextVariableType = this.classForm.get('properties').value;
+  //       this.classForm.get('properties').addValidators(AutocompleteSelectValidator.compareMatching(ListDataTypes));
+  //       return this._filter(value || '')
+  //     }),
+  //   );
+  // }
 
   duplicatePropertyError: boolean = false;
 

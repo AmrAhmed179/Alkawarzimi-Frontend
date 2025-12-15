@@ -84,6 +84,7 @@ import { DocumentsComponent } from './Ai-build-veba-Knowledge-Base/components/do
 import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components/index-details/index-details.component';
 import { ChatComponent } from './Ai-build-veba-Knowledge-Base/components/Chat/chat.component';
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
+import { UnsavedChangesGuard } from './build/_build-tasks/--task-edit-static-and-flow/diagramflow-ifram/guards/unsaved-changes.guard';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },
@@ -105,7 +106,7 @@ const routes: Routes = [
             },
           { path: "home/:start/:type", component: MainTaskParentComponent, data: { breadcrumbs: ["Tasks"], } },
           { path: "createTask", component: CreateTaskComponent, data: { breadcrumbs: ["Create Task"], } },
-          { path: "editTask/:intentId/:eventTask/:clickSource", component: ParentTaskEditOptionsComponent, data: { breadcrumbs: ["Create Task"], } },
+          { path: "editTask/:intentId/:eventTask/:clickSource", component: ParentTaskEditOptionsComponent, canDeactivate: [UnsavedChangesGuard] ,data: { breadcrumbs: ["Create Task"], } },
           { path: "datails", component: ProjectDetailsPage },
           { path: "variables", component: VariablesComponent, data: { breadcrumbs: ['Variables'] }, },
           { path: "TriggeredTasks", component: BuildTriggeredTasksComponent, data: { breadcrumbs: ['TriggeredTasks'] }, },

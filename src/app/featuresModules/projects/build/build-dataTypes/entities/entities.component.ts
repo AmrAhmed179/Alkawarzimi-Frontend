@@ -51,6 +51,8 @@ interface SynonymInfo {
 export class EntitiesComponent implements OnInit, OnDestroy {
 
   entity: Entity[] = [];
+  entitiesArray: Entity[] = [];
+  entities: any[] = [];
   workspace_id: string;
   selectedLang: string = 'ar';
   private projectSubscription: Subscription;
@@ -75,7 +77,9 @@ export class EntitiesComponent implements OnInit, OnDestroy {
       this.getSystemEntities();
       this.languageSubscription = this._optionsService.selectedLang$.subscribe((res) => {
         if (res) {
+          debugger
           this.selectedLang = res
+          this.getEntityiesBasedOnLangChange()
         }
       })
     });
@@ -93,20 +97,29 @@ export class EntitiesComponent implements OnInit, OnDestroy {
 
   getSystemEntities(): any {
     this._systemEntity.GetSystemEntities(this.workspace_id).subscribe(response => {
-      let entities = response['entities'];
-      if (entities) {
-        let entitiesArray = [];
-
-        entitiesArray = entities.filter(x => x.sysEntity == false).map(x => {
-          x.values = this.getValuesByLang(x.values, this.selectedLang).join(', ');
-          return x;
-        });
-        this.dataSource = new MatTableDataSource(entitiesArray);
-      }
+       this.entities = response['entities'];
+          this.getEntityiesBasedOnLangChange()
     });
   }
 
+  getEntityiesBasedOnLangChange(){
+       let entitiesArray = [];
+
+    if(this.entities.length > 0){
+   entitiesArray =  this.entities.filter(x=>x.sysEntity == false)
+    .map(entity => ({
+    ...entity,
+    values: entity.values.map(v => ({
+      ...v,
+      synonymsInfo: v.synonymsInfo.filter(s => s.language === this.selectedLang)
+    }))
+  }));
+  }
+  debugger
+    this.dataSource = new MatTableDataSource(entitiesArray);
+  }
   getValuesByLang(values, lang) {
+    debugger
     return values
       .filter(value => value.language === lang)
       .map(value => value.value);

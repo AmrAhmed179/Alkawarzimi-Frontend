@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Pipe, PipeTransform, Renderer2, ViewChild } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
@@ -30,6 +30,8 @@ export class ParseDatePipe implements PipeTransform {
 })
 export class AiConversationComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject();
+    totalPagesArray: number[] = [];
+
   projectId
   totalCost:number = 0
   selectedSessionId:string = ""
@@ -47,7 +49,8 @@ export class AiConversationComponent implements OnInit {
   tapNameValue:string = 'allConversations'
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private _aiConversationService:AiConversationService, private _dataService: DataService, private dialog: MatDialog
+  constructor(private _aiConversationService:AiConversationService, private _dataService: DataService, private dialog: MatDialog,
+          private renderer: Renderer2, private el: ElementRef,
   ) { }
 
   ngOnInit(): void {
@@ -85,6 +88,11 @@ export class AiConversationComponent implements OnInit {
     ).subscribe((res: any) => {
       this.conversationsList = res.sessions;
       this.totalItems = res.TotalCount;
+       this.totalPagesArray = Array.from(
+        { length: Math.ceil(this.totalItems / this.pageSize) },
+        (_, i) => i + 1
+      );
+      this.appendPageSelection()
     });
   }
     getOnlineConversations(){
@@ -159,4 +167,21 @@ export class AiConversationComponent implements OnInit {
     else
     this.getOnlineConversations()
   }
+
+    appendPageSelection() {
+  debugger
+  // Get the element by its class name
+  const childDiv = this.el.nativeElement.querySelector('.childDiv');
+  //const parentDiv = this.el.nativeElement.querySelector('.mat-paginator-outer-container');
+  const parentDiv = this.el.nativeElement.querySelector('.mat-paginator-range-actions');
+   const prevDiv = this.el.nativeElement.querySelector('.mat-paginator-navigation-next');
+  if (childDiv) {
+    this.renderer.appendChild(parentDiv, childDiv);
+  }
+}
+goToPage(page: number) {
+  this.page = page;
+  this.paginator.pageIndex = page - 1;
+  this.getAllConversations()
+}
 }

@@ -202,6 +202,7 @@ export class MenusComponent implements OnInit {
             if (response) {
               if (response["status"] == 1) {
                 this.notify.openSuccessSnackBar("Entity Successfully Created");
+                 this.getSystemMenu();
               } else {
                 this.notify.openFailureSnackBar(response ? response["message"] : "Failed to create entity");
               }

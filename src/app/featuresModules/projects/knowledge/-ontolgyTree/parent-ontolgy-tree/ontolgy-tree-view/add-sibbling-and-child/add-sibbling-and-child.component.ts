@@ -18,7 +18,6 @@ import { AddclassAsvalueComponent } from '../../../../ontology-entities/parent-o
 export class AddSibblingAndChildComponent implements OnInit {
   search:string = ''
   entityTypeValue:string = 'all'
-  lang:string
   currentClassAndPrpsIndex:number
   classesAndPropsFilter:EntityModel[]
   classesAndProps:EntityModel[]
@@ -30,7 +29,7 @@ export class AddSibblingAndChildComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private _optionsService:OptionsServiceService,
-    @Inject(DIALOG_DATA) public data: {entities:EntityModel[] ,type:string, treeNodesEntityText:string[]},
+    @Inject(DIALOG_DATA) public data: {entities:EntityModel[] ,type:string, treeNodesEntityText:string[], lang},
     public dialogRef: MatDialogRef<AddclassAsvalueComponent>
   ) { }
 
@@ -43,6 +42,19 @@ export class AddSibblingAndChildComponent implements OnInit {
     }
   }
 
+    getEntitytext(entityId){
+    var entity =  this.data.entities.find(x=>x._id == entityId)
+    if(entity){
+     var entityInfo =   entity.entityInfo.find(x=>x.language == this.data.lang)
+     if(entityInfo){
+      return entityInfo.entityText
+     }else{
+      return entity.entityInfo[0].entityText
+     }
+    }
+    else
+      return entityId
+  }
   formChang(){
     debugger
     var search = this.search

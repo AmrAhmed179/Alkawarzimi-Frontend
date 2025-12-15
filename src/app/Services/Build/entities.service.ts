@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 export class EntitiesService {
 
   GetEntitiesURL = environment.URLS.GetEntities;
+  GetObjectURL = environment.URLS.GetObjectURL;
   GetSystemEntitiesURL = environment.URLS.GetSystemEntities;
   DeleteEntitiesURL = environment.URLS.DeleteEntities;
   CreateEntitiesURL = environment.URLS.CreateEntities;
@@ -23,6 +24,12 @@ export class EntitiesService {
 
     }
     return this.http_client.get(this.GetEntitiesURL, { params: parm })
+  }
+  getObjects(workspace_id: number) {
+    let parm = {
+      workspace_id: workspace_id
+    }
+    return this.http_client.get(this.GetObjectURL, { params: parm })
   }
 
   GetSystemEntities(workspace_id: string) {

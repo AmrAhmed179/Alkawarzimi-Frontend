@@ -12,7 +12,7 @@ export class MagicWordWriteComponent implements OnInit {
   magicWordForm: FormGroup
 
   constructor(private fb: FormBuilder,
-    @Inject(DIALOG_DATA) public data: { QuestionTitle: string, pleasWriteMagic: string, actionName: string, item: any }, public dialogRef: MatDialogRef<MagicWordWriteComponent>
+    @Inject(DIALOG_DATA) public data: { QuestionTitle: string, pleasWriteMagic: string, actionName: string, item: any, deleteTreanslation:boolean }, public dialogRef: MatDialogRef<MagicWordWriteComponent>
   ) { }
 
   ngOnInit(): void {
@@ -28,9 +28,12 @@ export class MagicWordWriteComponent implements OnInit {
     };
   }
 
-  checkValue() {
+  checkValue(translation?) {
     if (this.magicWordForm.controls['magicword'].value.toLowerCase() == this.data.actionName.toLowerCase()) {
-      this.dialogRef.close('success')
+      if(translation)
+        this.dialogRef.close('trans')
+      else
+        this.dialogRef.close('success')
     }
   }
 }

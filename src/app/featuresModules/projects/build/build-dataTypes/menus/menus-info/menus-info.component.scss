@@ -1,46 +1,67 @@
-:host ::ng-deep {
-    .node-wrapper {
-        display: flex;
-        align-items: center;
-        padding-left: 0 !important;
-        padding-right: 20px !important;
-        margin-top: 5px;
-        height: 3rem;
-        border: solid 1px #ccc;
-        border-radius: 3px;
-    }
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+
+/*
+* This padding sets alignment of the nested nodes.
+*/
+
+.example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 25px;
+}
+
+
+/*
+* Padding for leaf nodes.
+* Leaf nodes need to have padding so as to align with other non-leaf nodes
+* under the same parent.
+*/
+
+.example-tree div[role=group]>.mat-tree-node {
+    padding-left: 40px;
+}
+
+.formWidth {
+    width: calc(100% - 330px);
+}
+
+.treeHight {
+    height: calc(100vh - 285px);
+    scrollbar-width: auto;
+    scrollbar-color: #C1C1C1 #ece6e6;
+    padding: 12px;
+}
+
+ :host ::ng-deep {
     .toggle-children {
-        width: 16px !important;
-        height: 16px !important;
-        margin-right: 8px;
-        margin-left: 8px;
+        height: 50px;
     }
     .node-content-wrapper {
-        flex: 1;
-        overflow: hidden;
-    }
-    .node-content-wrapper-active,
-    .node-content-wrapper.node-content-wrapper-active:hover,
-    .node-content-wrapper-active.node-content-wrapper-focused {
-        background: #f3872929 !important;
-    }
-    .node-content-wrapper:hover {
-        background: #f3872929 !important;
-    }
-    tree-node-wrapper {
-        background: #f3872929 !important;
+        width: 98%;
     }
 }
 
-::ng-deep .mat-form-field {
+ :host ::ng-deep .mat-form-field {
     .mat-input-element {
         font-size: 17px !important;
     }
 }
 
 .container {
-    min-height: 24px;
-    max-height: 39rem;
+    background-color: #ffff;
+}
+
+.treeHight {
+    min-height: 350px;
+    height: calc(100vh - 370px);
 }
 
 // .mat-mdc-form-field {

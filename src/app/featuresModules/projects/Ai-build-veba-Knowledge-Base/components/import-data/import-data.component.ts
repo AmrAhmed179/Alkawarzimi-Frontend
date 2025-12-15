@@ -150,6 +150,7 @@ export class ImportDataComponent implements OnInit {
           file.projectId = this.chatbotId
           file.fileContent = ""
           file.chatBotId = this.chatbotId
+          file.isRag = 1  /// 1 rag   0 notRag
           file.PlainTextOrDocument = 1   //1 document  0  plaintext
           return file;
         });

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AIToolInfo, Agents } from 'src/app/Models/Ai-Agent/toolInfo';
 
 @Component({
   selector: 'vex-menu-add',
@@ -14,7 +15,8 @@ export class MenuAddComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<MenuAddComponent>
+    private dialogRef: MatDialogRef<MenuAddComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { lang:string}
   ) { }
 
   ngOnInit(): void {

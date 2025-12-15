@@ -81,11 +81,53 @@ export class ServiceInfoComponent implements OnInit {
     this._entitiesService.GetEntities(this.chatBotId).subscribe((result: any) => {
       if (result) {
         this.entities = result["entities"];
+                this.getObjects()
+
         this.ContextVariable();
       }
     })
   }
 
+getObjects() {
+  this._entitiesService.getObjects(this.chatBotId).subscribe((result: any[]) => {
+    debugger
+    if (result && result.length > 0) {
+      const mappedEntities: Entities[] = result.map((obj) => ({
+        _id: obj.contextVariableId,
+        entityType: "object",
+        entityInfo: [
+          {
+            entityText: obj.key ?? "Unknown",
+            stemmedEntity: obj.key ?? "Unknown",
+            language: "ar",
+            tokens: null,
+            isReviewed: true,
+            autoTranslation: false
+          }
+        ],
+        parentId: 0,
+        ambClass: false,
+        trigger: false,
+        talkAboutMenu: false,
+        paraphraseEntities: null,
+        cmp: null,
+        sbj: null,
+        obj: null,
+        features: null,
+        senseId: 0,
+        type: obj.dataType ?? null,
+        verb: null,
+        templateId: 0,
+        female: false,
+        errorInStem: false,
+        categoryId: "0"
+      }));
+
+      // Append without overwriting
+      this.entities = [...(this.entities || []), ...mappedEntities];
+    }
+  });
+}
   ContextVariable() {
     this._contextVariableService.GetContextVariable(this.chatBotId).subscribe((response: ContextVariableModel[]) => {
 
@@ -131,6 +173,7 @@ export class ServiceInfoComponent implements OnInit {
               this.variables.push(ve)
             }
           });
+          debugger
           this.entities.forEach(c => {
             let index = this._serviceData.findIndex(a => a.ObjectID == c._id.toString());
             if (index == -1) {
@@ -157,6 +200,8 @@ export class ServiceInfoComponent implements OnInit {
 
   IntializForm() {
 
+
+    debugger
     this.listvariables = this.variables.map(elment => elment.key)
 
     const info = this.objects.map(a => a.entityInfo)
@@ -213,7 +258,7 @@ export class ServiceInfoComponent implements OnInit {
       }))),
       outputMapping: this.fb.array(this._outputMapping.map(a => this.fb.group({
         variableId: this.fb.control(a.variableId),
-        jsonField: ({ value: a.jsonField, disabled: true })
+        jsonField:this.fb.control(a.jsonField )
       })))
     })
 

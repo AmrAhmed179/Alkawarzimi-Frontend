@@ -9,7 +9,7 @@ export interface Entities {
     ambClass: boolean;
     trigger: boolean;
     paraphraseEntities: number[];
-    frame: frame;
+    frame?: frame;
     templateId:number;
     female:boolean;
     errorInStem: boolean,

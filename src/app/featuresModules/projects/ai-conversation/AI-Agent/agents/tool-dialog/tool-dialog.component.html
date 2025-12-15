@@ -1,0 +1,46 @@
+<div dir="ltr">
+    <div class="flex justify-center">
+        <h2 mat-dialog-title>Manage Tools</h2>
+
+    </div>
+
+    <mat-dialog-content class="h-[700px] overflow-auto">
+        <mat-radio-group color="primary" [(ngModel)]="category" class="flex gap-4 justify-center my-4">
+            <mat-radio-button value="All"> <span class="mx-1">All</span></mat-radio-button>
+            <mat-radio-button value="selected"> <span class="mx-1">Selected Tools</span></mat-radio-button>
+            <mat-radio-button value="Restaurant"> <span class="mx-1">Restaurant</span> </mat-radio-button>
+            <mat-radio-button value="Educational"> <span class="mx-1">Educational</span> </mat-radio-button>
+            <mat-radio-button value="Healthcare"> <span class="mx-1">Healthcare</span> </mat-radio-button>
+        </mat-radio-group>
+        <!-- <div [formGroup]="form">
+            <div formArrayName="tools">
+                <div *ngFor="let ctrl of toolsArray.controls; let i = index" [formGroupName]="i" class="grid grid-cols-5 items-center gap-3 mb-3">
+                    <mat-checkbox color="primary" class="" formControlName="selected"> <span class="px-2"> {{ ctrl.get('name')?.value }}</span></mat-checkbox>
+
+                    <mat-form-field class="col-span-4" appearance="fill" *ngIf="ctrl.get('selected')?.value">
+                        <mat-label>Description</mat-label>
+                        <input matInput formControlName="description" />
+                    </mat-form-field>
+                </div>
+            </div>
+        </div> -->
+        <div>
+            <div class="" *ngFor="let tool of allTools; let i = index">
+                <div *ngIf="category === 'All' ||(category === 'selected' && tool.selected) || (category !== 'All' && category !== 'selected' && tool.category === category)" class="grid grid-cols-4 items-center gap-3 mb-3">
+                    <mat-checkbox class="col-span-1" color="primary" class="" [(ngModel)]="tool.selected"> <span class="px-2">{{tool.name}}</span></mat-checkbox>
+
+                    <mat-form-field class="col-span-3" appearance="fill" *ngIf="(category == 'All' || tool.category == category || category === 'selected') && tool.selected  ">
+                        <mat-label>Description</mat-label>
+                        <input matInput [(ngModel)]="tool.description" />
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button class="mx-3" (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="save()">Save</button>
+    </mat-dialog-actions>
+</div>

@@ -268,25 +268,28 @@ export class OntologyEntitiesService {
 
     return this.http.post(environment.URLS.CreatOntoloyEntity, body)
   }
-  EditOntoloyEntity(projectId:any,stemmedEntity:string,entityText:string, language:string, type:string, parentId:number,entityTextKnowTask:string, _id){
-    let body
-      body = {
-        projectId:projectId,
-        entityInfo: [
-          {
-            stemmedEntity:stemmedEntity,
-            entityText: entityText,
-            language: language
-          }
-        ],
-        _id: _id,
-        parentId: parentId,
-        entityType: type,
-        languageIndex: 0
-    }
+  EditOntoloyEntity(
+  projectId: any,
+  entityInfo: any[],
+  type: string,
+  parentId: number,
+  entityTextKnowTask: string,
+  _id: any
+) {
+  const body = {
+    projectId,
+    entityInfo,   // full updated array (with tokens, isReviewed, autoTranslation preserved/added)
+    _id,
+    parentId,
+    entityType: type,
+    languageIndex: 0
+  };
 
-    return this.http.post(environment.URLS.EditOntoloyEntity, body)
-  }
+  return this.http.post(environment.URLS.EditOntoloyEntity, body);
+}
+ EditOntoloyEntityRemovingtranslation(body) {
+  return this.http.post(environment.URLS.EditOntoloyEntity, body);
+}
   getClassandProp(projectId:string){
     let parm = {
       projectId: projectId

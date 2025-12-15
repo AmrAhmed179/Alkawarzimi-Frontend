@@ -135,6 +135,9 @@ export class ProjectsComponent implements OnInit {
   openDashboard(){
     window.open('/Dashboard', '_blank');
   }
+  openOldAlkwarizmi(){
+    window.open('/Bots#/home', '_blank');
+  }
   myAvailabilityCount: number;
   /**
    * GET PROJECTS AND SAVE IN THE STORAGE: PROJECT ID - PROJECT NAME - USE ROLE   */
@@ -430,12 +433,12 @@ export class ProjectsComponent implements OnInit {
       debugger
       if(res){
         this._optionsService.DeleteProject(project._id).subscribe((res:any)=>{
-          if(res.status === 1){
-            this.notify.openSuccessSnackBar('project Duplicated Successfuly')
+          if(res.success == 1){
+            this.notify.openSuccessSnackBar('Project Deleted Successfuly')
             this.getAllProjects()
           }
           else{
-            this.notify.openFailureSnackBar('Faild to Duplicate')
+            this.notify.openFailureSnackBar('Faild to Delete')
           }
         })
       }
@@ -457,7 +460,11 @@ export class ProjectsComponent implements OnInit {
   createWorkSpace(){
     const dialogRef = this.dialog.open(CreateWorkSpaceComponent,{data:{} ,maxHeight: '760px',
     width: '1000px',
-  },
-    )
+  });
+    dialogRef.afterClosed().subscribe((result:any) => {
+    if (result) {
+      this.getAllProjects()
+    }
+  });
   }
 }

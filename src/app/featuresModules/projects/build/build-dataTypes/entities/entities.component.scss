@@ -28,4 +28,9 @@ th.mat-header-cell {
 .mat-column-Entity {
     color: #047cc0;
     cursor: pointer;
-  }
+}
+
+.ltrClass {
+    direction: rtl;
+    text-align: right;
+}

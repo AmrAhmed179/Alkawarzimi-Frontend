@@ -41,9 +41,12 @@
             </div>
         </mat-form-field>
     </form> -->
-    <div class="flex gap-3 w-full relative">
+    <div class="flex gap-3 w-full relative items-center">
 
         <!-- /////////////////// Intents///////////////////////////////// -->
+        <mat-checkbox color="primary" [matTooltip]="!filter.modeAgent ?'Get Agent Conversations' : 'Get All Conversations'" [(ngModel)]="filter.modeAgent" (change)="getConverstionsWhenChange()">
+            <span class="font-semibold text-[15px]">Agent Conversations</span>
+        </mat-checkbox>
         <div (clickOutside)="IntentsDropdownOpen = false" class="py-2 w-full ">
             <!-- Dropdown -->
             <div class="border rounded shadow relative py-1">

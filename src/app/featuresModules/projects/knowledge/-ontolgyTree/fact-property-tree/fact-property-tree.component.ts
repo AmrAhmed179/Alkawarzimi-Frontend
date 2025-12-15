@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
-import { EntityModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
+import { EntityInfo, EntityModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
 import { FactProperties, LinkedArg, PropertiesIndex } from 'src/app/Models/ontology-model/fact-property';
 import { OntologyEntitiesService } from 'src/app/Services/Knowlege/ontology-entities.service';
 import { FactPropertyTreeService } from 'src/app/Services/Ontology-Tree/fact-property-tree.service';
@@ -53,6 +53,7 @@ export class FactPropertyTreeComponent implements OnInit {
   }
   @ViewChild('tree') tree: TreeComponent;
   activeTap:string = 'frame'
+  subscribeSecondTime:boolean = false
   propertyIndex:PropertiesIndex[] = []
   dataProp:PropertiesIndex[] = []
   LinkedArgObj:LinkedArg
@@ -77,23 +78,32 @@ export class FactPropertyTreeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+     let isFirst = true;
     this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
       if (project) {
         this.projectId = project._id;
     this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$)).subscribe((response) => {
           if (response) {
+            this.subscribeSecondTime = true
             this.lang = response;
-            this.route.paramMap.subscribe(params => {
+            if(isFirst){
+             this.route.paramMap.subscribe(params => {
               debugger
               this.entityId = params.get('entityId');
               this.propertiesIndex()
               this.getDataProperty()
               this.getClassandProp()
+              isFirst = false
             });
+            }
+
           }
         });
+
       }
     });
+
+
   }
 
   getEntityTye(){
@@ -113,10 +123,18 @@ export class FactPropertyTreeComponent implements OnInit {
       var entity = this.classesAndProps.find(y=>y._id == x.entityId )
       x.entity = entity
       var linkedClassEntity = this.classesAndProps.find(y=>y._id == x.linkedClass )
-      if(linkedClassEntity)
-        x.linkedClassText = linkedClassEntity.entityInfo[0].entityText
-      else
+      if(linkedClassEntity){
+         x.linkedClassText = linkedClassEntity.entityInfo[0].entityText
+        if(linkedClassEntity.entityInfo.length > 1)
+         x.linkedClassTextEn = linkedClassEntity.entityInfo[1].entityText
+        else
+          x.linkedClassTextEn = linkedClassEntity.entityInfo[0].entityText
+      }
+      else{
        x.linkedClassText = ''
+       x.linkedClassTextEn
+      }
+
 
       x.linkedFramesEntity = []
       x.linkedFrames?.forEach((e:any)=>{
@@ -131,13 +149,18 @@ export class FactPropertyTreeComponent implements OnInit {
       x.propertyIndex = property
       if(x.type == 'frame'){
         x.treeText = x.entity.entityInfo[0].entityText
+        if(x.entity.entityInfo.length > 1)
+          x.treeTextEn = x.entity.entityInfo[1].entityText
+        else
+          x.treeTextEn = x.entity.entityInfo[0].entityText
       }
       else if(x.type == 'root'){
         x.treeText = x.propertyIndex.entityText
-        x.treeText = x.propertyIndex.entityText
+        x.treeTextEn = x.propertyIndex.entityText
       }
       else if (x.type == 'modifiedFrame'){
         x.treeText = `${x.propertyIndex.entityText} => ${x.entity.entityInfo[0].entityText}`
+        x.treeTextEn = `${x.propertyIndex.entityText} => ${x.entity.entityInfo[0].entityText}`
       }
 
       else if (x.type == 'attachment'){
@@ -145,11 +168,18 @@ export class FactPropertyTreeComponent implements OnInit {
         if(Prop){
         x.propertyIndex = Prop
         x.treeText = `${x.propertyIndex.entityText}`
+        x.treeTextEn = `${x.propertyIndex.entityText}`
         }
         else{
           var entity = this.classesAndProps.find(y=>y._id == x.predicateId )
-          if(entity)
-            x.treeText = `${entity.entityInfo[0].entityText}`
+          if(entity){
+           x.treeText = entity.entityInfo[0].entityText
+           if(entity.entityInfo.length > 1)
+            x.treeTextEn = entity.entityInfo[1].entityText
+           else
+            x.treeTextEn = entity.entityInfo[0].entityText
+          }
+
           else{
             this.getProperites()
             var selectedProp = this.selectedTapProperties.find(y=>y.entityId == x.predicateId )
@@ -167,15 +197,24 @@ export class FactPropertyTreeComponent implements OnInit {
       if(Prop){
       x.propertyIndex = Prop
       x.treeText = `${x.propertyIndex.entityText}`
+      x.treeTextEn = `${x.propertyIndex.entityText}`
       }
       else{
         var entity = this.classesAndProps.find(y=>y._id == x.predicateId )
         var PropBySourcePredicateId = this.DataProperties.find(y=>y.entityId == x.sourcePredicateId )
-        if(PropBySourcePredicateId)
-         x.treeText = `${PropBySourcePredicateId.entityText} >>> ${entity.entityInfo[0].entityText}`
-        else
-         x.treeText = `${entity.entityInfo[0].entityText}`
+        if(PropBySourcePredicateId){
+          x.treeText = `${PropBySourcePredicateId.entityText} >>> ${entity.entityInfo[0].entityText}`
+          x.treeTextEn = `${PropBySourcePredicateId.entityText} >>> ${entity.entityInfo[0].entityText}`
+        }
+        else{
+           x.treeText = `${entity.entityInfo[0].entityText}`
+          if(entity.entityInfo.length > 1)
+            x.treeTextEn = `${entity.entityInfo[1].entityText}`
+          else
+            x.treeTextEn = `${entity.entityInfo[0].entityText}`
 
+
+        }
       }
     }
     })
@@ -450,7 +489,7 @@ export class FactPropertyTreeComponent implements OnInit {
     if(!node.response){
       node.response = {value:[{lang:'ar',value:''}]}
     }
-    if(!node.response?.value){
+    if(!node.response?.value || node.response?.value[0] == null){
       node.response.value = [{lang:'ar',value:''}]
     }
     if(node.response?.value.length == 0){
@@ -471,6 +510,62 @@ export class FactPropertyTreeComponent implements OnInit {
   }
 
   deleteFrameFactProperty(node:FactProperties){
+    debugger
+    let QuestionTitle = "Are you sure you want to delete this ?"
+    let pleasWriteMagic = "Please write the **Magic** word to delete"
+    let actionName = "delete"
+    const dialogRef = this.dialog.open(MagicWordWriteComponent,
+      {
+        data: { QuestionTitle: QuestionTitle, pleasWriteMagic: pleasWriteMagic, actionName: actionName }, maxHeight: '760px',
+        width: '600px',
+        position: { top: '100px', left: '400px' }
+      });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        var firstSiblingBody
+        var firstSibling = this.factsProperty.find(x=>x.previous_sibling == node.node_id)
+        if(firstSibling){
+          firstSiblingBody ={
+            entityId: firstSibling.entityId,
+            subjectId: firstSibling.subjectId,
+            predicateId: firstSibling.predicateId,
+            docId: firstSibling.docId,
+            type: firstSibling.type,
+            node_id: firstSibling.node_id,
+            parent: firstSibling.parent,
+            previous_sibling: firstSibling.previous_sibling
+          }
+        }
+        else{
+          firstSiblingBody = null
+        }
+
+        var body ={
+          projectId:this.projectId,
+          childrenCount:node.nodes.length,
+         node: {
+            node_id: node.node_id,
+            previous_sibling: node.previous_sibling,
+            entityId: node.entityId,
+            patternIntentId: node.patternIntentId
+        },
+        firstSiblingNode:firstSiblingBody
+        }
+
+        this._factPropertyTreeService.deleteFrameFactProperty(body).subscribe((res:any)=>{
+          debugger
+            var index = this.factsProperty.findIndex(x=>x.previous_sibling == node.node_id)
+            if(index != -1)
+              this.factsProperty[index].previous_sibling = node.previous_sibling
+
+            this.factsProperty.splice(this.factsProperty.findIndex(x=>x.node_id == node.node_id),1)
+            this.showTree()
+        })
+      }
+    })
+
+  }
+   deleteFrameValue(node:FactProperties){
     debugger
     let QuestionTitle = "Are you sure you want to delete this ?"
     let pleasWriteMagic = "Please write the **Magic** word to delete"
@@ -876,6 +971,7 @@ export class FactPropertyTreeComponent implements OnInit {
         }
         this._factPropertyTreeService.attachPropertyToFrame(body).subscribe((res:any)=>{
           if(res.status == '1'){
+            debugger
             this.notify.openSuccessSnackBar("Data Saved");
             (this.factsProperty[index].linkedFrames ??= []).push(result.FrameEntityId);
             var entity = this.classesAndProps.find(x=>x._id == result.FrameEntityId)
@@ -945,6 +1041,17 @@ export class FactPropertyTreeComponent implements OnInit {
         }
       })
     }
+
+  getSubClassEntityText(entityInfo: EntityInfo[]): string {
+  if (!entityInfo || entityInfo.length === 0) {
+    return '';
+  }
+  const match = entityInfo.find(e => e.language === this.lang);
+  if (match) {
+    return match.entityText;
+  }
+  return entityInfo[0].entityText;
+}
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();

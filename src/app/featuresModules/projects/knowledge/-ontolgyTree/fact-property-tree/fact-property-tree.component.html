@@ -29,23 +29,36 @@
                         class="  py-2  w-full mat-tree-node flex justify-between bg-[#F6F6F6] rounded-sm px-2  border border-slate-300 hover:border-black" [id]="node.data._id">
 
                         <p [ngClass]="{'text-white':node.data.type != 'root' && node.data.type != 'attachment','blackTextColor':node.data.node_id == selectedNodeId}" dir="rtl" class="text-base font-medium border-r-black">
-                            <span class="text-[#0000FF]  border border-[#0000FF] p-1" *ngIf="node.data.linkedClassText">{{node.data.linkedClassText}}</span>&nbsp;
+                            <span class="text-[#0000FF]  border border-[#0000FF] p-1" *ngIf="node.data.linkedClassText">
+                              <span *ngIf="lang == 'ar'" >{{node.data.linkedClassText}}</span>
+                            <span *ngIf="lang == 'en'">{{node.data.linkedClassTextEn}}</span>
+                            </span>&nbsp;
 
                             <span class="text-[#FE1A17] border-[#FE1A17]  border p-1 ml-1" *ngFor="let subClass of node.data.subClassEntityArray">
-                              {{subClass.entityInfo[0].entityText}}   <mat-icon (click)="deleteSubProp(node.data, subClass)" class="icon-sm text-[#d33b43]  " svgIcon="mat:close"></mat-icon>
-                            </span> &nbsp; {{node.data.treeText}}
+                              {{getSubClassEntityText(subClass.entityInfo)}}   <mat-icon (click)="deleteSubProp(node.data, subClass)" class="icon-sm text-[#d33b43]  " svgIcon="mat:close"></mat-icon>
+                            </span> &nbsp;
+                            <span *ngIf="lang == 'ar'">{{node.data.treeText}}</span> <span *ngIf="lang == 'en'">{{node.data.treeTextEn}}</span>
                         </p>
                         <div class="flex gap-2 px-2" *ngIf="node.data.type != 'root'">
                             <button (click)="saveNodedetailsValuse(node.data, $event)" matTooltip="Save Value" class=""><mat-icon class="icon-base text-[#D27F37]" svgIcon="mat:description"></mat-icon></button>
                             <button (click)="addFrameModificationProperty(node.data)" [ngClass]="{'text-white':node.data.type != 'root' && node.data.type != 'attachment'}" *ngIf="node.data.type != 'attachment' && activeTap == 'frame' && node.data.entity.entityType == 'action'" matTooltip="Add Modification Property"
                                 class=""><mat-icon class="icon-base " svgIcon="mat:add"></mat-icon></button>
                             <button (click)="addFrameAttachProperty(node.data)" [ngClass]="{'text-white':node.data.type != 'root' && node.data.type != 'attachment'}" *ngIf="node.data.type != 'attachment'" matTooltip="Add Attachment Property" class=""><mat-icon class="icon-sm" svgIcon="mat:add_circle_outline"></mat-icon></button>
-                            <button (click)="addSubProperties(node.data)" *ngIf="node.data.type == 'attachment' && activeTap == 'frame' && node.data.entity.entityType != 'class'" matTooltip="Add Sub Properties" class=""><mat-icon class="icon-sm" svgIcon="mat:device_hub"></mat-icon></button>
+                            <button (click)="addSubProperties(node.data)" *ngIf="node.data.type == 'attachment' && activeTap == 'frame' && (node.data.entity.entityType != 'class'&& node.data.entity.entityType != 'individual' && node.data.entity.entityType != 'prop')" matTooltip="Add Sub Properties"
+                                class=""><mat-icon class="icon-sm" svgIcon="mat:device_hub"></mat-icon>
+                            </button>
                             <button (click)="removeLink(node.data)" *ngIf="node.data.type == 'attachment' && node.data.linkedClassText && activeTap == 'frame'  &&  node.data.entity.entityType != 'class'" matTooltip="Remove Linked Class" class=""><mat-icon class="icon-base text-red-600" svgIcon="mat:link"></mat-icon></button>
-                            <button (click)="linkClass(node.data)" *ngIf="node.data.type == 'attachment' && !node.data.linkedClassText && activeTap == 'frame' &&  node.data.entity.entityType != 'class'" matTooltip="Link Class" class=""><mat-icon class="icon-base " svgIcon="mat:link"></mat-icon></button>
-                            <button (click)="linkFrameList(node.data)" *ngIf="node.data.type == 'attachment'  &&  node.data.entity.entityType == 'class' &&node.data.linkedFramesEntity.length > 0" matTooltip="Attach with Frame" class="text-red-600 flex items-center"><mat-icon class="icon-base text-red-600" svgIcon="mat:attach_file"></mat-icon>Attached Frames</button>
-                            <button (click)="linkFrameEntity(node.data)" *ngIf="node.data.type == 'attachment' &&   node.data.entity.entityType == 'class'" matTooltip="Attach with frame" class=""><mat-icon class="icon-base " svgIcon="mat:link"></mat-icon></button>
+                            <button (click)="linkClass(node.data)" *ngIf="node.data.type == 'attachment' && !node.data.linkedClassText && activeTap == 'frame' &&  (node.data.entity.entityType != 'class'&& node.data.entity.entityType != 'individual' && node.data.entity.entityType != 'prop')"
+                                matTooltip="Link Class" class=""><mat-icon class="icon-base " svgIcon="mat:link"></mat-icon>
+                            </button>
+                            <button (click)="linkFrameList(node.data)" *ngIf="node.data.type == 'attachment'  && ( node.data.entity.entityType == 'class' || node.data.entity.entityType == 'individual' || node.data.entity.entityType == 'prop') && node.data.linkedFramesEntity.length > 0"
+                                matTooltip="Attach with Frame" class="text-red-600 flex items-center"><mat-icon class="icon-base text-red-600" svgIcon="mat:attach_file"></mat-icon>Attached Frames</button>
+                            <button (click)="linkFrameEntity(node.data)" *ngIf="node.data.type == 'attachment' &&   (node.data.entity.entityType == 'class'|| node.data.entity.entityType == 'individual' || node.data.entity.entityType == 'prop')" matTooltip="Attach with frame" class=""><mat-icon class="icon-base " svgIcon="mat:link"></mat-icon></button>
                             <button *ngIf="!(node.data.parent == -1 && node.data.previous_sibling == null)" (click)="deleteFrameFactProperty(node.data)" [ngClass]="{'text-white':node.data.type != 'root' && node.data.type != 'attachment'}" class=""><mat-icon class="icon-base" svgIcon="mat:delete"></mat-icon></button>
+                            <!-- <button *ngIf="!(node.data.parent == -1 && node.data.previous_sibling == null && node.data.response.objectEntitiesValues != null && node.data.response.mediaResponse != null && node.data.response.goToTaskId != null && node.data.response.value[0].value != null)"
+                                (click)="deleteFrameValue(node.data)" [ngClass]="{'text-white':node.data.type != 'root' && node.data.type != 'attachment'}" class="">
+                             <mat-icon class="icon-base" svgIcon="mat:delete"></mat-icon>
+                            </button> -->
                         </div>
                     </div>
 
@@ -59,7 +72,7 @@
         </div>
     </div>
     <div class="w-full col-span-3 mx-2" *ngIf="SeLectedNode">
-        <vex-tree-node-details [entities]="classesAndProps" [selectActiveTap]="'response'" [SeLectedNode]="SeLectedNode" [propertyId]="SeLectedNode.node_id" [projectId]="projectId" [saveNodeValueId]="saveNodeValueId" (saveNodeValue)="getNodeValueFromChild($event)"
+        <vex-tree-node-details [entities]="classesAndProps" [lang]="lang" [selectActiveTap]="'response'" [SeLectedNode]="SeLectedNode" [propertyId]="SeLectedNode.node_id" [projectId]="projectId" [saveNodeValueId]="saveNodeValueId" (saveNodeValue)="getNodeValueFromChild($event)"
             (addCompoundProperty)="addCompoundProperty($event)"></vex-tree-node-details>
     </div>
 </div>

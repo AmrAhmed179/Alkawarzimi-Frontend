@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component,  Input,  OnInit, ViewChild } from '
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { filter, merge, Subject, takeUntil, tap } from 'rxjs';
 import { EntityCatogeryModel, EntityModel } from 'src/app/Models/ontology-model/EntityCatogeryModel';
 import { OntologyEntitiesService } from 'src/app/Services/Knowlege/ontology-entities.service';
 import { DataService } from 'src/app/core/services/data.service';
@@ -17,6 +17,7 @@ import { ArgumentMappingComponent } from '../../dialogs/argument-mapping/argumen
 import { EntityBehaviorComponent } from '../../dialogs/entity-behavior/entity-behavior.component';
 import { DeconstructClassComponent } from '../../dialogs/deconstruct-class/deconstruct-class.component';
 import { CreateOntologyEntityComponent } from '../../dialogs/create-ontology-entity/create-ontology-entity.component';
+import { OptionsServiceService } from 'src/app/Services/options-service.service';
 
 @Component({
   selector: 'vex-shared-entity-table',
@@ -38,11 +39,13 @@ export class SharedEntityTableComponent implements OnInit {
   currentIndex:number
   entityTitle:string
   childrenEntites:EntityModel[] = []
+  lang:string
   @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
 
   clickedEntity:EntityModel
   clickedEntityIndex:number
   constructor(private _ontologyEntitiesService:OntologyEntitiesService,
+    private _optionsService: OptionsServiceService,
     private route: ActivatedRoute,
     private _dataService: DataService,
     private fb:FormBuilder,
@@ -51,34 +54,47 @@ export class SharedEntityTableComponent implements OnInit {
     private router: Router,
     ) { }
   ngOnInit(): void {
-    this._ontologyEntitiesService.ReloadEntitesInCreation$.pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
-     debugger
-      if(res){
-        this.reloadEntiesFlage = true
-        if(this.type == 'gneratedFrames'){
-          this.getGeneratedEntities()
-        }
-        else{
-          this.getEntities()
-        }
-      }
-    })
-    this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project:any)=>{
-      if(project){
-      this.projectId = project._id
-      this.getFactCategories()
-      debugger
-      if(this.type == 'gneratedFrames'){
-        this.getGeneratedEntities()
-      }
-      else{
-        this.getEntities()
-      }
-       this.intiateForm()
-      }
-    })
+    this._optionsService.selectedLang$.pipe(takeUntil(this.onDestroy$)).subscribe((response) => {
+          if (response) {
+            this.lang = response;
+          }
+        });
+    merge(
+    // When reload event comes
+    this._ontologyEntitiesService.ReloadEntitesInCreation$.pipe(
+      filter(Boolean),
+      tap(() => {
+        this.reloadEntiesFlage = true;
+      })
+    ),
+
+    // When project changes
+    this._dataService.$project_bs.pipe(
+      filter(Boolean),
+      tap((project: any) => {
+        this.projectId = project._id;
+        this.getFactCategories();
+        this.intiateForm();
+      })
+    )
+  )
+  .pipe(takeUntil(this.onDestroy$))
+  .subscribe(() => {
+    this.loadEntities();
+  });
   }
 
+ loadEntities() {
+    if (!this.projectId && ! this.lang) {
+    return; // don’t call API until projectId is set
+  }
+
+  if (this.type === 'gneratedFrames') {
+    this.getGeneratedEntities();
+  } else {
+    this.getEntities();
+  }
+}
   intiateForm(){
     this.form = this.fb.group({
       Category:[],
@@ -102,7 +118,7 @@ export class SharedEntityTableComponent implements OnInit {
     })
   }
   sortEntites(entities){
-    var allParents = entities.filter(x=>x.parentId == 0)
+    var allParents = entities.filter(x=>x?.parentId == 0)
     debugger
      this.ontologyEntities = allParents.sort((n1,n2) => {
       if (n1._id > n2._id) {
@@ -141,7 +157,10 @@ export class SharedEntityTableComponent implements OnInit {
     var filteredData:EntityModel[]
     filteredData = this.entities
     if(search){
-      filteredData = this.entities.filter(x=>x.entityInfo[0].entityText.trim().includes(search.trim()))
+      filteredData = this.entities.filter(entity => entity.entityInfo?.some(info =>
+       (info.language === 'ar' || info.language === 'en') && info.entityText?.trim().includes(search.trim())
+      )
+    );
     }
     if(Category){
       filteredData = filteredData.filter(x=>x.categoryId == Category)
@@ -154,14 +173,13 @@ export class SharedEntityTableComponent implements OnInit {
        filteredData = filteredData.filter(x=>x.entityInfo[0].isReviewed != true)
 
       if(Filter == 'filter_no_syn' )
-         filteredData = filteredData.filter(x=>x.children.length < 1)
-
+              filteredData = filteredData.filter(x => !x.children || x.children.length === 0);
          if(Filter == 'filter_error_stem' )
          filteredData = filteredData.filter(x=>x.errorInStem == true)
     }
     let childrenEntities:EntityModel[] = []
     filteredData.forEach(element => {
-      if(element.parentId != 0){
+      if(element.parentId != 0 && Filter != 'filter_no_syn'){
         let entities = this.entities.filter(x=>x.parentId == element.parentId)
         let parent = this.entities.find(x=>x._id == element.parentId)
         childrenEntities.push(parent)
@@ -180,7 +198,12 @@ export class SharedEntityTableComponent implements OnInit {
   }
 
   clickOnList(entity:EntityModel, index){
-    this.entityTitle = entity.entityInfo[0].entityText
+    let entityBylang =  entity.entityInfo.find(x=>x.language == this.lang)
+    if(entityBylang)
+      this.entityTitle = entityBylang.entityText
+    else
+      this.entityTitle = entity.entityInfo[0].entityText
+
     this.currentIndex = index
     this.childrenEntites = entity.children.sort((n1,n2) => {
       if (n1._id > n2._id) {
@@ -196,7 +219,11 @@ export class SharedEntityTableComponent implements OnInit {
   }
 
   clickOnList2(){
-    this.entityTitle = this.ontologyEntities[this.currentIndex].entityInfo[0].entityText
+        let entityBylang =  this.ontologyEntities[this.currentIndex].entityInfo.find(x=>x.language == this.lang)
+    if(entityBylang)
+      this.entityTitle = entityBylang.entityText
+    else
+      this.entityTitle = this.ontologyEntities[this.currentIndex].entityInfo[0].entityText
 
     this.childrenEntites = this.ontologyEntities[this.currentIndex].children.sort((n1,n2) => {
       if (n1._id > n2._id) {
@@ -210,28 +237,93 @@ export class SharedEntityTableComponent implements OnInit {
   });
   }
 
-  deleteEntity(id:any){
+  getEntityTextBasedOnLang(all,entity?:EntityModel){
+    if(all){
+    let entityBylang =  entity.entityInfo.find(x=>x.language == this.lang)
+    if(entityBylang)
+      return entityBylang.entityText
+    else
+      return entity.entityInfo[0].entityText
+    }
+    else{
+        let entityBylang =  this.ontologyEntities[this.currentIndex].entityInfo.find(x=>x.language == this.lang)
+    if(entityBylang)
+      return entityBylang.entityText
+    else
+      return this.ontologyEntities[this.currentIndex].entityInfo[0].entityText
+    }
+  }
+  getTranslation(entity?:EntityModel){
+    let translateAr:number = 0 // 1 translte toArabic   2 // translate toEnglish
+
+    let entityBylangAr
+    let entityBylangEn
+    if(this.lang == 'ar'){
+      entityBylangAr =  entity.entityInfo.find(x=>x.language == 'ar')
+      entityBylangEn =  entity.entityInfo.find(x=>x.language == 'en')
+      if(entityBylangEn && entityBylangAr == undefined){
+         return translateAr = 1
+      }
+    }
+    if(this.lang == 'en'){
+     entityBylangEn =  entity.entityInfo.find(x=>x.language == 'en')
+     entityBylangAr =  entity.entityInfo.find(x=>x.language == 'ar')
+      if(entityBylangEn == undefined && entityBylangAr){
+        return translateAr = 2
+      }
+    }
+
+  }
+  deleteEntity(entity:EntityModel){
+   let deleteTreanslation = false
+    let entitTransalteCheck = entity.entityInfo.find(x=>x.language == 'en')
+    if(entitTransalteCheck)
+      deleteTreanslation = true
     let QuestionTitle = "Are you sure you want to delete this ?"
     let pleasWriteMagic = "Please write the **Magic** word to delete"
     let actionName = "delete"
     const dialogRef = this.dialog.open(MagicWordWriteComponent,
       {
-        data: { QuestionTitle: QuestionTitle, pleasWriteMagic: pleasWriteMagic, actionName: actionName }, maxHeight: '760px',
+        data: { QuestionTitle: QuestionTitle, pleasWriteMagic: pleasWriteMagic, actionName: actionName , deleteTreanslation:deleteTreanslation }, maxHeight: '760px',
         width: '600px',
         position: { top: '100px', left: '400px' }
       });
 
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
-          this._ontologyEntitiesService.DeleteOntologyEntities(this.projectId,this.type,id).subscribe((res:any)=>{
+          if(res =='success'){
+          this._ontologyEntitiesService.DeleteOntologyEntities(this.projectId,this.type,entity._id).subscribe((res:any)=>{
             if(res.status == 1){
               this.notify.openSuccessSnackBar("Successfully deleted")
               this.reloadEntiesFlage = true
               this.getEntities()
             }
+            if(res.status == 2)
+              this.notify.openFailureSnackBar("Entity is Tree Node So it Can't be Deleted")
           })
         }
+        if(res =='trans'){
+          let entityInfo = entity.entityInfo.filter(x=>x.language == 'ar')
+          entity.entityInfo = entityInfo
+          let body = {
+            entity:entity,
+            projectId:this.projectId
+          }
+          this._ontologyEntitiesService
+            .EditOntoloyEntityRemovingtranslation(body)
+            .subscribe((res: any) => {
+              if (res.status == 1) {
+                this.entities[this.entities.findIndex(x=>x._id ==entity._id)] = entity
+                this.sortEntites(this.entities)
+                this.notify.openSuccessSnackBar("Translation Deleted successfully");
+              } else {
+                this.notify.openFailureSnackBar("Translation Delete failed");
+              }
+            });
+        }
+        }
       })
+
   }
 
   setIsType(entity:EntityModel){
@@ -400,15 +492,17 @@ export class SharedEntityTableComponent implements OnInit {
         }
     })
   }
-  openModifyEntity(){
+  openModifyEntity(translationFlag?){ //1 arbic // 2 english
     debugger
+    if( this.ontologyEntities[this.currentIndex].type == 'prop')
+      return
     let entityId = this.ontologyEntities[this.currentIndex]._id
      const dialogRef = this.dialog.open(CreateOntologyEntityComponent, {
-       data: {entityId:0, projectId:this.projectId,mode:'edit' , Type:this.type,entity:this.ontologyEntities[this.currentIndex],_id:entityId},},
+       data: {entityId:0, projectId:this.projectId,mode:'edit' , Type:this.type,entity:this.ontologyEntities[this.currentIndex],_id:entityId, translationFlag:translationFlag, lang:this.lang},},
      );
      dialogRef.afterClosed().subscribe((res:any) => {
-       if(res)
-         {this.reloadEntiesFlage = true
+       if(res){
+        this.reloadEntiesFlage = true
            if(this.type == 'gneratedFrames'){
              this.getGeneratedEntities()
            }
@@ -419,12 +513,14 @@ export class SharedEntityTableComponent implements OnInit {
      })
    }
 
-  openModifySynEntity(entity:EntityModel){
+  openModifySynEntity(entity:EntityModel,translationFlag?){
     debugger
+     if( entity.entityType  == 'prop')
+      return
     let entityId = entity._id
     let type = entity.entityType
      const dialogRef = this.dialog.open(CreateOntologyEntityComponent, {
-       data: {entityId:0, projectId:this.projectId,mode:'edit' , Type:type,entity:entity,_id:entityId},},
+       data: {entityId:entity.parentId, projectId:this.projectId,mode:'edit' , Type:type,entity:entity,_id:entityId,translationFlag:translationFlag,lang:this.lang}},
      );
      dialogRef.afterClosed().subscribe((res:any) => {
        if(res)
@@ -441,7 +537,8 @@ export class SharedEntityTableComponent implements OnInit {
 
   editFrame(entity:EntityModel){
     debugger
-    let verb = entity.verb != null ? entity.verb : entity.entityInfo[0].stemmedEntity.split(" ")[0]
+    //let verb = entity.verb != null ? entity.verb : entity.entityInfo[0].stemmedEntity.split(" ")[0]
+    let verb = entity.entityInfo[0].stemmedEntity.split(" ")[0]
     this.router.navigate([`/projects/${this.projectId}/EditFrame/${verb}/${entity._id}/1`])
   }
   ngOnDestroy(): void {

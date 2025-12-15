@@ -56,6 +56,7 @@ export class AgentToolsComponent implements OnInit {
       _id: [this.SelectedAiTool._id?this.SelectedAiTool._id :new ObjectId().toHexString()],
       agentId : [this.SelectedAiTool?.agentId],
       agentName: [this.SelectedAiTool?.agentName],
+      category: [this.SelectedAiTool?.category],
       historyMode: [this.SelectedAiTool?.historyMode],
       callGPT: [this.SelectedAiTool.callGPT],
       isActive: [this.SelectedAiTool.isActive],

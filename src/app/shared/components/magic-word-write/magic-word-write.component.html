@@ -18,6 +18,7 @@
 </mat-dialog-content>
 <mat-divider></mat-divider>
 <mat-dialog-actions align="end">
-    <button mat-raised-button class="w-24   text-slate-50 bg-slate-800 hover:bg-orange-500" [disabled]="!magicWordForm.valid" (click)="checkValue()">{{data.actionName}}</button>
-    <button mat-raised-button class="w-24 text-slate-50 bg-slate-800  hover:bg-orange-500" mat-dialog-close type="button">Close</button>
+    <button mat-raised-button class="text-slate-50 bg-slate-800 hover:bg-orange-500" [disabled]="!magicWordForm.valid" (click)="checkValue(false)">{{data.actionName}}</button>
+    <button mat-raised-button class="text-slate-50 bg-slate-800 hover:bg-orange-500" *ngIf="data.deleteTreanslation" [disabled]="!magicWordForm.valid" (click)="checkValue(true)">Delete Translation</button>
+    <button mat-raised-button class="text-slate-50 bg-slate-800  hover:bg-orange-500" mat-dialog-close type="button">Close</button>
 </mat-dialog-actions>

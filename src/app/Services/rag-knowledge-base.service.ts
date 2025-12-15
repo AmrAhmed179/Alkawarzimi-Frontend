@@ -128,6 +128,7 @@ export class RagKnowledgeBaseService {
       formData.append('chatBotId', item.chatBotId);
       formData.append('projectId', item.projectId);
       formData.append('type', item.PlainTextOrDocument);
+      formData.append('isRag', item.isRag);
       formData.append("content", encodeURIComponent(item.fileContent));
 
       if(item.url){

@@ -537,6 +537,10 @@ goToPage(page: number) {
     this.intiateForm()
    }
 
+   getConverstionsWhenChange(){
+          this.getChatbotConversation()
+          this.getMessangerUser()
+   }
    addDate(date){
     //date = "7/2/2023 9:08:47 PM";
     let addedDate = new Date(date)
