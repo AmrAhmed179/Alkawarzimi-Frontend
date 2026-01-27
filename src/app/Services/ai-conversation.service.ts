@@ -9,40 +9,47 @@ import { Agents } from '../Models/Ai-Agent/toolInfo';
 export class AiConversationService {
 
   constructor(private http:HttpClient) { }
-   GetAiSessionHistory(ai_sessionId:string, projectId){
+   GetAiSessionHistory(ai_sessionId:string, chatbotId){
        let parm = {
       ai_sessionId: ai_sessionId,
-      projectId: projectId
+      chatbotId: chatbotId
     }
     return this.http.get(environment.URLS.GetAiSessionHistory, { params: parm })
    }
 
-  GetOnlineAiSessionHistory(ai_sessionId:string, projectId){
+  GetOnlineAiSessionHistory(ai_sessionId:string, chatbotId){
        let parm = {
       ai_sessionId: ai_sessionId,
-      projectId: projectId
+      projectId: chatbotId
     }
     return this.http.get(environment.URLS.GetOnlineAiSessionHistory, { params: parm })
    }
 
-  GetALLAiSessions(projectId, userId ,startDate ,endDate , pageSize , page){
+  GetALLAiSessions(chatbotId, userId ,startDate ,endDate ,projectId, pageSize , page){
    let parm = {
-      projectId: projectId,
+      chatbotId: chatbotId,
       userId: userId,
       startDate: startDate,
       endDate: endDate,
+      projectId:projectId,
       pageSize: pageSize,
       page: page,
     }
       return this.http.get(environment.URLS.GetAllAiSessions, { params: parm })
     }
-  GetOnlineAiSessions(projectId){
+  GetOnlineAiSessions(chatbotId){
    let parm = {
-      projectId: projectId,
+      projectId: chatbotId,
     }
       return this.http.get(environment.URLS.GetOnlineAiSessions, { params: parm })
     }
-   GetTools(selectedAgentId:string){
+   GetAllProjects(chatbotId:string){
+   let parm = {
+      chatbotId: chatbotId,
+    }
+      return this.http.get(environment.URLS.GetProjectsInfoAsync, { params: parm })
+    }
+  GetTools(selectedAgentId:string){
    let parm = {
       selectedAgentId: selectedAgentId,
     }

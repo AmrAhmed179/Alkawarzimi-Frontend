@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
-import { AIModels, AIToolInfo, Agents, Models, Routing, SubAgent, SubAgentSelected } from 'src/app/Models/Ai-Agent/toolInfo';
+import { AIModels, AIToolInfo, Agents, IntentResponse, Models, Routing, SubAgent, SubAgentSelected } from 'src/app/Models/Ai-Agent/toolInfo';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { ObjectId } from 'bson';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { ViewFullPropmptDialogComponent } from './view-full-propmpt-dialog/view-
 import { ContextVariableService } from 'src/app/Services/Build/context-variable.service';
 import { ContextVariableModel } from 'src/app/core/models/contextVariable';
 import { StateComponent } from './state/state.component';
+import { IntentResponseDialogComponent } from './intent-response-dialog/intent-response-dialog.component';
 
 @Component({
   selector: 'vex-agents',
@@ -93,6 +94,8 @@ export class AgentsComponent implements OnInit {
       mainAgent: [SelectedAgent.mainAgent],
       agentHandoffMode: [SelectedAgent.agentHandoffMode],
       maxMemoryLength: [SelectedAgent.maxMemoryLength],
+      haveIntentRespone: [SelectedAgent.haveIntentRespone],
+      intentResponse: [SelectedAgent.intentResponse || []],
       routing: this.fb.array(SelectedAgent.routing?.map(route => this.createRoutingGroup(route)) || []),
             // / 👇 Now promptSections is a nested FormGroup
     promptSections: this.fb.group({
@@ -151,6 +154,32 @@ export class AgentsComponent implements OnInit {
      this.selectedIndex = index
      this.intiateForm(this.SelectedAgent);
    }
+
+viewIntentReponse() {
+  const dialogRef = this.dialog.open(IntentResponseDialogComponent, {
+    width: '1200px',
+    maxWidth: '95vw',
+    height: '800px',
+    data: {
+      items: this.SelectedAgent.intentResponse || []
+    }
+  });
+
+  dialogRef.afterClosed().subscribe((result: IntentResponse[] | null) => {
+    if (!result) return;
+
+    this.SelectedAgent.intentResponse = result;
+    this.form?.patchValue({ intentResponse: result });
+
+    // optional: persist
+    this._aiConversationService.saveAgent(this.form.value).subscribe(() => {
+      this.notify.openSuccessSnackBar("Intent responses updated successfully");
+    });
+  });
+}
+setHaveIntentRespone(){
+    this.form?.patchValue({ haveIntentRespone: this.SelectedAgent.haveIntentRespone });
+}
   selectProvider(event){
     debugger
     this.selectedProvider = event.value

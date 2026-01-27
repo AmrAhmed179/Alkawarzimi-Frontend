@@ -30,9 +30,9 @@ export class ParseDatePipe implements PipeTransform {
 })
 export class AiConversationComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject();
-    totalPagesArray: number[] = [];
+  totalPagesArray: number[] = [];
 
-  projectId
+  chatbotId
   totalCost:number = 0
   selectedSessionId:string = ""
   conversationsList:string[] = []
@@ -41,7 +41,9 @@ export class AiConversationComponent implements OnInit {
    filter: FilterData = {
     userId: '',
     startDate: null,
-    endDate: null
+    endDate: null,
+    projectId:"",
+    projects:[]
   };
 
   pageSize:number = 10
@@ -56,7 +58,8 @@ export class AiConversationComponent implements OnInit {
   ngOnInit(): void {
         this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
           if (project) {
-            this.projectId = project._id;}
+            this.chatbotId = project._id;}
+            this.getAllProjects()
             if(this.tapNameValue == 'allConversations')
              this.getAllConversations()
             else
@@ -73,16 +76,23 @@ export class AiConversationComponent implements OnInit {
     this.getAllConversations()
   });
 }
+
+  getAllProjects(){
+     this._aiConversationService.GetAllProjects(this.chatbotId).subscribe((res:any)=>{
+      this.filter.projects = res
+     })
+  }
   getAllConversations() {
     // Handle null dates - either skip them or provide defaults
     const startDate = this.filter.startDate ? this.filter.startDate.toISOString() : null;
     const endDate = this.filter.endDate ? this.filter.endDate.toISOString() : null;
 
     this._aiConversationService.GetALLAiSessions(
-      this.projectId,
+      this.chatbotId,
       this.filter.userId,
       startDate,
       endDate,
+      this.filter.projectId,
       this.pageSize,
       this.page
     ).subscribe((res: any) => {
@@ -96,7 +106,7 @@ export class AiConversationComponent implements OnInit {
     });
   }
     getOnlineConversations(){
-    this._aiConversationService.GetOnlineAiSessions(this.projectId).subscribe((res:any)=>{
+    this._aiConversationService.GetOnlineAiSessions(this.chatbotId).subscribe((res:any)=>{
       this.conversationsList = res.sessions
        this.totalItems = res.TotalCount
     })
@@ -112,7 +122,7 @@ export class AiConversationComponent implements OnInit {
   }
   GetAiSessionHistory(){
 
-    this._aiConversationService.GetAiSessionHistory(this.selectedSessionId,this.projectId).subscribe((res:any)=>{
+    this._aiConversationService.GetAiSessionHistory(this.selectedSessionId,this.chatbotId).subscribe((res:any)=>{
       debugger
       this.selectedSession = res.history
       //this.SelectedSession(res.history)
@@ -120,7 +130,7 @@ export class AiConversationComponent implements OnInit {
     })
   }
   GetOnlineAiSessionHistory(){
-    this._aiConversationService.GetOnlineAiSessionHistory(this.selectedSessionId,this.projectId).subscribe((res:any)=>{
+    this._aiConversationService.GetOnlineAiSessionHistory(this.selectedSessionId,this.chatbotId).subscribe((res:any)=>{
       debugger
       this.totalCost = 0
       this.SelectedSession(JSON.parse(res.History))

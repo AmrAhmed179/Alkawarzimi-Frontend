@@ -1,0 +1,90 @@
+<div class="flex justify-center items-center">
+    <h2 mat-dialog-title class="my-1 text-lg font-medium">Intent Responses</h2>
+</div>
+<mat-divider></mat-divider>
+<div class="content h-[660px] overflow-auto" [formGroup]="form" dir="ltr">
+    <!-- Search -->
+    <div class="flex justify-between items-center my-2">
+        <button mat-stroked-button class="py-[2px]" (click)="addNew()">
+      <mat-icon svgIcon="mat:add"></mat-icon>
+      Add New Intent
+    </button>
+        <mat-form-field appearance="fill" class="w-1/2 ltr-input">
+            <mat-label>Search intent / response</mat-label>
+            <input matInput [(ngModel)]="filterText" [ngModelOptions]="{standalone: true}" />
+            <mat-icon matSuffix svgIcon="mat:search"></mat-icon>
+        </mat-form-field>
+
+    </div>
+
+    <div formArrayName="items" class="list">
+        <mat-accordion multi>
+
+            <ng-container *ngFor="let g of itemsGroups; let i = index; trackBy: trackByIndex">
+                <!-- filter (keeps UI simple) -->
+                <ng-container *ngIf="matchesFilter(g)">
+
+                    <mat-expansion-panel [expanded]="expandedIndex === i" (opened)="expandedIndex = i" (closed)="expandedIndex = null" class="panel">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="panel-title">
+                                <span class="intent-title">
+                  {{ g.get('intent')?.value || '(no intent)' }}
+                </span>
+                            </mat-panel-title>
+
+                            <mat-panel-description class="panel-desc">
+                                {{ preview(g.get('response')?.value) || '(no response)' }}
+                            </mat-panel-description>
+
+                            <button mat-icon-button color="warn" (click)="remove(i)" matTooltip="Delete">
+                  <mat-icon svgIcon="mat:delete"></mat-icon>
+                </button>
+                        </mat-expansion-panel-header>
+
+                        <!-- Inline editor -->
+                        <div class="editor" [formGroupName]="i">
+                            <div class="row">
+                                <mat-form-field appearance="fill" class="w-full ltr-input">
+                                    <mat-label>Intent</mat-label>
+                                    <input matInput formControlName="intent" maxlength="120" />
+                                    <mat-hint align="end">
+                                        {{ (g.get('intent')?.value || '').length }}/120
+                                    </mat-hint>
+                                    <mat-error *ngIf="g.get('intent')?.hasError('required')">
+                                        Intent is required
+                                    </mat-error>
+                                </mat-form-field>
+
+
+                            </div>
+
+                            <mat-form-field appearance="fill" class="w-full ltr-input">
+                                <mat-label>Response</mat-label>
+                                <textarea matInput formControlName="response" rows="8" class="font-mono"></textarea>
+                                <mat-hint align="end">
+                                    Chars: {{ (g.get('response')?.value || '').length }}
+                                </mat-hint>
+                                <mat-error *ngIf="g.get('response')?.hasError('required')">
+                                    Response is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                    </mat-expansion-panel>
+
+                </ng-container>
+            </ng-container>
+
+        </mat-accordion>
+
+        <div *ngIf="itemsGroups.length === 0" class="empty">
+            No intent responses. Click <b>Add</b>.
+        </div>
+    </div>
+</div>
+
+
+<mat-dialog-actions dir="ltr" align="end">
+    <button mat-raised-button color="primary" (click)="saveAll()">Save</button>
+    <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

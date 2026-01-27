@@ -275,7 +275,7 @@ export class ProjectRoutelet {
             label: "Agents",
             route: "./Agents",
             // icon: "mat:bar_chart",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
             breadCrumbs: ['AI Agent', 'Agents'],
 
           },
@@ -284,7 +284,7 @@ export class ProjectRoutelet {
             label: "Agent Tools",
             route: "./AgentTools",
             // icon: "mat:bar_chart",
-            routerLinkActiveOptions: { exact: true },
+            routerLinkActiveOptions: { exact: false },
             breadCrumbs: ['AI Agent', 'AgentTools'],
 
           },

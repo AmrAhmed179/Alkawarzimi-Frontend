@@ -1,10 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface FilterData {
+export class FilterData {
   userId: string;
   startDate: Date;
   endDate: Date;
+  projectId:string
+  projects:Projects[] = []
+}
+export class Projects{
+  ProjectId:string
+  ProjectName:string
 }
 @Component({
   selector: 'vex-ai-conversation-filter-dialog',

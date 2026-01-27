@@ -30,6 +30,10 @@
             <button *ngIf="form" class="mt-2 rounded-sm" mat-stroked-button (click)="viewFullPropmpt()">
                   View Full Prompt
             </button>
+            <mat-slide-toggle (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="Intent Reponse" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.haveIntentRespone"></mat-slide-toggle>
+            <button *ngIf="SelectedAgent.haveIntentRespone == true" class="mt-2 rounded-sm" mat-stroked-button (click)="viewIntentReponse()">
+                  View Intent Reponse
+            </button>
             <mat-checkbox color="primary" class="mx-8 mt-1" [(ngModel)]="SelectedAgent.startWithoutHistory"> <span class=" px-1 text-base">Start Without History</span></mat-checkbox>
 
         </div>

@@ -183,6 +183,7 @@ import { SubAgentDialogComponent } from './ai-conversation/AI-Agent/agents/sub-a
 import { ToolDialogComponent } from './ai-conversation/AI-Agent/agents/tool-dialog/tool-dialog.component';
 import { ViewFullPropmptDialogComponent } from './ai-conversation/AI-Agent/agents/view-full-propmpt-dialog/view-full-propmpt-dialog.component';
 import { StateComponent } from './ai-conversation/AI-Agent/agents/state/state.component';
+import { IntentResponseDialogComponent } from './ai-conversation/AI-Agent/agents/intent-response-dialog/intent-response-dialog.component';
 
 @NgModule({
   declarations: [
@@ -353,7 +354,8 @@ import { StateComponent } from './ai-conversation/AI-Agent/agents/state/state.co
     SubAgentDialogComponent,
     ToolDialogComponent,
     ViewFullPropmptDialogComponent,
-    StateComponent
+    StateComponent,
+    IntentResponseDialogComponent
   ],
   imports: [
     TreeModule,

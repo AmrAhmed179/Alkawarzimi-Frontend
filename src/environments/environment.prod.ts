@@ -265,6 +265,7 @@ export const environment = {
     GetOnlineAiSessions: `${BaseUrl}Conversation/GetAiSessions`,
     GetAiSessionHistory: `${BaseUrl}AiAgent/GetAIConversationById`,
     GetOnlineAiSessionHistory: `${BaseUrl}Conversation/GetAiSessionHistory`,
+    GetProjectsInfoAsync: `${BaseUrl}AiAgent/GetProjectsInfoAsync`,
     GetTools: `${BaseUrl}AiAgent/GetTools`,
     EditTool: `${BaseUrl}AiAgent/EditTool`,
     ChangeSubAgent: `${BaseUrl}AiAgent/ChangeSubAgent`,

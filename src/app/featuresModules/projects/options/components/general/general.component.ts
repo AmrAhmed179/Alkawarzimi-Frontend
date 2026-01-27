@@ -29,8 +29,9 @@ export class GeneralComponent implements OnInit {
     public dialog: MatDialog) { }
   counter = 0
   onDestroy$: Subject<void> = new Subject();
-
+  getClassSndentityFlage = false
   generalOptions: FormGroup
+  initiateFormFlage = false
   //   = this.fb.group({
   //   name: [''],
   //   description: [''],
@@ -49,13 +50,16 @@ export class GeneralComponent implements OnInit {
         if (res) {
           console.log("general component inside subscribe")
           this.projectOptions = res
-          this.initiateForm()
+          if(this.initiateFormFlage ==false)
+              this.initiateForm()
           this._optionsService.selectedLang$
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(result => {
               this.selectedLang = result
             })
-          this.getEntityClassAndProp()
+
+            if(this.getClassSndentityFlage == false)
+               this.getEntityClassAndProp()
           this.counter += 1
         }
       })
@@ -72,6 +76,7 @@ export class GeneralComponent implements OnInit {
   // }
 
   initiateForm() {
+    this.initiateFormFlage = true
     this.generalOptions = this.fb.group({
       name: [this.projectOptions.name],
       description: [this.projectOptions.description],
@@ -79,12 +84,14 @@ export class GeneralComponent implements OnInit {
       //ProccessingMode: [this.projectOptions.proccessingMode],
       socialWelcomeInterval: [this.projectOptions.socialWelcomeInterval],
       clearSessionInterval: [this.projectOptions.clearSessionInterval],
+      sessionTimeOut: [this.projectOptions.sessionTimeOut],
       botSystem: [this.projectOptions.botSystem],
       brainMode: [this.projectOptions.brainMode],
       stopInterruption: [this.projectOptions.stopInterruption],
       nluMode: [this.projectOptions.nluMode],
       hybridMode: [this.projectOptions.hybridMode],
       includeAiMessage: [this.projectOptions.includeAiMessage],
+      orderBot: [this.projectOptions.orderBot]
     })
   }
 
@@ -93,6 +100,7 @@ export class GeneralComponent implements OnInit {
 
       if (res) {
         console.log("general component inside getEntityClassAndProp subscribe")
+        this.getClassSndentityFlage = true
         this.entitiesClass = res.entities;
         // debugger
         let mainEntityObject = this.entitiesClass.find(x => x._id == this.projectOptions.mainEntityId)
@@ -127,6 +135,7 @@ export class GeneralComponent implements OnInit {
     })
   }
   getFormValue() {
+    debugger
     this.projectOptions.name = this.generalOptions.controls['name'].value
     this.projectOptions.hybridMode = this.generalOptions.controls['hybridMode'].value
     this.projectOptions.description = this.generalOptions.controls['description'].value
@@ -139,9 +148,10 @@ export class GeneralComponent implements OnInit {
     this.projectOptions.stopInterruption = this.generalOptions.controls['stopInterruption'].value
     this.projectOptions.nluMode = this.generalOptions.controls['nluMode'].value
     this.projectOptions.includeAiMessage = this.generalOptions.controls['includeAiMessage'].value
+    this.projectOptions.orderBot = this.generalOptions.controls['orderBot'].value
+    this.projectOptions.sessionTimeOut = this.generalOptions.controls['sessionTimeOut'].value
     this._optionsService.projectOptions$.next(this.projectOptions)
   }
-
 
   ngOnDestroy() {
     console.log("general destroy!!!")

@@ -25,6 +25,8 @@ export class Agents{
   agent_id:string
   chatbotId:string
   mainAgent:boolean = false
+  intentResponse:IntentResponse[] = []
+  haveIntentRespone:boolean = false
   startWithoutHistory:boolean = false
   maxMemoryLength:number
   routing:Routing[] = []
@@ -36,6 +38,11 @@ export class Agents{
   description:string
   parentAgentId:string
   agentHandoffMode:number
+}
+
+export class IntentResponse{
+    intent:string
+    response:string
 }
 export class Routing{
   intent:string

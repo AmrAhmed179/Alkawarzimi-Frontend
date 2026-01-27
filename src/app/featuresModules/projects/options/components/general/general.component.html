@@ -1,14 +1,14 @@
 <div class=" pageHight">
     <form class="flex flex-col  justify-between py-2 mx-6" [formGroup]="generalOptions" *ngIf="projectOptions">
         <div class="grid grid-cols-3 gap-4">
-            <mat-form-field class="flex-auto" (change)="getFormValue()">
+            <mat-form-field class="flex-auto">
                 <mat-label>Name</mat-label>
-                <input matInput Enmity="Name" formControlName="name">
+                <input (blur)="getFormValue()" matInput Enmity="Name" formControlName="name">
             </mat-form-field>
 
-            <mat-form-field class="flex-auto col-span-2" (change)="getFormValue()">
+            <mat-form-field class="flex-auto col-span-2">
                 <mat-label>Description</mat-label>
-                <input matInput Enmity="Description" formControlName="description">
+                <input (blur)="getFormValue()" matInput Enmity="Description" formControlName="description">
             </mat-form-field>
         </div>
         <mat-divider class="mb-2 bg-slate-400"></mat-divider>
@@ -26,9 +26,9 @@
                 <button mat-raised-button (click)="openAddClientDialog('clientEntity','ar')" *ngIf="selectedLang ==='ar'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800  text-base h-8">Select </button>
                 <p class="text-base" *ngIf="selectedLang ==='en'">Knowledge Client Entity :<span class="text-orange-500 text-lg font-medium">&emsp;{{ClientEntityEn}}</span> </p> <button mat-raised-button (click)="openAddClientDialog('clientEntity','en')" *ngIf="selectedLang ==='en'" class="hover:bg-orange-500 text-gray-100 rounded-sm bg-slate-800 mt-1 mx-6 text-base h-8">Select </button>
             </div>
-            <mat-form-field class="flex-auto col-span-2 mt-3" (change)="getFormValue()">
+            <mat-form-field class="flex-auto col-span-2 mt-3">
                 <mat-label>Domain</mat-label>
-                <input matInput Enmity="Domain" formControlName="domainName">
+                <input (blur)="getFormValue()" matInput Enmity="Domain" formControlName="domainName">
             </mat-form-field>
 
         </div>
@@ -96,16 +96,26 @@
         <mat-divider class="mb-4 bg-slate-400"></mat-divider>
 
         <div class="grid grid-cols-4 gap-4">
-            <mat-form-field class="flex-auto" (change)="getFormValue()">
+            <mat-form-field class="flex-auto">
                 <mat-label>Social Welcome Interval</mat-label>
-                <input matInput Enmity="Social Welcome Interval" formControlName="socialWelcomeInterval">
+                <input (blur)="getFormValue()" matInput Enmity="Social Welcome Interval" formControlName="socialWelcomeInterval">
             </mat-form-field>
-            <mat-form-field class="flex-auto" (change)="getFormValue()">
+            <mat-form-field class="flex-auto">
                 <mat-label>Clear Session Interval</mat-label>
-                <input matInput Enmity="Clear Session Interval" formControlName="clearSessionInterval">
+                <input (blur)="getFormValue()" matInput Enmity="Clear Session Interval" formControlName="clearSessionInterval">
             </mat-form-field>
+            <div class="flex gap-4 mx-5 col-span-2">
+                <div class="my-3">
+                    <mat-slide-toggle color="primary" (change)="getFormValue()" [labelPosition]="'before'" class="" formControlName="orderBot" matTooltip="Order Bot">Order Bot</mat-slide-toggle>
+                </div>
+                <mat-form-field class="flex-auto" *ngIf="generalOptions.get('orderBot').value">
+                    <mat-label>Order Session TimeOut</mat-label>
+                    <input (blur)="getFormValue()" matInput Enmity="Order Session TimeOut" type="number" formControlName="sessionTimeOut">
+                </mat-form-field>
+            </div>
+
+
+
         </div>
-
-
     </form>
 </div>

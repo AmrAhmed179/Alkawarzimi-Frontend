@@ -18,6 +18,13 @@
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
     </mat-form-field>
+    <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Projects</mat-label>
+        <mat-select [(ngModel)]="data.projectId">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let project of data.projects" [value]="project.ProjectId">{{project.ProjectName}}</mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 
 <div mat-dialog-actions>

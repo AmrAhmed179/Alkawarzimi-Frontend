@@ -20,10 +20,12 @@ export class ProjectOptionsModel {
   mediaBaseUrl:          string;
   socialWelcomeInterval: number;
   clearSessionInterval:  number;
+  sessionTimeOut:  number;
   loginType:             number;
   brainMode:string
   stopInterruption:boolean
   includeAiMessage:boolean
+  orderBot:boolean
   nluMode:string
   hybridMode:string
   loginValidateService:  number;
