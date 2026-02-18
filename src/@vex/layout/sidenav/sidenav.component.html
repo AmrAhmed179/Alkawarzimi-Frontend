@@ -42,7 +42,7 @@
             <h1 *ngIf="!collapsed" class="text-sm font-bold threeDotsM">{{projectName}}</h1>
             <h1 *ngIf="collapsed" class="text-sm font-bold threeDotsS">{{projectName}}</h1>
             <div>
-                <button [routerLink]="['./','Options']"> <mat-icon
+                <button *ngIf="this.user.role !== 'Analyst'" [routerLink]="['./','Options']"> <mat-icon
                       svgIcon="mat:settings"></mat-icon></button>
             </div>
         </div>

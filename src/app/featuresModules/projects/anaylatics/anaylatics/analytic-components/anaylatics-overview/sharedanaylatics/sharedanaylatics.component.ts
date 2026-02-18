@@ -216,7 +216,7 @@ export class SharedanaylaticsComponent implements OnInit {
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
-    this.script.parentNode.removeChild(this.script)
+    //this.script.parentNode.removeChild(this.script)
 
    // document.removeChild(this.script);
   //  const element = document.querySelector('.khaIcon');

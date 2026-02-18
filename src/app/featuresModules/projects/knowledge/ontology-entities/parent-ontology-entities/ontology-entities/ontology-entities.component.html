@@ -11,9 +11,9 @@
     <button (click)="setCategoryName(category[9].genre_name)" routerLink="Adjective" routerLinkActive="active" class=" px-[3px] textColor rounded-sm  py-2 hover:text-blue-600">Adjectives <span class="text-white rounded-full bg-[#999999] px-2 py-[1px] text-xs">{{category[9].genre_count}}</span></button>
     <button routerLink="GeneratedFrames" routerLinkActive="active" class=" px-[3px] textColor rounded-sm  py-2 hover:text-blue-600">Generated Frames</button>
     <button (click)="testEnitiesStemes()" class="mx-[6px] px-[6px] textColor py-1 rounded-sm bg-[#E0E0E0]"> <p class="border-2 border-black px-1">Test Stemes</p></button>
-    <button (click)="openEntityAIDialoge()" class=" px-[6px] text-base textColor rounded-sm text-white  py-1 bg-[#ee9344]">AI Entities</button>
+    <button (click)="openEntityAIDialoge()" class=" px-[6px] text-base rounded-sm text-white  py-1 buttonStyle ">AI Entities</button>
 
-    <button (click)="openCreateEntity()" class=" ml-3 px-[6px]  pb-1 text-base rounded-sm text-white  py-1 bg-[#F0913F]">CREATE ENTITY</button>
+    <button (click)="openCreateEntity()" class=" ml-3 px-[6px]  pb-1 text-base rounded-sm text-white  py-1 buttonStyle ">CREATE ENTITY</button>
 
 </div>
 <router-outlet></router-outlet>

@@ -23,6 +23,7 @@ import {  ProjectDetailsModel } from "src/app/core/models/project-details";
 import { MagicWordWriteComponent } from "src/app/shared/components/magic-word-write/magic-word-write.component";
 import { DOCUMENT } from "@angular/common";
 import { CreateWorkSpaceComponent } from "./components/create-work-space/create-work-space.component";
+import { HttpClient } from "@angular/common/http";
 
 
 @Component({
@@ -83,7 +84,8 @@ export class ProjectsComponent implements OnInit {
     private _optionsService:OptionsServiceService,
     private fb:FormBuilder,
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private http: HttpClient
 
   ) {
 
@@ -332,10 +334,16 @@ export class ProjectsComponent implements OnInit {
       event.stopPropagation();
     }
     if (value == 'y') {
+    if (this.user?.role === 'Analyst') {
+       this.router.navigateByUrl(`projects/${_id}/Analytic/Chatbotconversation`);
+    }
+    else {
       this.router.navigateByUrl('projects/'+ _id +'/home')
     }
+    debugger
+          this._dataSerivce.projectSelected({_id:_id});
   }
-
+}
   // getProjects(){
   //   this.dashboardService.getProjects().subscribe(res=>{
   //     debugger
@@ -454,8 +462,13 @@ export class ProjectsComponent implements OnInit {
     localStorage.removeItem("user");
     localStorage.removeItem("project");
     localStorage.removeItem("role");
-    // localStorage.clear();
-    this.document.location.href = environment.URLS.BASE_URL
+    this.http.post('/Account/SSOFrontLogOff', {}, { withCredentials: true })
+    .subscribe(() => {
+      // Important: XHR won't navigate on server redirect
+      // So force navigation yourself:
+      this.document.location.href = environment.URLS.BASE_URL
+    });
+
   }
   createWorkSpace(){
     const dialogRef = this.dialog.open(CreateWorkSpaceComponent,{data:{} ,maxHeight: '760px',

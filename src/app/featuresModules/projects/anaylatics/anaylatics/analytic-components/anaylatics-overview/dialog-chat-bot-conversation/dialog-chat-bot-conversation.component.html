@@ -3,8 +3,8 @@
 </div>
 <!-- <p>{{response}}</p> -->
 
-<mat-dialog-content class="h-3/4" id="ontent-to-download">
-    <div *ngFor="let step of this.data.steps" class="flex flex-col  items-end">
+<mat-dialog-content dir="rtl" class="h-3/4" id="ontent-to-download">
+    <div *ngFor="let step of this.data.steps" class="flex flex-col  items-end" dir="rtl">
         <div *ngIf="step.input">
             <p class="mx-5 my-2 text-base font-medium bg-lime-200 p-3 rounded-tr-md rounded-bl-md flex flex-col" dir="rtl">{{step.input}} <span class="mx-1 text-[11px] text-red-600 ">  NodeId:&nbsp;{{step.nodeId}} &nbsp;{{changeDateFormate(step.createdTime)}}</span></p>
         </div>
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="mx-5 my-2 bg-slate-200 p-3 rounded-tr-md rounded-bl-md" dir="rtl" *ngIf="response.type === 'options'">
-                    <p class="text-base font-medium">{{response.title}}</p>
+                    <p class="text-base font-medium" [innerHtml]="response.title"></p>
                     <p *ngFor="let responseOptions of response.rOptions" class="border border-blue-900 rounded bg-white p-2 text-blue-900 text-base font-bold my-1 hover:bg-blue-900 hover:text-white">{{responseOptions.title}}</p>
                 </div>
 

@@ -184,6 +184,10 @@ import { ToolDialogComponent } from './ai-conversation/AI-Agent/agents/tool-dial
 import { ViewFullPropmptDialogComponent } from './ai-conversation/AI-Agent/agents/view-full-propmpt-dialog/view-full-propmpt-dialog.component';
 import { StateComponent } from './ai-conversation/AI-Agent/agents/state/state.component';
 import { IntentResponseDialogComponent } from './ai-conversation/AI-Agent/agents/intent-response-dialog/intent-response-dialog.component';
+import { VariableValueComponent } from './ai-conversation/AI-Agent/agents/variable-value/variable-value.component';
+import { AIIntentComponent } from './ai-conversation/AI-Agent/aIIntent/aiintent.component';
+import { EmptyComponentComponent } from './pages/home/empty-component/empty-component.component';
+import { AiIntentDialogComponent } from './ai-conversation/AI-Agent/aIIntent/ai-intent-dialog/ai-intent-dialog.component';
 
 @NgModule({
   declarations: [
@@ -355,7 +359,11 @@ import { IntentResponseDialogComponent } from './ai-conversation/AI-Agent/agents
     ToolDialogComponent,
     ViewFullPropmptDialogComponent,
     StateComponent,
-    IntentResponseDialogComponent
+    IntentResponseDialogComponent,
+    VariableValueComponent,
+    AIIntentComponent,
+    EmptyComponentComponent,
+    AiIntentDialogComponent
   ],
   imports: [
     TreeModule,

@@ -16,6 +16,7 @@ import { ContextVariableService } from 'src/app/Services/Build/context-variable.
 import { ContextVariableModel } from 'src/app/core/models/contextVariable';
 import { StateComponent } from './state/state.component';
 import { IntentResponseDialogComponent } from './intent-response-dialog/intent-response-dialog.component';
+import { VariableValueComponent } from './variable-value/variable-value.component';
 
 @Component({
   selector: 'vex-agents',
@@ -94,8 +95,8 @@ export class AgentsComponent implements OnInit {
       mainAgent: [SelectedAgent.mainAgent],
       agentHandoffMode: [SelectedAgent.agentHandoffMode],
       maxMemoryLength: [SelectedAgent.maxMemoryLength],
-      haveIntentRespone: [SelectedAgent.haveIntentRespone],
-      intentResponse: [SelectedAgent.intentResponse || []],
+      aiIntents: [SelectedAgent.aiIntents],
+      //intentResponse: [SelectedAgent.intentResponse || []],
       routing: this.fb.array(SelectedAgent.routing?.map(route => this.createRoutingGroup(route)) || []),
             // / 👇 Now promptSections is a nested FormGroup
     promptSections: this.fb.group({
@@ -122,7 +123,8 @@ export class AgentsComponent implements OnInit {
   createRoutingGroup(route?: Routing): FormGroup {
     return this.fb.group({
       intent: [route?.intent || '', Validators.required],
-      taskId: [route?.taskId || '', Validators.required]
+      taskId: [route?.taskId || '', Validators.required],
+      variables: [route?.variables || []]
     });
   }
 
@@ -178,8 +180,12 @@ viewIntentReponse() {
   });
 }
 setHaveIntentRespone(){
-    this.form?.patchValue({ haveIntentRespone: this.SelectedAgent.haveIntentRespone });
+    this.form?.patchValue({ aiIntents: this.SelectedAgent.aiIntents });
 }
+  setStartWithoutHistory(){
+      this.form?.patchValue({ startWithoutHistory: this.SelectedAgent.startWithoutHistory });
+  }
+
   selectProvider(event){
     debugger
     this.selectedProvider = event.value
@@ -311,6 +317,39 @@ openStateDialog() {
     }
   });
 }
+
+openVariableValueDialog(routing, index) {
+  const dialogRef = this.dialog.open(VariableValueComponent, {
+    width: '1300px',
+    data: { variables:this.variables, agentRouting: routing, routingIdex:index }
+  });
+
+  dialogRef.afterClosed().subscribe((result:any) => {
+    if (result) {
+    this.routingControls.at(index).patchValue({
+          variables: result
+        });
+
+        // 🔥 Also update SelectedAgent model
+        this.SelectedAgent.routing[index].variables = result;
+    }
+  });
+}
+
+removeRoutingVariable(routeIndex: number, variableIndex: number) {
+
+  const variables = this.routingControls
+    .at(routeIndex)
+    .value.variables || [];
+
+  variables.splice(variableIndex, 1);
+
+  this.routingControls.at(routeIndex).patchValue({
+    variables: [...variables]
+  });
+
+  this.SelectedAgent.routing[routeIndex].variables = [...variables];
+}
 viewFullPropmpt() {
   this.buildPromptFromSections()
   const dialogRef = this.dialog.open(ViewFullPropmptDialogComponent, {
@@ -426,5 +465,10 @@ viewFullPropmpt() {
       startWithoutHistory: this.SelectedAgent.startWithoutHistory
     });
  }
+   ngOnDestroy() {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
 
 }

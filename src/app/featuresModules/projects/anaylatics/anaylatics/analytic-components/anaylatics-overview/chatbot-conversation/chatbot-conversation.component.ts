@@ -472,7 +472,9 @@ goToPage(page: number) {
    }
    openConversationDialog(steps,userId){
     const dialogRef = this.dialog.open(DialogChatBotConversationComponent,{data:{steps:steps,userId:userId}, height: '600px',
-    width: '800px'},
+      minWidth: '800px',
+     //width: '1200px'
+  },
     );
     dialogRef.afterClosed().subscribe(res=>{
     })
@@ -587,7 +589,8 @@ goToPage(page: number) {
    IntentsDropdownOpen = false;
 
   get filteredIntents() {
-    if (!this.searchServiceText) return this.intentResponseList;
+    debugger
+    if (!this.searchIntentsText) return this.intentResponseList;
     return this.intentResponseList.filter(s =>
       s.intent.toLowerCase().includes(this.searchIntentsText.toLowerCase())
     );
@@ -615,7 +618,7 @@ goToPage(page: number) {
    EntitiesDropdownOpen = false;
 
   get filteredEntities() {
-    if (!this.searchServiceText) return this.entityResponseList;
+    if (!this.searchEntitiesText) return this.entityResponseList;
     return this.entityResponseList.filter(s =>
       s.entity.toLowerCase().includes(this.searchEntitiesText.toLowerCase())
     );

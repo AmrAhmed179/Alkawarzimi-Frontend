@@ -85,6 +85,7 @@ import { IndexDetailsComponent } from './Ai-build-veba-Knowledge-Base/components
 import { ChatComponent } from './Ai-build-veba-Knowledge-Base/components/Chat/chat.component';
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { UnsavedChangesGuard } from './build/_build-tasks/--task-edit-static-and-flow/diagramflow-ifram/guards/unsaved-changes.guard';
+import { AIIntentComponent } from './ai-conversation/AI-Agent/aIIntent/aiintent.component';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },
@@ -195,7 +196,7 @@ const routes: Routes = [
           {
             path: "Analytic", component: SharedanaylaticsComponent,
             children: [
-              { path: "", redirectTo: "Chatbotconversation" },
+              { path: "", redirectTo: "Chatbotconversation", pathMatch: "full"},
               { path: "overview", component: AnaylaticsOverviewComponent, data: { breadcrumbs: [ 'Analytic', 'overview'] } },
               { path: "Chatbotconversation", component: ChatbotConversationComponent, data: { breadcrumbs: [ 'Analytic', 'Chatbotconversation'] } },
               { path: "Agentconversation", component: AgentconversationComponent, data: { breadcrumbs: [ 'Analytic', 'Agentconversation'] } },
@@ -205,9 +206,10 @@ const routes: Routes = [
             ]
           },
 
-           { path: "aiConversation", component: AiConversationComponent, data: { breadcrumbs: ['AI Agent', 'AI Conversation'] } },
-           { path: "AgentTools", component: AgentToolsComponent, data: { breadcrumbs: ['AI Agent', 'AgentTools'] } },
-           { path: "Agents", component: AgentsComponent, data: { breadcrumbs: ['AI Agent', 'Agents'] } },
+           { path: "aiConversation", component: AiConversationComponent, data: { breadcrumbs: ['AI', 'Conversation'] } },
+           { path: "AgentTools", component: AgentToolsComponent, data: { breadcrumbs: ['AI', 'AgentTools'] } },
+           { path: "Agents", component: AgentsComponent, data: { breadcrumbs: ['AI', 'Agents'] } },
+           { path: "AIIntent", component: AIIntentComponent, data: { breadcrumbs: ['AI', 'Intents'] } },
            { path: "KnowledgeBase", component: ParentKnowledgeBaseComponent,
            children:[
             { path: "", redirectTo: "documents" },

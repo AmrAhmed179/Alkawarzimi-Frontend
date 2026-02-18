@@ -7,11 +7,10 @@ table {
     width: 100%;
 }
 
-td,
-th {
-    width: 25%;
-}
-
+// td,
+// th {
+//     width: 25%;
+// }
 ::ng-deep .mat-tab-label {
     font-size: 15px;
 }
@@ -89,4 +88,58 @@ td.mat-cell {
     /* allows wrapping */
     overflow-wrap: break-word;
     /* modern property */
+}
+
+.count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    background-color: #047cc0;
+    /* blue */
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 9999px;
+    /* fully round */
+}
+
+
+/* Reduce header row height */
+
+.mat-header-row {
+    height: 36px;
+    /* default is ~56px */
+}
+
+
+/* Reduce header cell padding */
+
+
+/* Reduce header cell padding */
+
+.mat-header-cell {
+    line-height: 1.2;
+    font-size: 14px;
+    font-weight: 700;
+    /* optional */
+}
+
+.fontfamily-ibm,
+p {
+    font-family: 'IBM Plex Sans', Helvetica, Arial, Roboto, sans-serif;
+}
+
+
+/* Conversation Steps column */
+
+.mat-column-Conversation\ Steps {
+    flex: 0 0 auto !important;
+    /* no grow */
+    width: fit-content !important;
+    max-width: fit-content !important;
+    padding-right: 8px;
 }

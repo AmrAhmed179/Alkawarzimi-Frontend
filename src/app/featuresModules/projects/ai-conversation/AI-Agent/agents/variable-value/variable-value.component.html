@@ -1,0 +1,50 @@
+<div class="p-6 grid grid-cols-2 gap-2" dir="ltr">
+    <!-- Available Variables -->
+    <div>
+        <h2 class="text-lg font-semibold mb-3">Available Variables</h2>
+        <input type="text" [(ngModel)]="searchText" (input)="applySearch()" placeholder="Search variable by name or type..." class="w-[92%] px-3 mb-2 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm" />
+        <div class="space-y-2 mb-2 overflow-auto h-[600px]">
+            <div *ngFor="let variable of filteredVariables" class="flex justify-between items-center border rounded p-3 bg-gray-50">
+                <div class="flex gap-2">
+                    <p class="font-medium">{{ variable.key }}</p>
+                    <p class="text-sm text-gray-500">{{ variable.type }}</p>
+                </div>
+                <button (click)="addVariable(variable)" class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded">
+        Add
+      </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <!-- Selected Variables (Agent State) -->
+        <h2 class="text-lg font-semibold mb-3">Agent Routing Variables</h2>
+        <div class="space-y-3 overflow-auto  h-[680px]">
+            <div *ngFor="let stateVar of routing.variables" class=" grid grid-cols-5 gap-3 w-full border rounded p-3 bg-white shadow-sm">
+
+                <div class="flex items-center gap-3 col-span-2">
+                    <button (click)="removeVariable(stateVar)" class="mt-2">
+                <mat-icon svgIcon="mat:delete" ></mat-icon>
+           </button>
+                    <p class="font-medium ">{{ stateVar.variableName }}</p>
+                </div>
+
+                <div class="col-span-3 flex gap-1 items-center">
+                    <p class="text-xs font-medium">Value: </p>
+                    <input [(ngModel)]="stateVar.value" placeholder="Enter  Value" class="col-span-3 mt-1  px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm" />
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<mat-dialog-actions dir="ltr" align="end">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

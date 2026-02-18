@@ -25,7 +25,13 @@ export class ProjectRoutelet {
     ).subscribe(([project, user]) => {
       this.navigationService.items = [];
       if (project && user) {
-        this.createNavigation(user, project._id);
+        debugger;
+            this.route.params.subscribe((parmas: Params) => {
+            this.chatBotId = parmas["projectid"];
+            this.createNavigation(user, this.chatBotId.toString());
+            // this.createNavigation(user, project._id);
+        })
+
       }
     });
   }
@@ -53,6 +59,25 @@ export class ProjectRoutelet {
 
   createNavigation(user, projectId: string) {
     this.navigationService.items = [];
+    if(user.role =="Analyst"){
+      this.navigationService.items.push(
+         {
+        type: "dropdown",
+        label: "Analytics",
+        icon: "mat:bar_chart",
+        children: [
+          {
+            type: "link",
+            label: "Conversations",
+            route:  `/projects/${projectId}/Analytic`,
+            // icon: "mat:bar_chart",
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ["Analytic", "Conversations"],
+          }
+        ]
+      }
+      )
+    }else{
     this.navigationService.items.push(
 
       {
@@ -64,7 +89,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Tasks",
-            route: "./home",
+            route: `/projects/${projectId}/home/0/dialogflow`,
             icon: "",
             routerLinkActiveOptions: { exact: false },
 
@@ -73,7 +98,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Data Type",
-            route: "./dataTypes/entities",
+            route:`/projects/${projectId}/dataTypes`,
             icon: "",
             routerLinkActiveOptions: { exact: false },
 
@@ -82,7 +107,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Variables",
-            route: "./variables",
+            route:`/projects/${projectId}/variables`,
             // icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -91,7 +116,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Services",
-            route: "./servicesSet",
+            route:`/projects/${projectId}/servicesSet`,
             //icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -100,7 +125,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Triggered Tasks",
-            route: "./TriggeredTasks",
+            route:`/projects/${projectId}/TriggeredTasks` ,
             // icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -109,7 +134,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Validation",
-            route: "./users",
+            route:`/projects/${projectId}/users`,
             //icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -144,7 +169,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Ontology Entities",
-            route: "./knowledge/ontologyEntities",
+            route:`/projects/${projectId}/knowledge/ontologyEntities`,
             // icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -153,7 +178,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Ontology Tree",
-            route: "./ontologyTree/ontologyTreeView/",
+            route:`/projects/${projectId}/ontologyTree/ontologyTreeView`,
             //  icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -162,7 +187,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "knowledge Graph",
-            route: "./knowledgeGraph",
+            route:`/projects/${projectId}/knowledgeGraph`,
             // icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -171,7 +196,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "knowledge Tasks",
-            route: "./KnowledgeTasks",
+            route:`/projects/${projectId}/KnowledgeTasks`,
             // icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -180,7 +205,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Problem Tasks",
-            route: "./users",
+            route:`/projects/${projectId}/users`,
             //icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -189,7 +214,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Language Tools",
-            route: "./languageTools",
+            route:`/projects/${projectId}/languageTools`,
             //icon: "mat:people",
             routerLinkActiveOptions: { exact: false },
 
@@ -201,7 +226,7 @@ export class ProjectRoutelet {
                 {
             type: "link",
             label: "Knowledge Base (RAG)",
-            route: "./KnowledgeBase",
+            route: `/projects/${projectId}/KnowledgeBase`,
             icon: "mat:view_quilt",
             routerLinkActiveOptions: { exact: false },
             breadCrumbs: ['AI Agent', 'Knowledge Base'],
@@ -218,7 +243,7 @@ export class ProjectRoutelet {
       {
         type: "link",
         label: "Test",
-        route: "test",
+        route: `/projects/${projectId}/test`,
         icon: "mat:build",
         routerLinkActiveOptions: { exact: true },
 
@@ -227,7 +252,7 @@ export class ProjectRoutelet {
       {
         type: "link",
         label: "Integration",
-        route: "integrations",
+        route:`/projects/${projectId}/integrations`,
         icon: "mat:wifi_tethering",
         routerLinkActiveOptions: { exact: true },
         breadCrumbs: ["Integration"],
@@ -241,7 +266,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Conversations",
-            route: "./Analytic",
+            route:  `/projects/${projectId}/Analytic`,
             // icon: "mat:bar_chart",
             routerLinkActiveOptions: { exact: false },
             breadCrumbs: ["Analytic", "Conversations"],
@@ -249,7 +274,7 @@ export class ProjectRoutelet {
           {
             type: "link",
             label: "Survey",
-            route: "./SharedSurvey/Survey",
+            route: `/projects/${projectId}/SharedSurvey/Survey`,
             //icon: "mat:star_rate",
             routerLinkActiveOptions: { exact: false },
             breadCrumbs: ["Analytic", "Survey"],
@@ -257,7 +282,7 @@ export class ProjectRoutelet {
                {
             type: "link",
             label: "AI Conversation",
-            route: "./aiConversation",
+            route: `/projects/${projectId}/aiConversation`,
             //icon: "mat:star_rate",
             routerLinkActiveOptions: { exact: false },
             breadCrumbs: ["Analytic", "AI Conversation"],
@@ -267,25 +292,34 @@ export class ProjectRoutelet {
 
  {
         type: "dropdown",
-        label: "AI Agent",
+        label: "AI",
         icon: "mat:developer_board",
         children: [
           {
             type: "link",
             label: "Agents",
-            route: "./Agents",
+            route: `/projects/${projectId}/Agents`,
             // icon: "mat:bar_chart",
             routerLinkActiveOptions: { exact: false },
-            breadCrumbs: ['AI Agent', 'Agents'],
+            breadCrumbs: ['AI', 'Agents'],
 
           },
           {
             type: "link",
-            label: "Agent Tools",
-            route: "./AgentTools",
+            label: "Tools",
+            route: `/projects/${projectId}/AgentTools`,
             // icon: "mat:bar_chart",
             routerLinkActiveOptions: { exact: false },
-            breadCrumbs: ['AI Agent', 'AgentTools'],
+            breadCrumbs: ['AI', 'Tools'],
+
+          },
+          {
+            type: "link",
+            label: "Intents",
+            route: `/projects/${projectId}/AIIntent`,
+            // icon: "mat:bar_chart",
+            routerLinkActiveOptions: { exact: false },
+            breadCrumbs: ['AI', 'Intent'],
 
           },
 
@@ -294,12 +328,13 @@ export class ProjectRoutelet {
       {
         type: "link",
         label: "Widget",
-        route: "./widget-set-up",
+        route:`/projects/${projectId}/widget-set-up`,
         icon: "mat:table_chart",
         breadCrumbs: ["widget Setup"],
       }
 
     )
+  }
     this.navigationService.triggerItemsChange();
   }
   // createNavigation(user, projectId: string) {
@@ -502,7 +537,7 @@ export class ProjectRoutelet {
   // }
 
   ngOnDestroy(): void {
-    location.reload();
+    //location.reload();
 
   }
 }

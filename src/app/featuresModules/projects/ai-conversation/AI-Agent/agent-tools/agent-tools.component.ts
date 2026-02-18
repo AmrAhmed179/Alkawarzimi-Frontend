@@ -62,10 +62,13 @@ export class AgentToolsComponent implements OnInit {
       isActive: [this.SelectedAiTool.isActive],
       message: [this.SelectedAiTool.message],
       taskCompleted: [this.SelectedAiTool.taskCompleted],
-      functionName: [this.SelectedAiTool.functionName,[Validators.required,Validators.minLength(6)]],
+      functionName: [this.SelectedAiTool.functionName,[Validators.required]],
       functionDescription: [this.SelectedAiTool.functionDescription],
       functionSchemaIsStrict: [this.SelectedAiTool.functionSchemaIsStrict],
       functionParameters: [this.SelectedAiTool.functionParameters],
+      IsMcp: [this.SelectedAiTool.IsMcp],
+      TransportType: [this.SelectedAiTool.TransportType],
+      Path: [this.SelectedAiTool.Path],
     });
     console.log("formvalueee",this.form.value)
     this.form.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe((formValue) => {

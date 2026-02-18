@@ -37,7 +37,7 @@ export class LoadingInterceptor implements HttpInterceptor {
       headers: request.headers.delete('skipLoader')
     });
     return next.handle(modifiedRequest).pipe(
-      delay(700),
+      // delay(700),
       finalize(() => {
         if (!skipLoader) {
           this.busyService.idle();

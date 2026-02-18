@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Agents } from '../Models/Ai-Agent/toolInfo';
+import { Agents, AIIntentModel } from '../Models/Ai-Agent/toolInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -110,5 +110,29 @@ export class AiConversationService {
       return this.http.post(environment.URLS.ChangeSubAgent,body)
     }
 
+  GetAIIntents(chatbotId: string) {
+    let parm = {
+      chatbotId: chatbotId
+    };
+    return this.http.get(environment.URLS.GetAllAIIntents, { params: parm });
+  }
+
+  UpsertAIIntent(model: AIIntentModel) {
+    return this.http.post(environment.URLS.UpsertAIIntent, model);
+  }
+
+  // MVC Delete(string id) [HttpPost]
+  DeleteAIIntent(id: string) {
+    const body = new URLSearchParams();
+    body.set('id', id);
+
+    return this.http.post(environment.URLS.DeleteAIIntent, body.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+  }
+
+    GenerateIntent(payload: { ChatbotId: string; topic: string; examples: string[] }) {
+    return this.http.post<{ intent: string }>(`/api/ai/intents/generate`, payload);
+  }
 
 }

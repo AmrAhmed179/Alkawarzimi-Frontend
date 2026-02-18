@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>{{ data.item?._id ? 'Edit' : 'Add' }} Intent</h2>
+
+<div mat-dialog-content [formGroup]="form" class="content">
+    <mat-radio-group formControlName="mode" class="modes">
+        <mat-radio-button value="intent">Intent</mat-radio-button>
+        <mat-radio-button value="topic">Topic</mat-radio-button>
+    </mat-radio-group>
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>{{ form.get('mode')?.value === 'topic' ? 'Topic' : 'Intent' }}</mat-label>
+        <input matInput formControlName="intentOrTopic" maxlength="120" />
+        <mat-hint align="end">{{ (form.get('intentOrTopic')?.value || '').length }}/120</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Response</mat-label>
+        <textarea matInput rows="6" formControlName="response"></textarea>
+    </mat-form-field>
+
+    <div class="examples-head">
+        <div class="title">Examples</div>
+        <button mat-stroked-button type="button" (click)="addExample()">+ Add example</button>
+    </div>
+
+    <div formArrayName="examples" class="examples">
+        <div class="example-row" *ngFor="let c of examplesFA.controls; let i = index">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Example {{ i + 1 }}</mat-label>
+                <input matInput [formControlName]="i" />
+            </mat-form-field>
+
+            <button mat-icon-button type="button" (click)="removeExample(i)" aria-label="Remove example">
+        <mat-icon>delete</mat-icon>
+      </button>
+        </div>
+
+        <div class="hint" *ngIf="examplesFA.length === 0">
+            Add examples as strings.
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="primary" type="button" (click)="save()">Save</button>
+</div>

@@ -14,6 +14,10 @@ export class AIToolInfo {
   message: string; // Message associated with the tool
   isActive: boolean; // Indicates if the tool should be called
   taskCompleted: boolean; // Indicates if the tool should be called
+
+  IsMcp:boolean
+  TransportType:string
+  Path:string
 }
 export class Agents{
   _id:string = new ObjectId().toHexString()
@@ -26,7 +30,7 @@ export class Agents{
   chatbotId:string
   mainAgent:boolean = false
   intentResponse:IntentResponse[] = []
-  haveIntentRespone:boolean = false
+  aiIntents:boolean = false
   startWithoutHistory:boolean = false
   maxMemoryLength:number
   routing:Routing[] = []
@@ -47,8 +51,13 @@ export class IntentResponse{
 export class Routing{
   intent:string
   taskId:string
+  variables:VariableValue[] = []
 }
-
+export class VariableValue{
+  variableId:string
+  variableName:string
+  value:string
+}
 export class promptSections {
   conversationFlow:string
   crtitcalNote:string
@@ -93,4 +102,14 @@ export class Models {
   promptRate!: number;
   completionRate!: number;
   cacheRate!: number;
+}
+
+export interface AIIntentModel {
+  _id?: string;
+  intent: string;
+  response: string;
+  ChatbotId: string;
+
+  mode?: string;       // 'intent' or 'topic'
+  examples?: string[];
 }

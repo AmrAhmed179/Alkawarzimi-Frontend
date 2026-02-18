@@ -8,7 +8,7 @@
                 <mat-icon class="icon-lg" matTooltip="SubAgents Count" *ngIf="agent.subAgents?.length > 0" svgIcon="mat:group" matBadge="{{ agent.subAgents?.length || 0 }}" matBadgeColor="warn">
                 </mat-icon>
 
-                <mat-slide-toggle matTooltip="Main Agent" (change)="setMainAgent(agent)" (click)="$event.stopPropagation()" [(ngModel)]="agent.mainAgent"></mat-slide-toggle>
+                <mat-slide-toggle color="primary" matTooltip="Main Agent" (change)="setMainAgent(agent)" (click)="$event.stopPropagation()" [(ngModel)]="agent.mainAgent"></mat-slide-toggle>
                 <button *ngIf="agent._id == SelectedAgent?._id" class="rounded-sm py-1 px-2 bg-[#FF7F27] text-base text-white hover:bg-slate-200 hover:text-black" (click)="onSubmit()">Save</button>
                 <button (click)="deleteAgent(i, agent._id, $event)" matTooltip="Delete Agent"><mat-icon class="icon-lg" svgIcon="mat:delete" ></mat-icon></button>
             </div>
@@ -17,7 +17,7 @@
     </div>
 
     <div id="agentFormScroll" class="col-span-3 border h-full px-3 pb-3 overflow-auto ">
-        <div class="flex  gap-4 items-center" *ngIf="form">
+        <div class="flex  gap-4 items-center w-full overflow-x-auto overflow-y-hidden" *ngIf="form">
             <button class="mt-2 rounded-sm" *ngIf="form && SelectedAgent.parentAgentId == null" mat-stroked-button (click)="openSubAgentsDialog()">
                  Manage SubAgents
             </button>
@@ -30,11 +30,14 @@
             <button *ngIf="form" class="mt-2 rounded-sm" mat-stroked-button (click)="viewFullPropmpt()">
                   View Full Prompt
             </button>
-            <mat-slide-toggle (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="Intent Reponse" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.haveIntentRespone"></mat-slide-toggle>
+            <mat-slide-toggle color="primary" (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="AI Intents" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.aiIntents">AI Intents</mat-slide-toggle>
+            <mat-slide-toggle color="primary" (change)="setStartWithoutHistory()" class="mt-2 " matTooltip="Start Without History" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.startWithoutHistory">Start Without History</mat-slide-toggle>
+
+            <!-- <mat-slide-toggle (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="Intent Reponse" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.haveIntentRespone"></mat-slide-toggle>
             <button *ngIf="SelectedAgent.haveIntentRespone == true" class="mt-2 rounded-sm" mat-stroked-button (click)="viewIntentReponse()">
                   View Intent Reponse
-            </button>
-            <mat-checkbox color="primary" class="mx-8 mt-1" [(ngModel)]="SelectedAgent.startWithoutHistory"> <span class=" px-1 text-base">Start Without History</span></mat-checkbox>
+            </button> -->
+            <!-- <mat-checkbox (change)="setStartWithoutHistory()" color="primary" class="mx-8 mt-1" [(ngModel)]="SelectedAgent.startWithoutHistory"> <span class=" px-1 text-base">Start Without History</span></mat-checkbox> -->
 
         </div>
 
@@ -164,7 +167,36 @@
                             <mat-option *ngFor="let task of tasks" [value]="task.intentId">{{task.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <div class="w-full mb-3 overflow-x-auto">
 
+                        <div class="flex gap-2 min-w-max">
+
+                            <div *ngFor="let v of routeCtrl.value.variables; let vi = index" class="flex items-center gap-2 border border-orange-400 bg-orange-50 px-3 py-1 rounded-full text-sm whitespace-nowrap">
+
+                                <span class="font-medium">{{ v.variableName }}</span>
+                                <span>:</span>
+                                <span>{{ v.value || '—' }}</span>
+
+                                <button mat-icon-button class="!w-5 !h-5" (click)="removeRoutingVariable(i, vi)">
+        <mat-icon svgIcon="mat:close"
+                  class="text-red-500 text-sm">
+        </mat-icon>
+      </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <button mat-icon-button class="mb-3" color="accent" (click)="openVariableValueDialog(routeCtrl.value, i)">
+          <mat-icon
+        svgIcon="mat:tune"
+        matTooltip="Set Variables"
+        [matBadge]="routeCtrl.value.variables?.length"
+        matBadgeColor="warn"
+        [matBadgeHidden]="!routeCtrl.value.variables?.length">
+      </mat-icon>
+    </button>
                     <button class="mb-3" mat-icon-button color="primary" (click)="removeRouting(i)">
       <mat-icon matTooltip="Delete Routing" svgIcon="mat:delete"></mat-icon>
     </button>

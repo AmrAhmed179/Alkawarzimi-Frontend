@@ -105,6 +105,7 @@ export class DataService {
   }
   // RECEIVE THE the project (name, id, profile_name, trial_expired and trial_days_left) AND PUBLISHES
   projectSelected(project: ProjectModel) {
+    debugger;
     // PUBLISH THE project
     console.log(
       "!!C-U AUTH SERVICE: I PUBLISH THE PROJECT RECEIVED FROM PROJECT COMP ",
@@ -164,7 +165,7 @@ export class DataService {
             // const current_url = this.location.path()
             const current_url = e.url;
             console.log("!!C-U »»»»» AUTH SERV - CURRENT URL ", current_url);
-
+            debugger;
             const url_segments = current_url.split("/");
             console.log(
               "!!C-U »»»»» AUTH SERV - CURRENT URL SEGMENTS ",

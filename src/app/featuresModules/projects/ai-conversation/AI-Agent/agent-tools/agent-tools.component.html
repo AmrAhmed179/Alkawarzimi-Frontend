@@ -30,8 +30,12 @@
             <div [ngClass]="{'hideItems': isExpand == true}" class="flex justify-between items-center mb-3">
                 <div class="flex gap-6 items-center">
                     <div class="flex gap-6 items-center">
-                        <mat-checkbox color="primary" formControlName="callGPT">Call GPT</mat-checkbox>
-                        <mat-checkbox color="primary" formControlName="isActive">Is Active</mat-checkbox>
+                        <!-- <mat-checkbox color="primary" formControlName="callGPT">Call GPT</mat-checkbox>
+                        <mat-checkbox color="primary" formControlName="isActive">Is Active</mat-checkbox> -->
+                        <mat-slide-toggle color="primary" matTooltip="Call GPT" formControlName="callGPT">Call GPT</mat-slide-toggle>
+                        <mat-slide-toggle color="primary" matTooltip="Is Active" formControlName="isActive">Is Active</mat-slide-toggle>
+                        <mat-slide-toggle color="primary" matTooltip="IsMcp" formControlName="IsMcp">IsMcp</mat-slide-toggle>
+
                     </div>
                     <fieldset class="px-2 py-1 border-gray-400 border-2 hover:border-gray-500 rounded-sm">
                         <legend class="px-2 font-medium text-xs text-[#ec843f]">*Select Histroy Mode</legend>
@@ -64,10 +68,29 @@
                 <button [disabled]="!form.valid" mat-raised-button color="primary" type="submit">Save</button>
 
             </div>
-            <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+            <!-- <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
                 <mat-label>Function Name</mat-label>
                 <input matInput formControlName="functionName">
-            </mat-form-field>
+            </mat-form-field> -->
+            <div class="grid grid-cols-7  gap-4 w-full" [ngClass]="{'hideItems': isExpand == true}">
+                <mat-form-field class="col-span-2" [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+                    <mat-label>Function Name</mat-label>
+                    <input matInput formControlName="functionName">
+                </mat-form-field>
+                <mat-form-field class="w-full " *ngIf="form.get('IsMcp').value" [ngClass]="{'hideItems': isExpand == true}">
+                    <mat-label class="px-2 font-medium text-xs text-[#ec843f]">Select TransportType </mat-label>
+                    <mat-select formControlName="TransportType" class="">
+                        <mat-option value="stdio">stdio</mat-option>
+                        <mat-option value="http">http</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="form.get('IsMcp').value" class="w-full col-span-4" [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
+                    <mat-label>Path</mat-label>
+                    <input class="" matInput formControlName="Path">
+                </mat-form-field>
+
+            </div>
 
             <mat-form-field [ngClass]="{'hideItems': isExpand == true}" appearance="fill">
                 <mat-label>Function Description</mat-label>

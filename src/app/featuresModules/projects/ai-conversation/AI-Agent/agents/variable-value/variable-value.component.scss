@@ -1,0 +1,35 @@
+.dialog-content {
+    padding: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* two equal columns */
+    gap: 20px;
+}
+
+.left-panel,
+.right-panel {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    background: #fff;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.chip {
+    background: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.ltr-input {
+    direction: ltr;
+    text-align: left;
+}
