@@ -107,6 +107,9 @@
 
                                 <!-- Actions -->
                                 <div class="flex items-center gap-2">
+                                    <button (click)="$event.stopPropagation(); editExamples(i)" class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50">
+  ✏️ Edit Examples
+</button>
                                     <button (click)="$event.stopPropagation(); saveOne(i)" class="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50" [disabled]="savingIndex === i || g.invalid">
                     💾 Save
                   </button>

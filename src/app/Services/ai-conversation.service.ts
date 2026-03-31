@@ -131,8 +131,12 @@ export class AiConversationService {
     });
   }
 
-    GenerateIntent(payload: { ChatbotId: string; topic: string; examples: string[] }) {
-    return this.http.post<{ intent: string }>(`/api/ai/intents/generate`, payload);
-  }
+// ai-conversation.service.ts
+detectIntent(payload: { mode: string; examples: string[] }) {
+  return this.http.post<{ intent: string }>(
+    `/api/ai/detect-intent`,
+    payload
+  );
+}
 
 }

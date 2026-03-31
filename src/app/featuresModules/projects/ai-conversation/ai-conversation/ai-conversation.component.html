@@ -20,7 +20,8 @@
         <div *ngFor="let item of conversationsList" style="word-wrap: break-word;" class="bg-slate-200 p-2 my-1 rounded-sm hover:bg-slate-100 h-14 flex items-center" (click)="getSessionHistory(item)" [ngClass]="{'selectedConversatioBg': item == selectedSessionId}">
             <p class="text-[14px] two-line-ellipsis">{{item}} </p>
         </div>
-        <mat-paginator [ngClass]="{'displayNone':tapNameValue == 'onlineConversations'}" #paginator class="" [showFirstLastButtons]="true" [length]="totalItems" [pageSize]="pageSize" aria-label="Select page"></mat-paginator>
+        <!-- <mat-paginator [ngClass]="{'displayNone':tapNameValue == 'onlineConversations'}" #paginator class="" [showFirstLastButtons]="true" [length]="totalItems" [pageSize]="pageSize" aria-label="Select page"></mat-paginator> -->
+        <mat-paginator #paginator class="" [showFirstLastButtons]="true" [length]="totalItems" [pageSize]="pageSize" aria-label="Select page"></mat-paginator>
 
     </div>
 

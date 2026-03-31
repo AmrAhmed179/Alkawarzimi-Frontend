@@ -31,6 +31,7 @@ export class ParseDatePipe implements PipeTransform {
 export class AiConversationComponent implements OnInit {
   onDestroy$: Subject<void> = new Subject();
   totalPagesArray: number[] = [];
+  onlineConversationsAll: string[] = [];
 
   chatbotId
   totalCost:number = 0
@@ -67,7 +68,7 @@ export class AiConversationComponent implements OnInit {
           }
           )
   }
-  ngAfterViewInit() {
+  ngAfterViewInit4() {
   debugger
   this.paginator.page.asObservable().subscribe((pageEvent) => {
     debugger
@@ -76,7 +77,31 @@ export class AiConversationComponent implements OnInit {
     this.getAllConversations()
   });
 }
+ngAfterViewInit() {
+  this.paginator.page.asObservable().subscribe((pageEvent) => {
+    this.page = pageEvent.pageIndex + 1;
+    this.pageSize = pageEvent.pageSize;
 
+    if (this.tapNameValue === 'allConversations') {
+      this.getAllConversations(); // backend pagination
+    } else {
+      this.applyOnlinePagination(); // frontend pagination
+    }
+  });
+}
+
+private applyOnlinePagination() {
+  const start = (this.page - 1) * this.pageSize;
+  const end = start + this.pageSize;
+
+  this.conversationsList = this.onlineConversationsAll.slice(start, end);
+  this.totalItems = this.onlineConversationsAll.length;
+
+  this.totalPagesArray = Array.from(
+    { length: Math.ceil(this.totalItems / this.pageSize) },
+    (_, i) => i + 1
+  );
+}
   getAllProjects(){
      this._aiConversationService.GetAllProjects(this.chatbotId).subscribe((res:any)=>{
       this.filter.projects = res
@@ -107,8 +132,16 @@ export class AiConversationComponent implements OnInit {
   }
     getOnlineConversations(){
     this._aiConversationService.GetOnlineAiSessions(this.chatbotId).subscribe((res:any)=>{
-      this.conversationsList = res.sessions
-       this.totalItems = res.TotalCount
+      // this.conversationsList = res.sessions
+      //  this.totalItems = res.TotalCount
+          this.onlineConversationsAll = res.sessions || [];
+
+    // reset to first page when loading online list (recommended)
+    this.page = 1;
+    if (this.paginator) this.paginator.pageIndex = 0;
+
+    this.applyOnlinePagination();
+    this.appendPageSelection();
     })
   }
 
@@ -192,6 +225,11 @@ export class AiConversationComponent implements OnInit {
 goToPage(page: number) {
   this.page = page;
   this.paginator.pageIndex = page - 1;
-  this.getAllConversations()
+ // this.getAllConversations()
+   if (this.tapNameValue === 'allConversations') {
+    this.getAllConversations();
+  } else {
+    this.applyOnlinePagination();
+  }
 }
 }

@@ -1,46 +1,43 @@
-<h2 mat-dialog-title>{{ data.item?._id ? 'Edit' : 'Add' }} Intent</h2>
+<div class="flex justify-center">
+    <h2 mat-dialog-title>Generate Intent</h2>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content [formGroup]="form" class="flex flex-col gap-4 h-[400px]">
 
-<div mat-dialog-content [formGroup]="form" class="content">
-    <mat-radio-group formControlName="mode" class="modes">
-        <mat-radio-button value="intent">Intent</mat-radio-button>
-        <mat-radio-button value="topic">Topic</mat-radio-button>
-    </mat-radio-group>
-
-    <mat-form-field appearance="outline" class="w-full">
-        <mat-label>{{ form.get('mode')?.value === 'topic' ? 'Topic' : 'Intent' }}</mat-label>
-        <input matInput formControlName="intentOrTopic" maxlength="120" />
-        <mat-hint align="end">{{ (form.get('intentOrTopic')?.value || '').length }}/120</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Response</mat-label>
-        <textarea matInput rows="6" formControlName="response"></textarea>
-    </mat-form-field>
-
-    <div class="examples-head">
-        <div class="title">Examples</div>
-        <button mat-stroked-button type="button" (click)="addExample()">+ Add example</button>
+    <div class="flex items-center justify-between mt-4">
+        <mat-radio-group formControlName="mode" class="flex gap-4 ">
+            <mat-radio-button color="primary" value="intent"> Intent</mat-radio-button>
+            <mat-radio-button color="primary" value="topic"> Topic</mat-radio-button>
+        </mat-radio-group>
+        <button mat-stroked-button type="button" (click)="addExample()">
+      + Add example
+    </button>
     </div>
 
-    <div formArrayName="examples" class="examples">
-        <div class="example-row" *ngFor="let c of examplesFA.controls; let i = index">
+
+    <div formArrayName="examples" class="flex flex-col gap-2">
+        <div class="text-sm font-semibold">Examples</div>
+
+        <div *ngFor="let c of examplesFA.controls; let i = index" class="flex gap-2 items-center">
             <mat-form-field appearance="outline" class="w-full">
                 <mat-label>Example {{ i + 1 }}</mat-label>
                 <input matInput [formControlName]="i" />
+                <mat-error *ngIf="c.hasError('required')">Required</mat-error>
             </mat-form-field>
 
-            <button mat-icon-button type="button" (click)="removeExample(i)" aria-label="Remove example">
-        <mat-icon>delete</mat-icon>
+            <button mat-icon-button color="warn" (click)="removeExample(i)" [disabled]="examplesFA.length === 1">
+        <mat-icon svgIcon="mat:delete"></mat-icon>
       </button>
         </div>
 
-        <div class="hint" *ngIf="examplesFA.length === 0">
-            Add examples as strings.
-        </div>
+
     </div>
+
 </div>
 
-<div mat-dialog-actions align="end">
-    <button mat-button type="button" (click)="cancel()">Cancel</button>
-    <button mat-raised-button color="primary" type="button" (click)="save()">Save</button>
+<div mat-dialog-actions align="start">
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+    {{ saving ? 'Generating...' : 'Generate' }}
+  </button>
 </div>

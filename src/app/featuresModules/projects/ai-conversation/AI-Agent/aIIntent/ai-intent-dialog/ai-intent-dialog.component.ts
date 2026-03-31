@@ -1,52 +1,45 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AIIntentModel } from 'src/app/Models/Ai-Agent/toolInfo';
+import { Component, Inject } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { finalize } from 'rxjs';
+import { NotifyService } from 'src/app/core/services/notify.service';
+import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 
-export interface AIIntentDialogData {
-  chatbotId: string;
-  item?: AIIntentModel | null;
+export interface AiIntentDialogData {
+  mode?: string;          // 'intent' | 'topic'
+  examples?: string[];
 }
 
-export interface AIIntentDialogResult {
-  _id?: string | null;
-  ChatbotId: string;
-  mode: 'intent' | 'topic';
-  intentOrTopic: string;
-  response: string;
+export interface AiIntentDialogResult {
+  mode: string;
   examples: string[];
+  intent: string;         // returned from API
 }
 
 @Component({
-  selector: 'vex-ai-intent-dialog',
+  selector: 'app-ai-intent-dialog',
   templateUrl: './ai-intent-dialog.component.html',
-  styleUrls: ['./ai-intent-dialog.component.scss']
 })
 export class AiIntentDialogComponent {
   form: FormGroup;
+  saving = false;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AiIntentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AIIntentDialogData
+    @Inject(MAT_DIALOG_DATA) public data: AiIntentDialogData,
+    private aiService: AiConversationService,
+    private notify: NotifyService,
   ) {
-    const item = data.item;
-
     this.form = this.fb.group({
-      _id: [item?._id ?? null],
-      ChatbotId: [data.chatbotId, [Validators.required]],
-
-      // ✅ mode is string: intent | topic
-      mode: [item?.mode ?? 'intent', [Validators.required]],
-
-      // ✅ input text: if mode=intent => intent name, if mode=topic => topic text
-      intentOrTopic: [item?.intent ?? '', [Validators.required, Validators.maxLength(120)]],
-
-      response: [item?.response ?? '', [Validators.required]],
-
-      // ✅ examples array
-      examples: this.fb.array((item?.examples ?? []).map(x => this.fb.control(x, [Validators.required])))
+      mode: [data?.mode ?? 'intent', [Validators.required]],
+      examples: this.fb.array([])
     });
+
+    const initial = (data?.examples?.length ? data.examples : ['']);
+    initial.forEach(x =>
+      this.examplesFA.push(this.fb.control(x, [Validators.required, Validators.maxLength(300)]))
+    );
   }
 
   get examplesFA(): FormArray {
@@ -54,15 +47,12 @@ export class AiIntentDialogComponent {
   }
 
   addExample() {
-    this.examplesFA.push(this.fb.control('', [Validators.required]));
+    this.examplesFA.push(this.fb.control('', [Validators.required, Validators.maxLength(300)]));
   }
 
   removeExample(i: number) {
+    if (this.examplesFA.length === 1) return;
     this.examplesFA.removeAt(i);
-  }
-
-  cancel() {
-    this.dialogRef.close(null);
   }
 
   save() {
@@ -71,17 +61,40 @@ export class AiIntentDialogComponent {
       return;
     }
 
-    const v = this.form.value;
+    const mode = this.form.value.mode as string;
+    const examples = (this.form.value.examples as string[])
+      .map(x => (x || '').trim())
+      .filter(Boolean);
 
-    const result: AIIntentDialogResult = {
-      _id: v._id,
-      ChatbotId: v.ChatbotId,
-      mode: v.mode,
-      intentOrTopic: (v.intentOrTopic || '').trim(),
-      response: v.response,
-      examples: (v.examples || []).map((x: string) => (x || '').trim()).filter(Boolean)
-    };
+    if (!examples.length) {
+      this.examplesFA.at(0).setErrors({ required: true });
+      return;
+    }
 
-    this.dialogRef.close(result);
+    this.saving = true;
+
+    this.aiService.detectIntent({ mode, examples })
+      .pipe(finalize(() => (this.saving = false)))
+      .subscribe({
+        next: (res: any) => {
+          const intent = typeof res === 'string' ? res : res?.intent;
+
+          const result: AiIntentDialogResult = {
+            mode,
+            examples,
+            intent: (intent || '').trim()
+          };
+          this.notify.openSuccessSnackBar('Intent generated successfully');
+          this.dialogRef.close(result);
+        },
+        error: () => {
+          this.notify.openFailureSnackBar('Failed to generate intent');
+          this.dialogRef.close(null);
+        }
+      });
+  }
+
+  close() {
+    this.dialogRef.close(null);
   }
 }

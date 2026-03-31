@@ -162,4 +162,10 @@ export class SidenavComponent implements OnInit {
     this.selectedLang  = lang
     this._optionsService.selectedLang$.next(this.selectedLang )
   }
+  locationRelaod(){
+    this.router.navigate(['/projects'])
+    .then(() => {
+      window.location.reload();
+    })
+  }
 }

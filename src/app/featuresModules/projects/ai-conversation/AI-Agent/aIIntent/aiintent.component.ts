@@ -7,7 +7,7 @@ import { NotifyService } from 'src/app/core/services/notify.service';
 import { AIIntentModel } from 'src/app/Models/Ai-Agent/toolInfo';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
-import { AiIntentDialogComponent, AIIntentDialogResult } from './ai-intent-dialog/ai-intent-dialog.component';
+import { AiIntentDialogComponent } from './ai-intent-dialog/ai-intent-dialog.component';
 
 @Component({
   selector: 'vex-aiintent',
@@ -37,7 +37,6 @@ export class AIIntentComponent implements OnInit {
     private _dataService: DataService,
     private notify: NotifyService,
     private dialog: MatDialog,
-
   ) {
     this.form = this.fb.group({
       items: this.fb.array([])
@@ -77,8 +76,8 @@ export class AIIntentComponent implements OnInit {
       ChatbotId: [item?.ChatbotId ?? this.chatbotId, [Validators.required]],
       intent: [item?.intent ?? '', [Validators.required, Validators.maxLength(120)]],
       response: [item?.response ?? '', [Validators.required]],
-      mode: [item?.mode ?? 'intent', [Validators.required]],
-      examples: [item?.examples ?? []]
+          mode: [item?.mode ?? 'intent'],
+    examples: [item?.examples ?? []]
     });
   }
 
@@ -103,12 +102,58 @@ export class AIIntentComponent implements OnInit {
   }
 
   // ---------- Actions ----------
+// addNew() {
+//   this.itemsFA.push(this.createItem({ _id: null, intent: '', response: '', ChatbotId: this.chatbotId } as any));
+//   this.expandedIndex = this.itemsFA.length - 1;
+// }
 addNew() {
-  this.itemsFA.push(this.createItem({ _id: null, intent: '', response: '', ChatbotId: this.chatbotId } as any));
-  this.expandedIndex = this.itemsFA.length - 1;
+  const dialogRef = this.dialog.open(AiIntentDialogComponent, {
+    width: '700px',
+    data: { mode: 'intent', examples: [''] }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (!result){
+      this.itemsFA.push(this.createItem({ _id: null, intent: '', response: '', ChatbotId: this.chatbotId, mode: '',
+      examples: [] } as any))
+    }else {
+      const item: AIIntentModel = {
+      _id: null,
+      ChatbotId: this.chatbotId,
+      intent: result.intent,     // from API
+      response: '',
+      mode: result.mode,
+      examples: result.examples
+    };
+
+    this.itemsFA.push(this.createItem(item));
+    }
+
+
+    this.expandedIndex = this.itemsFA.length - 1;
+  });
 }
 
+editExamples(index: number) {
+  const g = this.itemsGroups[index];
 
+  const dialogRef = this.dialog.open(AiIntentDialogComponent, {
+    width: '700px',
+    data: {
+      mode: g.get('mode')?.value ?? 'intent',
+      examples: g.get('examples')?.value ?? []
+    }
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (!result) return;
+
+    g.get('mode')?.setValue(result.mode);
+    g.get('examples')?.setValue(result.examples);
+    g.get('intent')?.setValue(result.intent); // updated intent returned
+    g.markAsDirty();
+  });
+}
   toggle(i: number) {
   this.expandedIndex = (this.expandedIndex === i) ? null : i;
 }
@@ -137,7 +182,9 @@ saveOne(index: number) {
     _id: newId,              // force correct id
     intent: intent,
     response: response,
-    ChatbotId: this.chatbotId
+    ChatbotId: this.chatbotId,
+      mode: g.get('mode')?.value,
+  examples: g.get('examples')?.value
   };
 
   this.savingIndex = index;
