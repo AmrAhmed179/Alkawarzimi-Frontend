@@ -128,6 +128,19 @@
             </div>
         </div>
 
+        <div class="w-full py-2 relative">
+            <div class="relative">
+                <label class="absolute -top-2 left-2 px-1 mx-1 text-xs font-medium text-gray-600 bg-[#f3f4f6]">
+                  Channel
+                </label>
+                <select [(ngModel)]="filter.channel" class="h-[47px] border rounded shadow w-full px-2 bg-[#f3f4f6]" (ngModelChange)="formvalue(0)">
+                  <option [value]="''">All</option>
+                  <option [value]="'web'">web</option>
+                  <option [value]="'whatsapp'">whatsapp</option>
+                </select>
+            </div>
+        </div>
+
         <div class="py-2 w-full ">
             <input [(ngModel)]="filter.search" (change)="formvalue(0)" (keydown.enter)="formvalue(1)" class=" h-[47px] border rounded shadow w-[94%] px-2  focus:border-indigo-500 focus:ring-indigo-500 bg-[#f3f4f6]" placeholder="Enter Utterance.." type="text" (change)="formvalue(0)"
                 (keydown.enter)="formvalue(1)">

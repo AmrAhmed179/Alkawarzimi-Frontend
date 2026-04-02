@@ -119,13 +119,12 @@ debugger
       })
 
 
-    this.filter.endDate = res.endDate
-    this.filter.startDate = res.startDate
-    this.filter.chatBotId = res.chatBotId
-    this.filter.searchFromParent = res.searchFromParent
+    if (!res) {
+      return;
+    }
+    // Merge new parent fields with current child filter state to avoid wiping local filters.
+    this.filter = { ...this.filter, ...res };
     this.filter.start = 0
-
-    this.filter.modeAgent = false
 
     if(this.servicesName.length <1){
       this.getServices()
@@ -335,6 +334,15 @@ goToPage(page: number) {
     this.setEntityRequestFilter();
     this.filter.filter = this.requestFilter
     this.filter.searchFromParent = false
+    this.formValue.entities = this.selectedEntities.map(x => x.entity)
+    this.formValue.services = this.selectedServices.map(x => x.name)
+    this.formValue.intents = this.selectedIntents.map(x => x.intent)
+    this.formValue.userId = this.filter.userId || ''
+    this.formValue.search = this.filter.search || ''
+    this.formValue.projectId = this.filter.projectId || ''
+    this.formValue.channel = this.filter.channel || ''
+    this.formValue.searchFromParent = false
+    this._analyticalService.formValue$.next(this.formValue)
     this._analyticalService.filterAnylatic$.next(this.filter)
     if(value == 1){
       this.getChatbotConversation()

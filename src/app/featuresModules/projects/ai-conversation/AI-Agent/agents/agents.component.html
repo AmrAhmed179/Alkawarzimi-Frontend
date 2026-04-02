@@ -32,6 +32,7 @@
             </button>
             <mat-slide-toggle color="primary" (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="AI Intents" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.aiIntents">AI Intents</mat-slide-toggle>
             <mat-slide-toggle color="primary" (change)="setStartWithoutHistory()" class="mt-2 " matTooltip="Start Without History" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.startWithoutHistory">Start Without History</mat-slide-toggle>
+            <mat-slide-toggle color="primary" (change)="setIsvoice()" class="mt-2 " matTooltip="Is Voice" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.isVoice">IS Voice</mat-slide-toggle>
 
             <!-- <mat-slide-toggle (change)="setHaveIntentRespone()" class="mt-2 " matTooltip="Intent Reponse" (click)="$event.stopPropagation()" [(ngModel)]="SelectedAgent.haveIntentRespone"></mat-slide-toggle>
             <button *ngIf="SelectedAgent.haveIntentRespone == true" class="mt-2 rounded-sm" mat-stroked-button (click)="viewIntentReponse()">

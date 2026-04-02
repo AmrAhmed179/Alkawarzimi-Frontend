@@ -10,6 +10,7 @@ export class filterAnalytical{
   start:number = 0
   userId:string
   projectId:string = ""
+  channel:string = ""
   modeAgent:boolean = false
   searchFromParent:boolean = true
 }
@@ -26,6 +27,7 @@ export class formValueMapToForm{
   search:String   = ''
   userId:String   = ''
   projectId:string = ""
+  channel:string = ""
   searchFromParent:boolean = true
 }
 

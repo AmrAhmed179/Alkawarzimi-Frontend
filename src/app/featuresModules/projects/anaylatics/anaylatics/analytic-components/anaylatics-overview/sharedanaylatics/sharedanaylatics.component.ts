@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import moment from 'moment';
-import { Subject, filter, map, takeUntil } from 'rxjs';
+import { Subject, filter, map, take, takeUntil } from 'rxjs';
 import { AnalyticServiceService } from 'src/app/Services/analytic-service.service';
 import { filterAnalytical } from 'src/app/core/models/filterAnaylic';
 import { DialogStatisticalReportComponent } from '../dialog-statistical-report/dialog-statistical-report.component';
@@ -82,10 +82,10 @@ export class SharedanaylaticsComponent implements OnInit {
 
     console.log("firstItialcompo")
     const  SetFilter = new filterAnalytical();
-    SetFilter.chatBotId = this.chatBotId;
-    SetFilter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
-    SetFilter.endDate =   (moment(this.range.get('endDate').value)).format('MM/DD/YYYY')
-    this._analyticalService.filterAnylatic$.next(SetFilter);
+    this.filter.chatBotId = this.chatBotId;
+    this.filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
+    this.filter.endDate =   (moment(this.range.get('endDate').value)).format('MM/DD/YYYY')
+    this._analyticalService.filterAnylatic$.next(this.filter);
 
     // this.createStatisticReport()
     // this.createConversationsReport()
@@ -114,12 +114,15 @@ export class SharedanaylaticsComponent implements OnInit {
     //   this.chatBotId = parmas["projectid"]
     // })
 
-    var  filter = new filterAnalytical();
-    filter.chatBotId = this.chatBotId;
-    filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
-    filter.endDate = (moment(this.range.get('endDate').value)).format('MM/DD/YYYY')
-    filter.searchFromParent = true
-    this._analyticalService.filterAnylatic$.next(filter);
+    this._analyticalService.filterAnylatic$.pipe(take(1)).subscribe((currentFilter: filterAnalytical) => {
+      // Keep existing child filters (userId, search, channel, selected filters, etc.) and only refresh parent date/chatbot fields.
+      const nextFilter: filterAnalytical = { ...(currentFilter || new filterAnalytical()) };
+      nextFilter.chatBotId = this.chatBotId;
+      nextFilter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY');
+      nextFilter.endDate = (moment(this.range.get('endDate').value)).format('MM/DD/YYYY');
+      nextFilter.searchFromParent = true;
+      this._analyticalService.filterAnylatic$.next(nextFilter);
+    });
 
    console.log("startDate",this.startDate)
    console.log("endDate",this.endDate)
@@ -127,18 +130,24 @@ export class SharedanaylaticsComponent implements OnInit {
   }
 
   createStatisticReport(){
+
+     this._analyticalService.filterAnylatic$.pipe(take(1)).subscribe((res:filterAnalytical)=>{
+      this.filter = res
+      this._analyticalService.CreateStatisticReport(this.filter).subscribe((res:any)=>{
+      this.statisticalReport = res
+      const dialogRef = this.dialog.open(DialogStatisticalReportComponent,{data:{report:this.statisticalReport ,type:'statisticalReport'}, height: '900px',
+        width: '1500px'},
+        );
+        dialogRef.afterClosed().subscribe(res=>{
+        })
+    })
+    })
+    return;
      var filter:filterAnalytical = new filterAnalytical()
      filter.chatBotId = this.chatBotId
      filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
      filter.endDate = (moment(this.range.get('endDate').value)).format('MM/DD/YYYY')
      filter.modeAgent = this.agentMode
-    //  this._analyticalService.filterAnylatic$.pipe(takeUntil(this.onDestroy$)).subscribe((res:filterAnalytical)=>{
-    //   this.filter = res
-    //   this._analyticalService.CreateStatisticReport(this.filter).subscribe((res:any)=>{
-    //     this.statisticalReport = res
-    //   })
-    // })
-
     this._analyticalService.CreateStatisticReport(filter).subscribe((res:any)=>{
       this.statisticalReport = res
       const dialogRef = this.dialog.open(DialogStatisticalReportComponent,{data:{report:this.statisticalReport ,type:'statisticalReport'}, height: '900px',
@@ -150,13 +159,19 @@ export class SharedanaylaticsComponent implements OnInit {
   }
   createConversationsReport(){
     debugger
-    // this._analyticalService.filterAnylatic$.pipe(takeUntil(this.onDestroy$)).subscribe((res:filterAnalytical)=>{
-    //   this.filter = res
-    //   this._analyticalService.CreateConversationsReport(this.filter).subscribe((res:any)=>{
-    //     this.conversationsReport = res
-    //    // this.sanitizer.bypassSecurityTrustHtml(res);
-    //   })
-    // })
+    this._analyticalService.filterAnylatic$.pipe(take(1)).subscribe((res:filterAnalytical)=>{
+      this.filter = res
+    this._analyticalService.CreateConversationsReport(this.filter).subscribe((res:any)=>{
+      this.conversationsReport = res
+      const dialogRef = this.dialog.open(DialogStatisticalReportComponent,{data:{report:this.conversationsReport ,type:'coversationReport'}, height: '900px',
+        width: '1500px'},
+        );
+        dialogRef.afterClosed().subscribe(res=>{
+        })
+    })
+    })
+
+    return;
     var filter:filterAnalytical = new filterAnalytical()
     filter.chatBotId = this.chatBotId
     filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
@@ -174,13 +189,20 @@ export class SharedanaylaticsComponent implements OnInit {
   }
 
   createConversationsReport2(){
-    // this._analyticalService.filterAnylatic$.pipe(takeUntil(this.onDestroy$)).subscribe((res:filterAnalytical)=>{
-    //   this.filter = res
-    //   this._analyticalService.CreateConversationsReport(this.filter).subscribe((res:any)=>{
-    //     this.conversationsReport = res
-    //    // this.sanitizer.bypassSecurityTrustHtml(res);
-    //   })
-    // })
+    this._analyticalService.filterAnylatic$.pipe(take(1)).subscribe((res:filterAnalytical)=>{
+      this.filter = res
+      this._analyticalService.CreateConversationsReport2(this.filter ).subscribe((response: Blob)=>{
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `report`; // Specify the file name
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url); // Free up memory
+    })
+    })
+    return;
     var filter:filterAnalytical = new filterAnalytical()
     filter.chatBotId = this.chatBotId
     filter.startDate = (moment(this.range.get('startDate').value)).format('MM/DD/YYYY')
