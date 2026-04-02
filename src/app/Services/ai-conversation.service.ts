@@ -62,9 +62,10 @@ export class AiConversationService {
       return this.http.get(environment.URLS.GetAgentsTasks, { params: parm })
     }
 
-  GetAgents(chatbotId){
+  GetAgents(chatbotId: string, type: 'all' | 'text' | 'voice' = 'all'){
          let parm = {
-      chatbotId: chatbotId
+      chatbotId: chatbotId,
+      type: type
     }
       return this.http.get(environment.URLS.GetAgents,  { params: parm })
   }

@@ -1,6 +1,17 @@
 <div class="grid grid-cols-4 gap-4 p-4 containerHight overflow-auto">
     <div class="col-span-1 border p-3">
-        <div> <button class="mb-4" mat-raised-button color="primary" (click)="addAgent()"><mat-icon matTooltip="Add Agent" svgIcon="mat:add"></mat-icon> Add New Agent</button>
+        <div class="agent-actions">
+            <button class="add-agent-btn" mat-raised-button color="primary" (click)="addAgent()">
+                <mat-icon matTooltip="Add Agent" svgIcon="mat:add"></mat-icon>
+                <span>Add New Agent</span>
+            </button>
+            <div class="agent-type-filter">
+                <select id="agentType" class="agent-type-select" [(ngModel)]="selectedAgentType" (change)="onAgentTypeChange()">
+                    <option value="all">All</option>
+                    <option value="text">Text</option>
+                    <option value="voice">Voice</option>
+                </select>
+            </div>
         </div>
         <div *ngFor="let agent of agents,let i = index" class="flex justify-between items-center bg-slate-200 p-2 my-1 rounded-sm min-h-8 hover:bg-[#f3a649]" (click)="selectedAgent(i)" [ngClass]="{'selectedAgentBg': agent._id == SelectedAgent?._id}">
             <p class="text-base">{{agent.name}} </p>

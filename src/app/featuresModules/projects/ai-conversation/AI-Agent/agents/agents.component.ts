@@ -43,6 +43,7 @@ export class AgentsComponent implements OnInit {
   agents: Agents[] = []
   agentFromAgentTemplete: Agents
   selectedAgentId: string = 'all'
+  selectedAgentType: 'all' | 'text' | 'voice' = 'all'
   isExpand: boolean = false
   expandName: string = ''
   constructor(private _aiConversationService: AiConversationService, private _dataService: DataService,
@@ -411,9 +412,19 @@ export class AgentsComponent implements OnInit {
     })
   }
   GetAgents() {
-    this._aiConversationService.GetAgents(this.projectId).subscribe((res: any) => {
+    this._aiConversationService.GetAgents(this.projectId, this.selectedAgentType).subscribe((res: any) => {
       this.agents = res
+
+      if (!this.agents.some(agent => agent._id === this.SelectedAgent?._id)) {
+        this.SelectedAgent = null;
+        this.selectedIndex = null;
+        this.form = null;
+      }
     })
+  }
+
+  onAgentTypeChange() {
+    this.GetAgents();
   }
 
   GetAIModelsProvider() {
