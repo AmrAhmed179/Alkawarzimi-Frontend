@@ -549,8 +549,9 @@ goToPage(page: number) {
    getConverstionsWhenChange(){
     this.paginator.pageIndex = 0;
     this.filter.start = 0
-    this.getChatbotConversation()
-    this.getMessangerUser()
+    this._analyticalService.filterAnylatic$.next(this.filter)
+    // this.getChatbotConversation()
+    // this.getMessangerUser()
    }
    addDate(date){
     //date = "7/2/2023 9:08:47 PM";

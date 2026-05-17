@@ -26,10 +26,13 @@ export class IntegrationsComponent implements OnInit {
     debugger
     this.route.parent.params.subscribe((parmas:Params)=>{
       this.chatBotId = parmas["projectid"];})
-      this._optionsService.getIntegrationIndex(this.chatBotId).subscribe((res:any)=>{
+      this.getIntegrationData()
+  }
+  getIntegrationData(){
+    this._optionsService.getIntegrationIndex(this.chatBotId).subscribe((res:any)=>{
         if(res){
           debugger
-          this.integrations = res.integration.integrations
+          this.integrations = res.integration
           this.liveChatResponse = res.integration.liveChat
           this.initiateForm()
         }
@@ -42,17 +45,19 @@ export class IntegrationsComponent implements OnInit {
     width: '900px'},
     );
     dialogRef.afterClosed().subscribe(res=>{
+      this.getIntegrationData()
     })
   }
   initiateForm(){
+    debugger
     this.form = this.fb.group({
-      webWidget: [this.integrations.web],
+      webWidget: [this.integrations?.web],
       mobileApp: [false],
       whatsApp: [this.integrations.whatsApp],
-      twitter: [this.integrations.twitterApp.enabled],
-      facebookMessenger: [this.integrations.facebook],
+      twitter: [this.integrations?.twitterApp?.enabled],
+      facebookMessenger: [this.integrations?.facebook],
       instagram: [false],
-      telegram: [this.integrations.telegram],
+      telegram: [this.integrations?.telegram],
     })
 
     this.liveChat = this.fb.group({

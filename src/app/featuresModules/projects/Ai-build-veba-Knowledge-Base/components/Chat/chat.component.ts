@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -15,7 +16,7 @@ export class ChatComponent implements OnInit {
   chatbotId:string
   @ViewChild('chatBox') chatBox!: ElementRef;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private ragKnowledgeBaseService: RagKnowledgeBaseService      ) {}
   ngOnInit(): void {
         this.route.parent?.parent?.paramMap.subscribe(params => {
     this.chatbotId = params.get('projectid');
@@ -39,7 +40,7 @@ export class ChatComponent implements OnInit {
     this.question = '';
     debugger
     const dd = environment.URLS.RagAsk
-    this.http.post<any>(environment.URLS.RagAsk, payload).subscribe({
+    this.http.post<any>(`${this.ragKnowledgeBaseService.ragUrl}ask`, payload).subscribe({
       next: (res) => {
         const reply =
           res?.response?.state === 'known'

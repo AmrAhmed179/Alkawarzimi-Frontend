@@ -78,12 +78,13 @@ export class OptionsServiceService {
 
   getIntegrationIndex(workspace_id) {
     let parm = {
-      workspace_id: workspace_id,
+      chatBotId: workspace_id,
+      projectId: workspace_id,
     }
     return this.http.get(environment.URLS.GetIntegrationIndex, { params: parm })
   }
   saveWhats(whatsForm) {
-    return this.http.post(environment.URLS.SaveWhatsapp, { whatsapp: whatsForm })
+    return this.http.post(environment.URLS.SaveWhatsapp,  whatsForm )
   }
   saveTwitter(twiter) {
     return this.http.post(environment.URLS.SaveTwitterapp, { twitterApp: twiter })

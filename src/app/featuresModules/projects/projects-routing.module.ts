@@ -13,7 +13,7 @@ import { SurveyComponent } from "./anaylatics/anaylatics/analytic-components/ana
 import { ChatbotConversationComponent } from "./anaylatics/anaylatics/analytic-components/anaylatics-overview/chatbot-conversation/chatbot-conversation.component";
 import { AgentconversationComponent } from "./anaylatics/anaylatics/analytic-components/anaylatics-overview/agentconversation/agentconversation.component";
 import { GptConversationComponent } from "./anaylatics/anaylatics/analytic-components/anaylatics-overview/gpt-conversation/gpt-conversation.component";
-import { IntegrationsComponent } from "integration-lib";
+//import { IntegrationsComponent } from "integration-lib";
 import { SharedOptionsComponent } from "./options/shared-options/shared-options.component";
 import { GeneralComponent } from "./options/components/general/general.component";
 import { LanguagesComponent } from "./options/components/languages/languages.component";
@@ -86,6 +86,7 @@ import { ChatComponent } from './Ai-build-veba-Knowledge-Base/components/Chat/ch
 import { SettingsComponent } from './Ai-build-veba-Knowledge-Base/components/settings/settings.component';
 import { UnsavedChangesGuard } from './build/_build-tasks/--task-edit-static-and-flow/diagramflow-ifram/guards/unsaved-changes.guard';
 import { AIIntentComponent } from './ai-conversation/AI-Agent/aIIntent/aiintent.component';
+import { IntegrationsComponent } from './intergration/integrations/integrations.component';
 
 const routes: Routes = [
   { path: "", component: ProjectsComponent },

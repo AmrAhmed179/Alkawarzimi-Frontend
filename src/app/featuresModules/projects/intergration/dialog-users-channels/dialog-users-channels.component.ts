@@ -43,10 +43,10 @@ export class DialogUsersChannelsComponent implements OnInit {
   }
   intiateForm(){
     this.whatsAppForm = this.fb.group({
-      provider:[this.data.integrations.whatsApp?.providor],
+      providor:[this.data.integrations.whatsApp?.providor],
       callBack: [{value:'',disabled:true}],
       accountId: [this.data.integrations.whatsApp?.accountId],
-      accessToken: [this.data.integrations.whatsApp?.authToken],
+      authToken: [this.data.integrations.whatsApp?.authToken],
       phone: [this.data.integrations.whatsApp?.phone],
       appId: [this.data.integrations.whatsApp?.appId],
       Sandbox: [this.data.integrations.whatsApp?.sandbox],
@@ -97,18 +97,22 @@ export class DialogUsersChannelsComponent implements OnInit {
   save(type){
     if(type == 'Whatsapp'){
       let whatsapp = {
-        accountId:this.whatsAppForm.controls['accountId'].value,
-        appId:this.whatsAppForm.controls['appId'].value,
-        accessToken:this.whatsAppForm.controls['accessToken'].value,
-        enabled:this.data.integrations.whatsApp.enabled,
-        phone:this.whatsAppForm.controls['phone'].value,
-        provider:this.whatsAppForm.controls['provider'].value,
-        Sandbox:this.whatsAppForm.controls['Sandbox'].value,
-        workspace_id:this.data.chatBotId
+        projectId:this.data.chatBotId,
+        chatBotId:this.data.chatBotId,
+         whatsapp: {
+          accountId:this.whatsAppForm.controls['accountId'].value,
+          appId:this.whatsAppForm.controls['appId'].value,
+          authToken:this.whatsAppForm.controls['authToken'].value,
+          enabled:this.data.integrations.whatsApp.enabled,
+          phone:this.whatsAppForm.controls['phone'].value,
+          providor:this.whatsAppForm.controls['providor'].value,
+          Sandbox:this.whatsAppForm.controls['Sandbox'].value,
+        }
     }
       this._optionsService.saveWhats(whatsapp).subscribe((res:any)=>{
         if(res.status == 1){
           this._notify.openSuccessSnackBar("Data Updated ")
+          this.dialogRef.close()
         }else{
           this._notify.openFailureSnackBar("Faild to update Data")
         }

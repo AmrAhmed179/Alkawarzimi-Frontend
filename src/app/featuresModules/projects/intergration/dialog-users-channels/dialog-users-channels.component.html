@@ -50,7 +50,7 @@
                 <a class="text-xs" class="hover:text-orange-500" href="https://alkhwarizmi.xyz/docs/integrations/Whatsapp">More in documentation.</a>
             </div>
             <form class="flex flex-col  justify-between py-2" [formGroup]="whatsAppForm">
-                <mat-radio-group aria-labelledby="example-radio-group-label" (change)="providerChange($event)" formControlName="provider" class="example-radio-group grid grid-cols-3 gap-1 my-3">
+                <mat-radio-group aria-labelledby="example-radio-group-label" (change)="providerChange($event)" formControlName="providor" class="example-radio-group grid grid-cols-3 gap-1 my-3">
                     <mat-radio-button class="example-radio-button" color="primary" [value]="1">Twilio</mat-radio-button>
                     <mat-radio-button class="example-radio-button" color="primary" color="primary" [value]="2">Unifonic</mat-radio-button>
                     <mat-radio-button class="example-radio-button" color="primary" [value]="3">360Dialog</mat-radio-button>
@@ -69,8 +69,8 @@
                 </mat-form-field>
 
                 <mat-form-field class="flex-auto">
-                    <mat-label>Access Token</mat-label>
-                    <input matInput Enmity="Access Token" formControlName="accessToken">
+                    <mat-label>Auth Token</mat-label>
+                    <input matInput Enmity="auth Token" formControlName="authToken">
                 </mat-form-field>
 
                 <mat-form-field class="flex-auto">
