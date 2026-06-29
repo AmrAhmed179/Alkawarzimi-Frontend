@@ -23,6 +23,7 @@ export class ImportDataComponent implements OnInit {
   configs:Config = new Config()
   addPlainText:boolean = false
   addUrl:boolean = false
+  isImportFiles:boolean = false
    plainText: string = ''
    url:string = ''
   indexStatus:string = ''

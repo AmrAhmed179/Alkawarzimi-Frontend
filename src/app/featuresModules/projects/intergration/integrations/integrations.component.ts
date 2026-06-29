@@ -53,7 +53,7 @@ export class IntegrationsComponent implements OnInit {
     this.form = this.fb.group({
       webWidget: [this.integrations?.web],
       mobileApp: [false],
-      whatsApp: [this.integrations.whatsApp],
+      whatsApp: [this.integrations?.whatsApp],
       twitter: [this.integrations?.twitterApp?.enabled],
       facebookMessenger: [this.integrations?.facebook],
       instagram: [false],

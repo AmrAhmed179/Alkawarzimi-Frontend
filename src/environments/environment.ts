@@ -321,9 +321,9 @@ export const environment = {
     ////////////optionsEnd////////////////
 
     ////////////Integrations////////////////
-    GetIntegrationIndex: `${BaseUrl}Integration/index`,
-    SaveWhatsapp: `${BaseUrl}Integration/saveWhatsapp`,
-    SaveTwitterapp: `${BaseUrl}Integration/saveTwitterapp`,
+    GetIntegrationIndex: `${BaseUrl}ChannelsIntegration/index`,
+    SaveWhatsapp: `${BaseUrl}ChannelsIntegration/saveWhatsapp`,
+    SaveTwitterapp: `${BaseUrl}ChannelsIntegration/saveTwitterapp`,
 
     ////////////Integrations End////////////////
 
