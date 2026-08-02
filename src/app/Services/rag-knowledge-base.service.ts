@@ -43,6 +43,12 @@ export class RagKnowledgeBaseService {
     );
   }
 
+  getChatBotProjects(chatBotId: string) {
+    return this.http.get<any>(environment.URLS.GetChatBotProjects, {
+      params: { chatBotId }
+    });
+  }
+
   getAllDocuments(chatbotId,projectId){
   return this.waitForConfig(() => {
     const params = {

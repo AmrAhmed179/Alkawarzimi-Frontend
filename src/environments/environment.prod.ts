@@ -258,6 +258,7 @@ export const environment = {
     CreateConversationsReport2: `${BaseUrl}Conversation/CreateConversationsReport2/`,
     LeadGenerationReport: `${BaseUrl}Reports/index`,
     GetSassProjects: `${BaseUrl}SassProjects/GetProjects`,
+    GetChatBotProjects: `${BaseUrl}SassProjects/GetChatBotProjects`,
     ////////////analytical end/////////////////////
 
     //#region AiConversation

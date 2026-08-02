@@ -42,6 +42,7 @@ export class SurveyFilter{
 
 export class SassProjects{
   _id: string
+  chatbotId: string
   brandInfo: BrandInfo
   projectType: number
 }

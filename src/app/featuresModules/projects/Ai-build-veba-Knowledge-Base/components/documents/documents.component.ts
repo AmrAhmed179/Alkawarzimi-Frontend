@@ -3,9 +3,9 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { Subject, takeUntil } from 'rxjs';
-import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { RagProjectContextService } from 'src/app/Services/rag-project-context.service';
 import { ConfirmDialoDeleteComponent } from 'src/app/shared/components/confirm-dialo-delete/confirm-dialo-delete.component';
 import { DocumentSettingsDialogComponent } from './document-settings-dialog/document-settings-dialog.component';
 export class DocumentItem {
@@ -29,6 +29,7 @@ export class DocumentsComponent implements OnInit {
     documents:any[] = []
     filteredDocuments:any =[]
     chatbotId:string
+    projectId:string
     search = '';
     clickedItemIndex:number
     docType:number
@@ -48,18 +49,19 @@ export class DocumentsComponent implements OnInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @Output() documentSelected = new EventEmitter<DocumentItem>();
-     constructor(private dialog: MatDialog,private _ragKnowledgeBaseService:RagKnowledgeBaseService, private _dataService: DataService,
+     constructor(private dialog: MatDialog,private _ragKnowledgeBaseService:RagKnowledgeBaseService,
       private fb: FormBuilder,
-      private notify: NotifyService) { }
+      private notify: NotifyService,
+      private ragProjectContext: RagProjectContextService) { }
 
     ngOnInit(): void {
-    this._dataService.$project_bs.pipe(takeUntil(this.onDestroy$)).subscribe((project) => {
-      if (project) {
-        this.chatbotId = project._id;
-        this.getAllDocuments()
-        }
-    }
-    )
+      this.ragProjectContext.whenReady()
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe(({ chatbotId, projectId }) => {
+          this.chatbotId = chatbotId;
+          this.projectId = projectId;
+          this.getAllDocuments();
+        });
   }
 
   ngAfterViewInit() {
@@ -79,7 +81,7 @@ export class DocumentsComponent implements OnInit {
 }
 
     getAllDocuments(){
-      this._ragKnowledgeBaseService.getAllDocuments(this.chatbotId, this.chatbotId).subscribe((res:any)=>{
+      this._ragKnowledgeBaseService.getAllDocuments(this.chatbotId, this.projectId).subscribe((res:any)=>{
           this.documents = res.data
           this.filteredDocuments  =  this.documents
       })
@@ -95,7 +97,7 @@ export class DocumentsComponent implements OnInit {
         "key": "",
         "url": "http://weaviate:8080",
         "chatbotId": this.chatbotId,
-        "projectId":this.chatbotId,
+        "projectId":this.projectId,
         "mode": "test"
       }
     }
@@ -186,8 +188,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   get_Doucment_chunks(){
-    let projectId = this.chatbotId
-  this._ragKnowledgeBaseService.get_Doucment_chunks(this.chatbotId,projectId,this.selectedDoc_uuid,this.docType,this.pageNumber).subscribe((res:any)=>{
+  this._ragKnowledgeBaseService.get_Doucment_chunks(this.chatbotId,this.projectId,this.selectedDoc_uuid,this.docType,this.pageNumber).subscribe((res:any)=>{
     debugger
         this.documentContent = res.chunk.replace(/\r\n/g, '<br>')
         this.totalPages = res.chunksCount

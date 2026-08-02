@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { RagProjectContextService } from 'src/app/Services/rag-project-context.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -9,19 +10,28 @@ import { environment } from 'src/environments/environment';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
   question: string = '';
   messages: { text: string; type: 'user' | 'bot' }[] = [];
-  chatbotId:string
+  chatbotId: string;
+  projectId: string;
+  onDestroy$: Subject<void> = new Subject();
   @ViewChild('chatBox') chatBox!: ElementRef;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private ragKnowledgeBaseService: RagKnowledgeBaseService      ) {}
+  constructor(
+    private http: HttpClient,
+    private ragKnowledgeBaseService: RagKnowledgeBaseService,
+    private ragProjectContext: RagProjectContextService
+  ) {}
+
   ngOnInit(): void {
-        this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.chatbotId = params.get('projectid');
-    console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    });
+    this.ragProjectContext.whenReady()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ chatbotId, projectId }) => {
+        this.chatbotId = chatbotId;
+        this.projectId = projectId;
+      });
   }
 
   askQuestion() {
@@ -33,7 +43,7 @@ export class ChatComponent implements OnInit {
 
     const payload = {
       chatbotId: this.chatbotId,
-      projectId:this.chatbotId,
+      projectId: this.projectId,
       query: q
     };
 
@@ -60,6 +70,11 @@ export class ChatComponent implements OnInit {
     try {
       this.chatBox.nativeElement.scrollTop = this.chatBox.nativeElement.scrollHeight;
     } catch (err) {}
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 
 }

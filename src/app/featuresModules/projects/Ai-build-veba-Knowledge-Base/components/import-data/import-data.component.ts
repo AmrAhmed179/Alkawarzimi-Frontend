@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { PlainTextDialogComponent } from '../../../ai-conversation/build-knowlege-base/dialogs/plain-text-dialog/plain-text-dialog.component';
 import { UploadDialogComponent } from '../../../ai-conversation/build-knowlege-base/dialogs/upload-dialog/upload-dialog.component';
 import { UrlsDialogComponent } from '../../../ai-conversation/build-knowlege-base/dialogs/urls-dialog/urls-dialog.component';
-import { ActivatedRoute } from '@angular/router';
 import { WebSocketService } from 'src/app/Services/web-socket-service.service';
 import { FileImportChunk } from 'src/app/Models/Ai-Agent/Rag';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { RagProjectContextService } from 'src/app/Services/rag-project-context.service';
 import { environment } from 'src/environments/environment';
 import { bufferTime, Subject, takeUntil } from 'rxjs';
 import { Config } from '../settings/settings.component';
@@ -34,25 +34,26 @@ export class ImportDataComponent implements OnInit {
   isImporting = false;
   importProgress: {[key: string]: number} = {};
   importStatus: {[key: string]: string} = {};
-  chatbotId
+  chatbotId: string;
+  projectId: string;
   onDestroy$: Subject<void> = new Subject();
     @ViewChild('urlModel', { static: false }) urlModel?: NgModel;
     @ViewChild('plainTextModel', { static: false }) plainTextModel?: NgModel;
 
   constructor(private wsService: WebSocketService,
     private dialog:MatDialog,
-    private route: ActivatedRoute,
     private _notify:NotifyService,
-    private _ragKnowledgeBaseService:RagKnowledgeBaseService) {}
+    private _ragKnowledgeBaseService:RagKnowledgeBaseService,
+    private ragProjectContext: RagProjectContextService) {}
 
   ngOnInit(): void {
-
-    this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.chatbotId = params.get('projectid');
-    console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    this.getConfigs()
-    });
-
+    this.ragProjectContext.whenReady()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ chatbotId, projectId }) => {
+        this.chatbotId = chatbotId;
+        this.projectId = projectId;
+        this.getConfigs();
+      });
   }
 
   ngOnDestroy(): void {
@@ -64,7 +65,7 @@ export class ImportDataComponent implements OnInit {
     getConfigs() {
     let body = {
       chatbotId: this.chatbotId,
-      projectId: this.chatbotId,
+      projectId: this.projectId,
     };
     this._ragKnowledgeBaseService.getConfigs(body).subscribe({
       next: (res: any) => {
@@ -174,7 +175,7 @@ export class ImportDataComponent implements OnInit {
     file.reader = this.configs.reader;
     file.chunker = this.configs.chunker;
     file.importStatus = "Not_Imported";
-    file.projectId = this.chatbotId;
+    file.projectId = this.projectId;
     file.chatBotId = this.chatbotId;
     file.isRag = 1;
     file.onlyTextFiles = onlyTextFiles;
@@ -228,7 +229,7 @@ export class ImportDataComponent implements OnInit {
     file.reader = this.configs.reader
     file.chunker = this.configs.chunker
     file.importStatus = "Not_Imported"
-    file.projectId = this.chatbotId
+    file.projectId = this.projectId
     file.chatBotId = this.chatbotId
     file.PlainTextOrDocument = 0
     file.fileContent = this.plainText
@@ -246,7 +247,7 @@ export class ImportDataComponent implements OnInit {
     file.reader = this.configs.reader
     file.chunker = this.configs.chunker
     file.importStatus = "Not_Imported"
-    file.projectId = this.chatbotId
+    file.projectId = this.projectId
     file.chatBotId = this.chatbotId
     file.PlainTextOrDocument = 2
     file.url = this.url

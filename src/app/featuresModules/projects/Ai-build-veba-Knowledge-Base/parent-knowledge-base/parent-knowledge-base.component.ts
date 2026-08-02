@@ -1,69 +1,109 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
-import { DataService } from 'src/app/core/services/data.service';
-import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
-import { IndexDetailsComponent } from '../components/index-details/index-details.component';
 import { ActivatedRoute } from '@angular/router';
-import { WebSocketService } from 'src/app/Services/web-socket-service.service';
+import { Subject, takeUntil } from 'rxjs';
+import { SassProjects } from 'src/app/core/models/filterAnaylic';
 import { NotifyService } from 'src/app/core/services/notify.service';
-import { environment } from 'src/environments/environment';
+import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { RagProjectContextService, RagSelectionState } from 'src/app/Services/rag-project-context.service';
+import { WebSocketService } from 'src/app/Services/web-socket-service.service';
+import { IndexDetailsComponent } from '../components/index-details/index-details.component';
 
 @Component({
   selector: 'vex-parent-knowledge-base',
   templateUrl: './parent-knowledge-base.component.html',
   styleUrls: ['./parent-knowledge-base.component.scss']
 })
-export class ParentKnowledgeBaseComponent implements OnInit {
-  chatbotId:string
-  indexStatus:string
+export class ParentKnowledgeBaseComponent implements OnInit, OnDestroy {
+  chatbotId: string;
+  indexStatus: string;
+  selectionState: RagSelectionState = 'idle';
+  projects: SassProjects[] = [];
+  selectedProjectName = '';
   onDestroy$: Subject<void> = new Subject();
-  constructor(private wsService: WebSocketService,
-         private dialog:MatDialog,
-         private route: ActivatedRoute,
-         private _notify:NotifyService,
-         private _ragKnowledgeBaseService:RagKnowledgeBaseService) { }
+
+  constructor(
+    private wsService: WebSocketService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private _notify: NotifyService,
+    private _ragKnowledgeBaseService: RagKnowledgeBaseService,
+    private ragProjectContext: RagProjectContextService
+  ) {}
 
   ngOnInit(): void {
-    this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.chatbotId = params.get('projectid');
-    console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    // this.get_index_status()
-    });
-    //this.wsService.connect(`${environment.VerbaBaseUrl}ws/import_files`);
-    // this._ragKnowledgeBaseService.indexStaus().pipe(takeUntil(this.onDestroy$)).subscribe(res=>{
-    //   this.indexStatus = res
-    // })
+    this.ragProjectContext.selectionState$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(state => {
+        this.selectionState = state;
+      });
 
-    }
-  openIndexDetalis(){
-    const dialogRef = this.dialog.open(IndexDetailsComponent, {
-    width: '700px',
-  });
+    this.ragProjectContext.projects$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(projects => {
+        this.projects = projects;
+        this.updateSelectedProjectName();
+      });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      debugger
-      console.log('Plain text submitted:', result);
-      // Handle the plain text content here
-    }
-  });
+    this.ragProjectContext.ragProjectId$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(() => this.updateSelectedProjectName());
+
+    this.route.parent?.parent?.paramMap
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(params => {
+        this.chatbotId = params.get('projectid');
+        if (this.chatbotId) {
+          this.ragProjectContext.resolve(this.chatbotId);
+        }
+      });
   }
 
-    get_index_status(){
-   let body =  {
-    "deployment": "Local",
-    "key": "",
-    "url": "http://weaviate:8080",
-    "chatbotId": this.chatbotId,
-    "projectId":this.chatbotId,
-    "mode": "test"
-    }
+  selectProject(project: SassProjects): void {
+    this.ragProjectContext.selectProject(project._id);
+  }
+
+  changeProject(): void {
+    this.ragProjectContext.changeProject();
+  }
+
+  getProjectName(project: SassProjects): string {
+    return project?.brandInfo?.name || project?._id || 'Untitled project';
+  }
+
+  getProjectDescription(project: SassProjects): string {
+    return project?.brandInfo?.description || '';
+  }
+
+  getProjectImage(project: SassProjects): string {
+    return project?.brandInfo?.image || '';
+  }
+
+  openIndexDetalis() {
+    const dialogRef = this.dialog.open(IndexDetailsComponent, {
+      width: '700px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Plain text submitted:', result);
+      }
+    });
+  }
+
+  get_index_status() {
+    const projectId = this.ragProjectContext.ragProjectId$.value || this.chatbotId;
+    const body = {
+      deployment: 'Local',
+      key: '',
+      url: 'http://weaviate:8080',
+      chatbotId: this.chatbotId,
+      projectId,
+      mode: 'test'
+    };
     this._ragKnowledgeBaseService.get_index_status(body).subscribe({
       next: (res: any) => {
-         this._ragKnowledgeBaseService.indexStaus$.next(res.status)
-        //  this.indexStatus = res.status
+        this._ragKnowledgeBaseService.indexStaus$.next(res.status);
       },
       error: (err) => {
         console.error('API Error:', err);
@@ -73,9 +113,16 @@ export class ParentKnowledgeBaseComponent implements OnInit {
     });
   }
 
+  private updateSelectedProjectName(): void {
+    const projectId = this.ragProjectContext.ragProjectId$.value;
+    const selected = this.projects.find(p => p._id === projectId);
+    this.selectedProjectName = selected ? this.getProjectName(selected) : '';
+  }
+
   ngOnDestroy(): void {
     this.onDestroy$.next();
     this.onDestroy$.complete();
+    this.ragProjectContext.clear();
     this.wsService.close();
   }
 }

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { ObjectId } from 'bson';
+import { Subject, takeUntil } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
 import { AiConversationService } from 'src/app/Services/ai-conversation.service';
 import { RagKnowledgeBaseService } from 'src/app/Services/rag-knowledge-base.service';
+import { RagProjectContextService } from 'src/app/Services/rag-project-context.service';
 
 // class Config {
 //   UseExactCache: boolean;
@@ -66,24 +67,28 @@ export class SettingsComponent implements OnInit {
   configForm:FormGroup
   configs:Config = new Config()
   chatbotId:string
+  projectId:string
+  onDestroy$: Subject<void> = new Subject();
   constructor(private _ragKnowledgeBaseService:RagKnowledgeBaseService, private _dataService: DataService,
        private fb: FormBuilder,
            private notify: NotifyService,
-           private route: ActivatedRoute,
-           private dialog: MatDialog) { }
+           private dialog: MatDialog,
+           private ragProjectContext: RagProjectContextService) { }
 
   ngOnInit(): void {
-    this.route.parent?.parent?.paramMap.subscribe(params => {
-    this.chatbotId = params.get('projectid');
-    console.log('Project ID:', this.chatbotId);  // Should now show "150"
-    this.getConfigs()
-    });
+    this.ragProjectContext.whenReady()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ chatbotId, projectId }) => {
+        this.chatbotId = chatbotId;
+        this.projectId = projectId;
+        this.getConfigs();
+      });
   }
 
   getConfigs() {
     let body = {
       chatbotId: this.chatbotId,
-      projectId: this.chatbotId,
+      projectId: this.projectId,
     };
     this._ragKnowledgeBaseService.getConfigs(body).subscribe({
       next: (res: any) => {
@@ -104,8 +109,8 @@ export class SettingsComponent implements OnInit {
     threshold: 0
   };
     this.configForm = this.fb.group({
-      chatbotId: [this.configs.chatbotId],
-      projectId: [this.configs.projectId],
+      chatbotId: [this.chatbotId || this.configs.chatbotId],
+      projectId: [this.projectId || this.configs.projectId],
       prompt: [this.configs.prompt],
       reader: this.fb.group({
         name: [this.configs.reader.name]
@@ -238,8 +243,8 @@ debugger
 
 
     const payload = {
-      chatbotId: this.configForm.value.chatbotId,
-      projectId: this.configForm.value.projectId,
+      chatbotId: this.chatbotId || this.configForm.value.chatbotId,
+      projectId: this.projectId || this.configForm.value.projectId,
       prompt: this.configForm.value.prompt,
       reader: this.configForm.value.reader,
       chunker: this.configForm.value.chunker,
@@ -261,7 +266,10 @@ debugger
       }
 }
 
-
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
 
 }
 

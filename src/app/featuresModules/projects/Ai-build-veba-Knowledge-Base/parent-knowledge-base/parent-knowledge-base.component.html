@@ -1,11 +1,46 @@
 <div class="m-4 pt-4">
-    <div class="flex justify-end gap-2 mb-3">
+  <div *ngIf="selectionState === 'loading'" class="rag-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading projects...</p>
+  </div>
+
+  <div *ngIf="selectionState === 'needsSelection'" class="rag-project-picker">
+    <h2 class="rag-project-picker__title">Select a project</h2>
+    <p class="rag-project-picker__subtitle">Choose which project knowledge base you want to open.</p>
+
+    <div class="rag-project-grid">
+      <div
+        class="rag-project-card"
+        *ngFor="let project of projects"
+        (click)="selectProject(project)"
+        matRipple>
+        <div class="rag-project-card__image">
+          <img *ngIf="getProjectImage(project)" [src]="getProjectImage(project)" [alt]="getProjectName(project)" />
+          <mat-icon *ngIf="!getProjectImage(project)" svgIcon="mat:business"></mat-icon>
+        </div>
+        <div class="rag-project-card__body">
+          <h3>{{ getProjectName(project) }}</h3>
+          <p *ngIf="getProjectDescription(project)">{{ getProjectDescription(project) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="selectionState === 'ready'">
+    <div class="flex justify-between items-center gap-2 mb-3">
+      <div class="rag-selected-project" *ngIf="projects.length > 1 && selectedProjectName">
+        <span class="rag-selected-project__label">Project:</span>
+        <strong>{{ selectedProjectName }}</strong>
+        <button type="button" class="change-project-btn" (click)="changeProject()">Change</button>
+      </div>
+      <div class="flex justify-end gap-2 ml-auto">
         <button routerLinkActive="active" routerLink="importData">Import Data</button>
         <button routerLinkActive="active" routerLink="documents">Documents</button>
         <button routerLinkActive="active" routerLink="settings">Settings</button>
-        <!-- <button routerLink="indexDetails" class="text-white hover:text-black" [ngClass]="{'bg-[#4caf50]':indexStatus == 'up-to-date','bg-[#f70505]':indexStatus == 'outdated'}">Index</button> -->
         <button routerLinkActive="active" routerLink="indexDetails">Index</button>
         <button routerLinkActive="active" routerLink="chat">Chat</button>
+      </div>
     </div>
     <router-outlet></router-outlet>
+  </ng-container>
 </div>
