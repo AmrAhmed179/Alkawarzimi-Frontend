@@ -20,6 +20,11 @@
                 <h3 class="title">Plain text</h3>
             </button>
 
+                <button mat-raised-button (click)="openUploadDialog(true) ; addPlainText = false; addUrl = false; url = '' ;uploadedFiles = []; plainText = ''" class="flex items-center rounded-sm">
+                <mat-icon svgIcon="mat:description" class="icon">description</mat-icon>
+                <h3 class="title ">Plain text file</h3>
+            </button>
+
                 <button mat-raised-button (click)="openUploadDialog() ; addPlainText = false; addUrl = false; url = '' ;uploadedFiles = []; plainText = ''" class="flex items-center rounded-sm">
                 <mat-icon svgIcon="mat:folder_open" class="icon">upload_file</mat-icon>
                 <h3 class="title ">Select Files</h3>

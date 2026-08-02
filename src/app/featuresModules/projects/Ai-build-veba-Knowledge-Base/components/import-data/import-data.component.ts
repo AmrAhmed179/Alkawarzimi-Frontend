@@ -134,39 +134,57 @@ export class ImportDataComponent implements OnInit {
     }
   }
 
-    openUploadDialog() {
+    openUploadDialog(onlyTextFiles = false) {
       this.uploadedFiles = []
       const dialogRef = this.dialog.open(UploadDialogComponent, {
         width: '400px',
-        disableClose: true
+        disableClose: true,
+        data: { onlyTextFiles }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          debugger
-         const filesWithConfig = result.map((file: any) => {
-          file.reader = this.configs.reader
-          file.chunker = this.configs.chunker
-          file.importStatus = "Not_Imported"
-          file.projectId = this.chatbotId
-          file.fileContent = ""
-          file.chatBotId = this.chatbotId
-          file.isRag = 1  /// 1 rag   0 notRag
-          file.PlainTextOrDocument = 1   //1 document  0  plaintext
-          return file;
-        });
-
-
-      this.uploadedFiles.push(...filesWithConfig);
-      console.log("files", this.uploadedFiles)
+          this.prepareUploadedFiles(result, onlyTextFiles);
         }
+      });
+    }
+
+  private prepareUploadedFiles(files: File[], onlyTextFiles: boolean): void {
+    files.forEach((file: File) => {
+      if (onlyTextFiles) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string ?? '';
+          const fileName = 'plain-text.txt';
+          const blob = new Blob([content], { type: 'text/plain' });
+          const plainTextFile = new File([blob], fileName, { type: 'text/plain' }) as any;
+          this.assignFileConfig(plainTextFile, onlyTextFiles, content);
+          this.uploadedFiles.push(plainTextFile);
+        };
+        reader.readAsText(file);
+      } else {
+        const fileWithConfig = file as any;
+        this.assignFileConfig(fileWithConfig, onlyTextFiles, '');
+        this.uploadedFiles.push(fileWithConfig);
+      }
     });
+  }
+
+  private assignFileConfig(file: any, onlyTextFiles: boolean, fileContent: string): void {
+    file.reader = this.configs.reader;
+    file.chunker = this.configs.chunker;
+    file.importStatus = "Not_Imported";
+    file.projectId = this.chatbotId;
+    file.chatBotId = this.chatbotId;
+    file.isRag = 1;
+    file.onlyTextFiles = onlyTextFiles;
+    file.PlainTextOrDocument = onlyTextFiles ? 0 : 1;
+    file.fileContent = onlyTextFiles ? fileContent : '';
   }
 
    importFiles(): Promise<void> {
     if (this.isImporting || this.uploadedFiles.length === 0) return;
     this.uploadedFiles.forEach((e:any)=>{
-      debugger
       if(e.importStatus == "IMPORTED" || e.importStatus == "FAILD" ||e.importStatus == "STARTING"){
         return
       }
@@ -175,16 +193,29 @@ export class ImportDataComponent implements OnInit {
         return
       }
 
-      e.importStatus = "STARTING"
-      this._ragKnowledgeBaseService.uploadRagResource(e).subscribe((res:any)=>{
-        if(res.status == 1){
-          e.importStatus = "IMPORTED"
-          this.plainText = ''
-          this.url = ''
-        }
-        else
-          e.importStatus = "FAILD"
-      })
+      const uploadFile = () => {
+        e.importStatus = "STARTING"
+        this._ragKnowledgeBaseService.uploadRagResource(e).subscribe((res:any)=>{
+          if(res.status == 1){
+            e.importStatus = "IMPORTED"
+            this.plainText = ''
+            this.url = ''
+          }
+          else
+            e.importStatus = "FAILD"
+        })
+      };
+
+      if (e.onlyTextFiles && !e.fileContent) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          e.fileContent = event.target?.result as string ?? '';
+          uploadFile();
+        };
+        reader.readAsText(e);
+      } else {
+        uploadFile();
+      }
     })
   }
 

@@ -1,11 +1,11 @@
 <mat-dialog-content>
-    <p class="text-center text-lg font-bold mb-4">Import files</p>
+    <p class="text-center text-lg font-bold mb-4">{{ onlyTextFiles ? 'Import plain text files' : 'Import files' }}</p>
     <div *ngIf="!selectedFiles" class="" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
         <div class="upload-box" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
             <div class="upload-area">
                 <p>Drag your files here or</p>
                 <button mat-stroked-button color="primary" (click)="fileInput.click()">Browse</button>
-                <input multiple #fileInput type="file" hidden (change)="onFileSelected($event)" accept=".pdf,.docx,.md" />
+                <input multiple #fileInput type="file" hidden (change)="onFileSelected($event)" [accept]="acceptedFileTypes" />
                 <p class="text-xs text-gray-500 italic">
                     Maximum file size: 20MB per file. Larger files will be rejected
                 </p>
