@@ -119,8 +119,23 @@
                     </div>
 
                     <div *ngIf="selectedNode?.action.type === 'text'" class="px-6 py-2 overflow-auto">
+                        <mat-radio-group color="primary" #responseInputType="matRadioGroup" value="editor"
+                            class="flex gap-4 mb-2">
+                            <mat-radio-button value="editor">Editor</mat-radio-button>
+                            <mat-radio-button value="textarea">Text area</mat-radio-button>
+                        </mat-radio-group>
                         <div *ngFor="let response of selectedNode.action.responses">
-                            <quill-editor *ngIf="response.language == selectedLang" [(ngModel)]="response.text" #editor [styles]="{ flex: '1 1 auto', minHeight:'100px'}" [required]="true"></quill-editor>
+                            <ng-container *ngIf="response.language == selectedLang">
+                                <quill-editor *ngIf="responseInputType.value !== 'textarea'"
+                                    [(ngModel)]="response.text" #editor
+                                    [styles]="{ flex: '1 1 auto', minHeight:'100px'}" [required]="true">
+                                </quill-editor>
+                                <mat-form-field *ngIf="responseInputType.value === 'textarea'"
+                                    appearance="standard" class="w-full">
+                                    <textarea matInput [(ngModel)]="response.text" rows="6" required
+                                        [dir]="selectedLang === 'ar' ? 'rtl' : 'ltr'"></textarea>
+                                </mat-form-field>
+                            </ng-container>
                         </div>
                     </div>
 
