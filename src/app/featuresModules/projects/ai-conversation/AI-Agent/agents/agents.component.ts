@@ -46,6 +46,31 @@ export class AgentsComponent implements OnInit {
   selectedAgentType: 'all' | 'text' | 'voice' = 'all'
   isExpand: boolean = false
   expandName: string = ''
+  selectedFormTab: string = 'details'
+  promptSectionTabs: { key: string, label: string }[] = [
+    { key: 'identity', label: 'Identity' },
+    { key: 'domainScope', label: 'Domain Scope' },
+    { key: 'responseStyle', label: 'Response Style' },
+    { key: 'functionCallRules', label: 'Function Call Rules' },
+    { key: 'internalReasoning', label: 'Internal Reasoning' },
+    { key: 'directResponseMandate', label: 'Direct Response Mandate' },
+    { key: 'conversationFlow', label: 'Conversation Flow' },
+    { key: 'crtitcalNote', label: 'Critical Note' },
+    { key: 'fewShotExamples', label: 'Few-Shot Examples' }
+  ]
+
+  get isPromptTab(): boolean {
+    return this.promptSectionTabs.some(section => section.key === this.selectedFormTab)
+  }
+
+  get activePromptLabel(): string {
+    return this.promptSectionTabs.find(section => section.key === this.selectedFormTab)?.label ?? ''
+  }
+
+  sectionLength(key: string): number {
+    const value = this.form?.get('promptSections')?.get(key)?.value
+    return typeof value === 'string' ? value.length : 0
+  }
   constructor(private _aiConversationService: AiConversationService, private _dataService: DataService,
     private fb: FormBuilder,
     private notify: NotifyService,
@@ -108,7 +133,10 @@ export class AgentsComponent implements OnInit {
         functionCallRules: [SelectedAgent.promptSections?.functionCallRules],
         conversationFlow: [SelectedAgent.promptSections?.conversationFlow],
         crtitcalNote: [SelectedAgent.promptSections?.crtitcalNote],
-        fewShotExamples: [SelectedAgent.promptSections?.fewShotExamples]
+        fewShotExamples: [SelectedAgent.promptSections?.fewShotExamples],
+        domainScope: [SelectedAgent.promptSections?.domainScope],
+        internalReasoning: [SelectedAgent.promptSections?.internalReasoning],
+        directResponseMandate: [SelectedAgent.promptSections?.directResponseMandate]
       }),
 
     });
@@ -464,11 +492,14 @@ export class AgentsComponent implements OnInit {
     // Filter out empty/null/undefined sections and join with newlines
     const promptParts = [
       promptSections.identity,
+      promptSections.domainScope,
       promptSections.responseStyle,
       promptSections.functionCallRules,
+      promptSections.internalReasoning,
+      promptSections.directResponseMandate,
       promptSections.conversationFlow,
       promptSections.crtitcalNote,
-      promptSections.fewShotExamples
+      promptSections.fewShotExamples,
     ].filter(section => section?.trim()); // Remove empty/undefined sections
 
     const combinedPrompt = promptParts.join('\n'); // Double newline for better separation

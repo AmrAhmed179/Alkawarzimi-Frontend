@@ -66,6 +66,9 @@ export class promptSections {
   functionCallRules: string
   identity: string
   responseStyle: string
+  domainScope: string
+  internalReasoning: string
+  directResponseMandate: string
 }
 
 export class SubAgent {
