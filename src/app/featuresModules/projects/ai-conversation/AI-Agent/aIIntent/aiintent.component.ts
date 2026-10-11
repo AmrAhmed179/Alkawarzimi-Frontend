@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Row, Workbook, Worksheet } from 'exceljs';
 import { takeUntil, switchMap, of, finalize, Subject } from 'rxjs';
 import { DataService } from 'src/app/core/services/data.service';
 import { NotifyService } from 'src/app/core/services/notify.service';
@@ -26,6 +27,7 @@ export class AIIntentComponent implements OnInit {
 
   savingIndex: number | null = null;
   deletingIndex: number | null = null;
+  exporting = false;
 
 
 
@@ -277,5 +279,139 @@ const dialogRef = this.dialog.open(ConfirmDialoDeleteComponent, {
 
   trackByIndex(i: number) {
     return i;
+  }
+
+  async exportExcel(): Promise<void> {
+    const rows = this.itemsGroups
+      .map(group => ({
+        intent: String(group.get('intent')?.value || '').trim(),
+        response: String(group.get('response')?.value || '').replace(/\r\n/g, '\n').trim()
+      }))
+      .filter(row => row.intent || row.response);
+
+    if (!rows.length) {
+      this.notify.openFailureSnackBar('No intents to export');
+      return;
+    }
+
+    this.exporting = true;
+    try {
+      const workbook = this.buildIntentsWorkbook(rows);
+      const buffer = await workbook.xlsx.writeBuffer();
+      this.downloadWorkbook(buffer, this.exportFileName());
+      this.notify.openSuccessSnackBar(`Exported ${rows.length} intents`);
+    } catch {
+      this.notify.openFailureSnackBar('Failed to export intents');
+    } finally {
+      this.exporting = false;
+    }
+  }
+
+  private buildIntentsWorkbook(rows: { intent: string; response: string }[]): Workbook {
+    const workbook = new Workbook();
+    workbook.creator = 'Alkhawarizmi';
+    workbook.created = new Date();
+    workbook.title = 'AI Intents';
+
+    const sheet = workbook.addWorksheet('Intents', {
+      views: [{ state: 'frozen', ySplit: 1, activeCell: 'A2', showGridLines: false, zoomScale: 110 }],
+      properties: { defaultRowHeight: 22, tabColor: { argb: 'FFDA6908' } },
+      pageSetup: {
+        orientation: 'landscape',
+        fitToPage: true,
+        fitToWidth: 1,
+        fitToHeight: 0,
+        paperSize: 9,
+        horizontalCentered: true,
+        printTitlesRow: '1:1',
+        margins: { left: 0.5, right: 0.5, top: 0.6, bottom: 0.6, header: 0.3, footer: 0.3 }
+      },
+      headerFooter: {
+        oddFooter: '&L&8 AI Intents&R&8 Page &P of &N',
+        evenFooter: '&L&8 AI Intents&R&8 Page &P of &N'
+      }
+    });
+
+    sheet.columns = [
+      { header: 'Intent', key: 'intent', width: 42 },
+      { header: 'Response', key: 'response', width: 92 }
+    ];
+
+    this.styleHeaderRow(sheet);
+
+    rows.forEach((row, index) => {
+      const excelRow = sheet.addRow({ intent: row.intent, response: row.response });
+      excelRow.height = this.responseRowHeight(row.response);
+      this.styleDataRow(excelRow, index);
+    });
+
+    const lastRow = rows.length + 1;
+    sheet.autoFilter = `A1:B${lastRow}`;
+    sheet.pageSetup.printArea = `A1:B${lastRow}`;
+    sheet.views = [{ state: 'frozen', ySplit: 1, activeCell: 'A2', showGridLines: false, zoomScale: 110 }];
+
+    return workbook;
+  }
+
+  private styleHeaderRow(sheet: Worksheet): void {
+    const header = sheet.getRow(1);
+    header.height = 30;
+    header.eachCell(cell => {
+      cell.font = { name: 'Calibri', bold: true, size: 13, color: { argb: 'FFFFFFFF' } };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDA6908' } };
+      cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FFDA6908' } },
+        left: { style: 'thin', color: { argb: 'FFDA6908' } },
+        right: { style: 'thin', color: { argb: 'FFDA6908' } },
+        bottom: { style: 'medium', color: { argb: 'FFF59A4B' } }
+      };
+    });
+  }
+
+  private styleDataRow(excelRow: Row, index: number): void {
+    const fill = index % 2 === 0 ? 'FFFFFFFF' : 'FFFFF7F0';
+    const grid = { style: 'thin' as const, color: { argb: 'FFE5E7EB' } };
+
+    [1, 2].forEach(col => {
+      const cell = excelRow.getCell(col);
+      const isResponse = col === 2;
+      cell.font = { name: 'Calibri', size: 11, color: { argb: 'FF1F2937' } };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } };
+      cell.alignment = {
+        vertical: 'top',
+        horizontal: isResponse ? 'right' : 'left',
+        wrapText: true,
+        readingOrder: isResponse ? 'rtl' : 'ltr'
+      };
+      cell.border = { top: grid, left: grid, bottom: grid, right: grid };
+    });
+  }
+
+  private responseRowHeight(text: string): number {
+    const visualLines = (text || '').split('\n').reduce((sum, line) => {
+      return sum + Math.max(1, Math.ceil(line.length / 48));
+    }, 0);
+    return Math.min(409, Math.max(24, visualLines * 16 + 10));
+  }
+
+  private exportFileName(): string {
+    const id = (this.chatbotId || 'chatbot').replace(/[^\w.-]+/g, '_');
+    const date = new Date().toISOString().slice(0, 10);
+    return `ai-intents-${id}-${date}.xlsx`;
+  }
+
+  private downloadWorkbook(buffer: ArrayBuffer, fileName: string): void {
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   }
 }

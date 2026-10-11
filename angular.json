@@ -54,7 +54,8 @@
                             "calendar-utils/date-adapters/date-fns",
                             "@mattlewis92/dom-autoscroller",
                             "apexcharts",
-                            "lodash"
+                            "lodash",
+                            "exceljs"
                         ],
                         "vendorChunk": true,
                         "extractLicenses": false,

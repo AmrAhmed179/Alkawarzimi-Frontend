@@ -37,6 +37,12 @@
               Chatbot: {{ chatbotId }}
             </span>
 
+                        <button class="px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50"
+                            (click)="exportExcel()"
+                            [disabled]="loading || exporting || !itemsGroups.length">
+              {{ exporting ? 'Exporting…' : 'Export Excel' }}
+            </button>
+
                         <button class="px-3 py-2 rounded-lg buttonStyle text-white " (click)="addNew()">
               ＋ Add Intent
             </button>
